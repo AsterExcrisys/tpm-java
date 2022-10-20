@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,34 +46,34 @@ public class Database {
 
 	public void createTables() throws SQLException {
 		try (Statement statement = connection.createStatement()) {
-			String sql = "CREATE TABLE IF NOT EXISTS PCRValues ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 'trustedState' INTEGER NOT NULL, 'PCRRegister' INTEGER NOT NULL, 'PCRValue' TEXT NOT NULL);";
+			String sql = "CREATE TABLE IF NOT EXISTS PCRValues ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 'trustedState' TEXT NOT NULL, 'PCRRegister' INTEGER NOT NULL, 'PCRValue' TEXT NOT NULL);";
 			statement.executeUpdate(sql);
 		}
 		try (Statement statement = connection.createStatement()) {
-			String sql = "CREATE TABLE IF NOT EXISTS TrustedStates ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 'systemFingerprint' TEXT NOT NULL, 'trustedState' INTEGER NOT NULL, 'remarks' TEXT);";
+			String sql = "CREATE TABLE IF NOT EXISTS TrustedStates ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 'systemFingerprint' TEXT NOT NULL, 'trustedState' TEXT NOT NULL, 'remarks' TEXT);";
 			statement.executeUpdate(sql);
 		}
 	}
 
-	public Set<Integer> getTrustedStatesForSystem(String systemFingerprint) throws SQLException {
-		Set<Integer> result = new HashSet<Integer>();
+	public Set<UUID> getTrustedStatesForSystem(String systemFingerprint) throws SQLException {
+		Set<UUID> result = new HashSet<UUID>();
 		String sql = "SELECT * FROM TrustedStates WHERE systemFingerprint = ?";
 		try (PreparedStatement pStatement = connection.prepareStatement(sql)) {
 			pStatement.setString(1, systemFingerprint);
 			try (ResultSet rs = pStatement.executeQuery()) {
 				while (rs.next()) {
-					result.add(rs.getInt("trustedState"));
+					result.add(UUID.fromString(rs.getString("trustedState")));
 				}
 			}
 		}
 		return result;
 	}
 
-	public Map<Integer, String> getPCRValuesForTrustedState(int trustedState) throws SQLException {
+	public Map<Integer, String> getPCRValuesForTrustedState(UUID trustedState) throws SQLException {
 		Map<Integer, String> result = new HashMap<Integer, String>();
 		String sql = "SELECT * FROM PCRValues WHERE trustedState = ?";
 		try (PreparedStatement pStatement = connection.prepareStatement(sql)) {
-			pStatement.setInt(1, trustedState);
+			pStatement.setString(1, trustedState.toString());
 			try (ResultSet rs = pStatement.executeQuery()) {
 				while (rs.next()) {
 					result.put(rs.getInt("PCRRegister"), rs.getString("PCRValue"));

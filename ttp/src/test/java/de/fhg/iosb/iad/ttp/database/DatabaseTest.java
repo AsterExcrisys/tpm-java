@@ -6,11 +6,10 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import de.fhg.iosb.iad.ttp.database.Database;
 
 public class DatabaseTest {
 
@@ -24,15 +23,15 @@ public class DatabaseTest {
 	@Test
 	public void testGetTrustedStates() throws SQLException {
 		String systemFingerprint = "63CF26DFA30590A9C5EEC51630DAA0D84E1D50536E4250AF8D139BEEC3F4F6C7";
-		Set<Integer> trustedStates = database.getTrustedStatesForSystem(systemFingerprint);
+		Set<UUID> trustedStates = database.getTrustedStatesForSystem(systemFingerprint);
 
 		assertEquals(1, trustedStates.size());
-		assertTrue(trustedStates.contains(1));
+		assertTrue(trustedStates.contains(UUID.fromString("5721d09d-4118-4768-8989-99af69d89f1a")));
 	}
 
 	@Test
 	public void testGetPCRValues() throws SQLException {
-		Map<Integer, String> pcrValues = database.getPCRValuesForTrustedState(1);
+		Map<Integer, String> pcrValues = database.getPCRValuesForTrustedState(UUID.fromString("5721d09d-4118-4768-8989-99af69d89f1a"));
 
 		assertEquals(3, pcrValues.size());
 		assertEquals("07CD877F1286496295ABDF54BCEC329C4B3DF21412C66B4B9B30E36EC204D91D", pcrValues.get(5));

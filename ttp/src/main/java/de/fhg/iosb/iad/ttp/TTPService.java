@@ -3,6 +3,7 @@ package de.fhg.iosb.iad.ttp;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +43,11 @@ public class TTPService extends TTPServiceGrpc.TTPServiceImplBase {
 		LOG.info("Received request for system {}", systemFingerprint);
 
 		try {
-			Set<Integer> trustedStates = database.getTrustedStatesForSystem(systemFingerprint);
+			Set<UUID> trustedStates = database.getTrustedStatesForSystem(systemFingerprint);
 			LOG.info("System has {} trusted states.", trustedStates.size());
 
 			TTPResponse.Builder response = TTPResponse.newBuilder();
-			for (int state : trustedStates) {
+			for (UUID state : trustedStates) {
 				Map<Integer, String> pcrValues = database.getPCRValuesForTrustedState(state);
 				response.addTrustedStates(SystemState.newBuilder().putAllPcrValues(pcrValues).build());
 			}
