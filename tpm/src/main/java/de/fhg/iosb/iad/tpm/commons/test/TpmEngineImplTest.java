@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import de.fhg.iosb.iad.tpm.commons.SecurityHelper;
 import de.fhg.iosb.iad.tpm.commons.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.commons.TpmEngineImpl;
+import de.fhg.iosb.iad.tpm.commons.TpmQuoteVerifier;
 import tss.Helpers;
 import tss.Tpm;
 import tss.TpmException;
@@ -84,12 +85,13 @@ public class TpmEngineImplTest {
 		byte[] quote = tpmEngine.quote(qualifyingData, pcrSelection);
 		LOG.info("Generated a quote of size {} bytes", quote.length);
 		// Verify quote
-		boolean b = tpmEngine.verifyQuote(quote, qualifyingData, qkPub, pcrs);
+		TpmQuoteVerifier verifier = new TpmQuoteVerifier();
+		boolean b = verifier.verifyQuote(quote, qualifyingData, qkPub, pcrs);
 		LOG.info("Verifying quote with correct PCRs. Result: {}", b ? "VALID" : "INVALID");
 		a.assertTrue(b);
 		// Change value of one expected PCR and verify again
 		pcrs.put(2, "D59AF3AE0DB1648B95B854C3E248D751B8453A6DA86DED2A44C033D08B5B658B");
-		b = tpmEngine.verifyQuote(quote, qualifyingData, qkPub, pcrs);
+		b = verifier.verifyQuote(quote, qualifyingData, qkPub, pcrs);
 		LOG.info("Verifying quote with wrong PCRs. Result: {}", b ? "VALID!" : "INVALID!");
 		a.assertFalse(b);
 	}

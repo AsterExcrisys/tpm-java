@@ -20,7 +20,6 @@ import tss.tpm.CreatePrimaryResponse;
 import tss.tpm.CreateResponse;
 import tss.tpm.GetCapabilityResponse;
 import tss.tpm.PCR_ReadResponse;
-import tss.tpm.QuoteResponse;
 import tss.tpm.StartAuthSessionResponse;
 import tss.tpm.TPM2B_DIGEST;
 import tss.tpm.TPM2B_PUBLIC_KEY_RSA;
@@ -153,28 +152,10 @@ public class TpmEngineImpl implements TpmEngine {
 		}
 	}
 
-	private TPMS_PCR_SELECTION createPcrSelection(Collection<Integer> numbers, TPM_ALG_ID hashAlg) {
-		int[] numbersArray = numbers.stream().mapToInt(i -> i).toArray();
-		Arrays.sort(numbersArray); // Sort numbers to make result deterministic
-		return new TPMS_PCR_SELECTION(hashAlg, numbersArray);
-	}
-
-	private TPM2B_DIGEST[] createPcrDigests(Map<Integer, String> pcrValues) {
-		int[] numbersArray = pcrValues.keySet().stream().mapToInt(i -> i).toArray();
-		Arrays.sort(numbersArray); // Sort numbers to make result deterministic
-
-		TPM2B_DIGEST[] pcrDigests = new TPM2B_DIGEST[numbersArray.length];
-		int i = 0;
-		for (int number : numbersArray)
-			pcrDigests[i++] = new TPM2B_DIGEST(SecurityHelper.hexToBytes(pcrValues.get(number)));
-
-		return pcrDigests;
-	}
-
 	@Override
 	public byte[] calculatePcrDigest(Map<Integer, String> pcrValues) {
 		TpmBuffer pcrDigests = new TpmBuffer();
-		for (TPM2B_DIGEST d : createPcrDigests(pcrValues))
+		for (TPM2B_DIGEST d : TpmHelper.createPcrDigests(pcrValues))
 			pcrDigests.writeByteBuf(d.buffer);
 		return Crypto.hash(pcrHashAlg, pcrDigests.trim());
 	}
@@ -183,7 +164,7 @@ public class TpmEngineImpl implements TpmEngine {
 	public byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues, TPM_ALG_ID authHashAlg)
 			throws TpmEngineException {
 		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
-				createPcrSelection(pcrValues.keySet(), pcrHashAlg) };
+				TpmHelper.createPcrSelection(pcrValues.keySet(), pcrHashAlg) };
 
 		StartAuthSessionResponse sessionResponse = null;
 		byte[] policyDigest = null;
@@ -209,7 +190,7 @@ public class TpmEngineImpl implements TpmEngine {
 			sessionResponse = tpm.StartAuthSession(TPM_HANDLE.NULL, TPM_HANDLE.NULL, nonceCaller, new byte[0],
 					TPM_SE.POLICY, new TPMT_SYM_DEF(), TPM_ALG_ID.SHA256);
 			tpm.PolicyPCR(sessionResponse.handle, calculatePcrDigest(getPcrValues(pcrNumbers)),
-					new TPMS_PCR_SELECTION[] { createPcrSelection(pcrNumbers, pcrHashAlg) });
+					new TPMS_PCR_SELECTION[] { TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) });
 			return sessionResponse.handle;
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in PolicyPCR()", e);
@@ -250,7 +231,8 @@ public class TpmEngineImpl implements TpmEngine {
 	@Override
 	public byte[] quote(byte[] qualifyingData, Collection<Integer> pcrNumbers) throws TpmEngineException {
 		CreatePrimaryResponse qk = loadQk();
-		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] { createPcrSelection(pcrNumbers, pcrHashAlg) };
+		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
+				TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) };
 
 		byte[] quote = null;
 		try {
@@ -262,41 +244,6 @@ public class TpmEngineImpl implements TpmEngine {
 			tpm.FlushContext(qk.handle);
 		}
 		return quote;
-	}
-
-	@Override
-	public boolean verifyQuote(byte[] quote, byte[] qualifyingData, byte[] quotingKeyPub,
-			Map<Integer, String> pcrValues) throws TpmEngineException {
-		TPMT_PUBLIC remoteQk = null;
-		QuoteResponse remoteQuote = null;
-		try {
-			remoteQuote = QuoteResponse.fromBytes(quote);
-			remoteQk = TPMT_PUBLIC.fromBytes(quotingKeyPub);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error while parsing TPM data structures", e);
-		}
-		// Verify attributes of remote quoting key
-		if (!remoteQk.objectAttributes.hasAttr(TPMA_OBJECT.restricted)) {
-			LOG.warn("Quote verification failed: Remote quoting key is not restricted!");
-			return false;
-		}
-		if (!remoteQk.objectAttributes.hasAttr(TPMA_OBJECT.sign)) {
-			LOG.warn("Quote verification failed: Remote quoting key is not a signing key!");
-			return false;
-		}
-
-		// Validate quote
-		PCR_ReadResponse expectedPcrs = new PCR_ReadResponse();
-		expectedPcrs.pcrSelectionOut = new TPMS_PCR_SELECTION[] { createPcrSelection(pcrValues.keySet(), pcrHashAlg) };
-		expectedPcrs.pcrValues = createPcrDigests(pcrValues);
-		expectedPcrs.pcrUpdateCounter = 0;
-		boolean valid = false;
-		try {
-			valid = remoteQk.validateQuote(expectedPcrs, qualifyingData, remoteQuote);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error while validating quote signature", e);
-		}
-		return valid;
 	}
 
 	@Override
@@ -439,38 +386,6 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (IOException e) {
 			LOG.error("Error while closing TPM connection", e);
 		}
-	}
-
-	@Override
-	public String prettyPrintPublicKey(byte[] publicKey) throws TpmEngineException {
-		TPMT_PUBLIC _publicKey = null;
-		try {
-			_publicKey = TPMT_PUBLIC.fromBytes(publicKey);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error while parsing TPM data structures", e);
-		}
-		return _publicKey.toString();
-	}
-
-	@Override
-	public String prettyPrintQuote(byte[] quote) throws TpmEngineException {
-		QuoteResponse _quote = null;
-		try {
-			_quote = QuoteResponse.fromBytes(quote);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error while parsing TPM data structures", e);
-		}
-		return _quote.toString();
-	}
-
-	public String prettyPrintCertificate(byte[] cert) throws TpmEngineException {
-		CertifyResponse _cert = null;
-		try {
-			_cert = CertifyResponse.fromBytes(cert);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error while parsing TPM data structures", e);
-		}
-		return _cert.toString();
 	}
 
 }
