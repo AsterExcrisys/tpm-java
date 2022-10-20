@@ -1,0 +1,10 @@
+// tpm
+
+apply plugin: 'java-library'
+
+dependencies {
+    implementation group: 'com.microsoft.azure', name: 'TSS.Java', version: '1.0.0'
+    
+    testImplementation group: 'junit', name: 'junit', version: libraryVersions.junit
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: libraryVersions.slf4j
+}

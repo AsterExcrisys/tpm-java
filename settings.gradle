@@ -1,0 +1,5 @@
+rootProject.name = 'tpm-java'
+
+include 'tpm'
+include 'tpm-tester'
+include 'ttp'

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package de.fhg.iosb.iad.tpm.ttp;
+
+option java_multiple_files = true;
+
+service TTPService {
+	rpc getValidPCRValues(TTPRequest) returns (TTPResponse) {}
+}
+
+message TTPRequest {
+	string quotingKeyFingerprint = 1;
+}
+
+message TTPResponse {
+	repeated SystemState trustedStates = 1;
+}
+
+message SystemState {
+	map<uint32, string> pcrValues = 1;
+}
