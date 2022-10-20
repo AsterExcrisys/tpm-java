@@ -1,0 +1,25 @@
+package de.fhg.iosb.iad.ttp;
+
+import com.beust.jcommander.IParameterValidator;
+import com.beust.jcommander.ParameterException;
+
+public class ArgsValidator implements IParameterValidator {
+
+	public void validate(String name, String value) throws ParameterException {
+		if (name.equalsIgnoreCase("-a") || name.equalsIgnoreCase("--address")) {
+			if (value.isEmpty())
+				throw new ParameterException("Invalid address. Found: " + value);
+		}
+
+		if (name.equalsIgnoreCase("-p") || name.equalsIgnoreCase("--port")) {
+			if (Integer.parseInt(value) <= 0)
+				throw new ParameterException("Invalid port. Found: " + value);
+		}
+
+		if (name.equalsIgnoreCase("-f") || name.equalsIgnoreCase("--file")) {
+			if (value.isEmpty())
+				throw new ParameterException("Invalid file. Found: " + value);
+		}
+	}
+
+}
