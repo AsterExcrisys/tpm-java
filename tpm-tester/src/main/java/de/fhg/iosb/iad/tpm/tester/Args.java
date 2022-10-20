@@ -1,4 +1,4 @@
-package de.fhg.iosb.wagner.tpmtester;
+package de.fhg.iosb.iad.tpm.tester;
 
 import java.util.Arrays;
 import java.util.List;

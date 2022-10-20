@@ -1,4 +1,4 @@
-package de.fhg.iosb.wagner.tpmtester;
+package de.fhg.iosb.iad.tpm.tester;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -14,9 +14,9 @@ import de.fhg.iosb.iad.tpm.commons.TpmEngineFactory;
 import de.fhg.iosb.iad.tpm.commons.TpmEngineImpl;
 import de.fhg.iosb.iad.tpm.commons.test.TpmEngineImplTest;
 
-public class Main {
+public class TpmTester {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TpmTester.class);
 
 	public static void main(String[] argv) {
 		Args args = new Args();

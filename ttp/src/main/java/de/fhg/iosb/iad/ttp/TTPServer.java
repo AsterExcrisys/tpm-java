@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.ttp;
+package de.fhg.iosb.iad.ttp;
 
 import java.io.IOException;
 import java.io.InputStream;

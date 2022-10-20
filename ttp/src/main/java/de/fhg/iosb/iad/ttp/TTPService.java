@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.ttp;
+package de.fhg.iosb.iad.ttp;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -7,7 +7,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fhg.iosb.iad.tpm.ttp.database.Database;
+import de.fhg.iosb.iad.tpm.ttp.SystemState;
+import de.fhg.iosb.iad.tpm.ttp.TTPRequest;
+import de.fhg.iosb.iad.tpm.ttp.TTPResponse;
+import de.fhg.iosb.iad.tpm.ttp.TTPServiceGrpc;
+import de.fhg.iosb.iad.ttp.database.Database;
 import io.grpc.stub.StreamObserver;
 
 public class TTPService extends TTPServiceGrpc.TTPServiceImplBase {

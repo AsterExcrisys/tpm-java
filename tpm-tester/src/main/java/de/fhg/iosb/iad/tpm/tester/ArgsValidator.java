@@ -1,4 +1,4 @@
-package de.fhg.iosb.wagner.tpmtester;
+package de.fhg.iosb.iad.tpm.tester;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

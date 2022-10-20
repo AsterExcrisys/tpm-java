@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.ttp;
+package de.fhg.iosb.iad.ttp;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.ttp.database;
+package de.fhg.iosb.iad.ttp.database;
 
 import java.io.File;
 import java.sql.Connection;
