@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
-import de.fhg.iosb.iad.tpm.commons.SecurityHelper;
-import de.fhg.iosb.iad.tpm.commons.TpmEngine.TpmEngineException;
-import de.fhg.iosb.iad.tpm.commons.TpmEngineFactory;
-import de.fhg.iosb.iad.tpm.commons.TpmEngineImpl;
+import de.fhg.iosb.iad.tpm.SecurityHelper;
+import de.fhg.iosb.iad.tpm.TpmEngineFactory;
+import de.fhg.iosb.iad.tpm.TpmEngineImpl;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 
 public class TTPTool {
 

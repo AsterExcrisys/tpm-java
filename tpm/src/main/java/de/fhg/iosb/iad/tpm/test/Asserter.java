@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.commons.test;
+package de.fhg.iosb.iad.tpm.test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

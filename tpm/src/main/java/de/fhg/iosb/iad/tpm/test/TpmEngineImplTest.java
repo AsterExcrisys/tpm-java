@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.commons.test;
+package de.fhg.iosb.iad.tpm.test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fhg.iosb.iad.tpm.commons.SecurityHelper;
-import de.fhg.iosb.iad.tpm.commons.TpmEngine.TpmEngineException;
-import de.fhg.iosb.iad.tpm.commons.TpmEngineImpl;
-import de.fhg.iosb.iad.tpm.commons.TpmQuoteVerifier;
+import de.fhg.iosb.iad.tpm.SecurityHelper;
+import de.fhg.iosb.iad.tpm.TpmEngineImpl;
+import de.fhg.iosb.iad.tpm.TpmQuoteVerifier;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import tss.Helpers;
 import tss.Tpm;
 import tss.TpmException;

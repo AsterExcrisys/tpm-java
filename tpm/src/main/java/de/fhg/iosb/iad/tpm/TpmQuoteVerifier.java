@@ -1,11 +1,11 @@
-package de.fhg.iosb.iad.tpm.commons;
+package de.fhg.iosb.iad.tpm;
 
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fhg.iosb.iad.tpm.commons.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import tss.tpm.PCR_ReadResponse;
 import tss.tpm.QuoteResponse;
 import tss.tpm.TPMA_OBJECT;

@@ -1,6 +1,6 @@
-package de.fhg.iosb.iad.tpm.commons;
+package de.fhg.iosb.iad.tpm;
 
-import de.fhg.iosb.iad.tpm.commons.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import tss.Tpm;
 import tss.TpmFactory;
 

@@ -8,9 +8,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.fhg.iosb.iad.tpm.commons.TpmEngine.TpmEngineException;
-import de.fhg.iosb.iad.tpm.commons.test.Asserter;
-import de.fhg.iosb.iad.tpm.commons.test.TpmEngineImplTest;
+import de.fhg.iosb.iad.tpm.TpmEngineFactory;
+import de.fhg.iosb.iad.tpm.TpmEngineImpl;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.test.Asserter;
+import de.fhg.iosb.iad.tpm.test.TpmEngineImplTest;
 
 /**
  * JUnit Test cases for the TPM engine. For this test suite the MSR.TSS

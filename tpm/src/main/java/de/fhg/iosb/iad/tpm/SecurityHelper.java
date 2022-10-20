@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.commons;
+package de.fhg.iosb.iad.tpm;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

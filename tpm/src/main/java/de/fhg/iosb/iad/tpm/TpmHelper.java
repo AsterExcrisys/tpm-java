@@ -1,10 +1,10 @@
-package de.fhg.iosb.iad.tpm.commons;
+package de.fhg.iosb.iad.tpm;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-import de.fhg.iosb.iad.tpm.commons.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import tss.tpm.CertifyResponse;
 import tss.tpm.QuoteResponse;
 import tss.tpm.TPM2B_DIGEST;
