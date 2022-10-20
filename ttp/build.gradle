@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'application'
 apply plugin: 'com.google.protobuf'
 
-mainClassName = 'de.fhg.iosb.iad.tpm.ttp.TTPServer'
+mainClassName = 'de.fhg.iosb.iad.ttp.TTPServer'
 
 dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j

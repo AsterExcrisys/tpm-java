@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.srat.ttp.database;
+package de.fhg.iosb.iad.ttp.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.fhg.iosb.iad.tpm.ttp.database.Database;
+import de.fhg.iosb.iad.ttp.database.Database;
 
 public class DatabaseTest {
 
