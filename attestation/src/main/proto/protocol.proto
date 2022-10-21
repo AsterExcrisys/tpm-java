@@ -19,8 +19,6 @@ enum ProtocolMessageType {
   SERVER_INIT              = 3;
   CLIENT_ATTESTATION       = 4;
   SERVER_ATTESTATION       = 5;
-  CLIENT_KEY_ESTABLISHMENT = 6;
-  SERVER_KEY_ESTABLISHMENT = 7;
   CLIENT_FINISH            = 8;
   SERVER_FINISH            = 9;
   CLIENT_SUCCESS           = 10;
@@ -33,7 +31,6 @@ message ProtocolMessage {
     AbortMessage abort                         = 2;
     InitMessage init                           = 3;
     AttestationMessage attestation             = 4;
-    KeyEstablishmentMessage key_establishment  = 5;
     FinishMessage finish                       = 6;
     SuccessMessage success                     = 7;
   }
@@ -69,26 +66,23 @@ message AbortMessage {
 message InitMessage {
   // Protocol type.
   ProtocolType protocol_type    = 1;
-  // Public part of the quoting key. May not be set if the protocol does not include attestation.
-  bytes quoting_key             = 2;
-  // Nonce to use in the attestation. May not be set if the protocol does not include attestation.
+  // Nonce to use in the attestation. May not be set if the protocol does not include an attestation.
   bytes nonce                   = 3;
-  // PCR selection to attest. May not be set if the protocol does not include attestation.
+  // PCR selection to attest. May be empty if the protocol does not include an attestation.
   repeated uint32 pcr_selection = 4;
 }
 
 message AttestationMessage {
-  // Signed quote that satisfies the request.
+  // Signed quote that includes the requested PCR selection.
   bytes quote                    = 1;
-  // PCR values that the quote attests to.
-  map<uint32, string> pcr_values = 2;
-}
-
-message KeyEstablishmentMessage {
-  // Public part of a key pair used to certify the encrypted channel.
-  bytes public_key  = 1;
-  // Certification structure that authenticates the public key.
-  bytes certificate = 2;
+  // Public part of the used quoting key.
+  bytes quoting_key              = 2;
+  // PCR values that are included in the quote.
+  map<uint32, string> pcr_values = 3;
+  // Public key that should be used to authenticate the key establishment. May be empty if protocol does not include key establishment.
+  bytes public_key              = 4;
+  // Certification structure that authenticates the public key. May be empty if protocol does not include key establishment.
+  bytes certificate             = 5;
 }
 
 message FinishMessage {

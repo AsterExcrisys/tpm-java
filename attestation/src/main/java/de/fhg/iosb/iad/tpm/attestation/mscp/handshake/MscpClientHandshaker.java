@@ -11,7 +11,6 @@ import de.fhg.iosb.iad.tpm.attestation.AbortMessage.ErrorCode;
 import de.fhg.iosb.iad.tpm.attestation.AttestationMessage;
 import de.fhg.iosb.iad.tpm.attestation.FinishMessage;
 import de.fhg.iosb.iad.tpm.attestation.InitMessage;
-import de.fhg.iosb.iad.tpm.attestation.KeyEstablishmentMessage;
 import de.fhg.iosb.iad.tpm.attestation.ProtocolMessage;
 import de.fhg.iosb.iad.tpm.attestation.ProtocolMessageType;
 import de.fhg.iosb.iad.tpm.attestation.SuccessMessage;
@@ -68,13 +67,7 @@ public class MscpClientHandshaker extends MscpHandshaker {
 			return State.IN_PROGRESS;
 		}
 		case SERVER_ATTESTATION: {
-			handleServerAttestation(inputMessage.getAttestation(), outputMessage.getKeyEstablishmentBuilder());
-			outputMessage.setType(ProtocolMessageType.CLIENT_KEY_ESTABLISHMENT);
-			expectedMessageType = ProtocolMessageType.SERVER_KEY_ESTABLISHMENT;
-			return State.IN_PROGRESS;
-		}
-		case SERVER_KEY_ESTABLISHMENT: {
-			handleServerKeyEstablishment(inputMessage.getKeyEstablishment(), outputMessage.getFinishBuilder());
+			handleServerAttestation(inputMessage.getAttestation(), outputMessage.getFinishBuilder());
 			outputMessage.setType(ProtocolMessageType.CLIENT_FINISH);
 			expectedMessageType = ProtocolMessageType.SERVER_FINISH;
 			return State.IN_PROGRESS;
@@ -110,19 +103,12 @@ public class MscpClientHandshaker extends MscpHandshaker {
 		createAttestation(outputMessage);
 	}
 
-	private void handleServerAttestation(AttestationMessage attestationMessage,
-			KeyEstablishmentMessage.Builder outputMessage) throws HandshakeException {
+	private void handleServerAttestation(AttestationMessage attestationMessage, FinishMessage.Builder outputMessage)
+			throws HandshakeException {
 		LOG.debug("Received SERVER_ATTESTATION\n{}", attestationMessage);
 		handleAttestation(attestationMessage);
-		createKeyEstablishment(outputMessage);
-		LOG.debug("SERVER_ATTESTATION succesfully verified");
-	}
-
-	private void handleServerKeyEstablishment(KeyEstablishmentMessage keyEstablishmentMessage,
-			FinishMessage.Builder outputMessage) throws HandshakeException {
-		LOG.debug("Received SERVER_KEY_ESTABLISHMENT\n{}", keyEstablishmentMessage);
-		handleKeyEstablishment(keyEstablishmentMessage);
 		createFinish(outputMessage);
+		LOG.debug("SERVER_ATTESTATION succesfully verified");
 	}
 
 	private void handleServerFinish(FinishMessage finishMessage, SuccessMessage.Builder outputMessage)

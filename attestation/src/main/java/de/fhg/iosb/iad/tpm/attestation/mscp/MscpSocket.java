@@ -75,7 +75,7 @@ public class MscpSocket extends Socket implements AttestedSocket {
 		try {
 			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			byte[] keyBytes = keyFactory
-					.generateSecret(new PBEKeySpec(new String(handshaker.getGeneratedDhZ()).toCharArray(),
+					.generateSecret(new PBEKeySpec(new String(handshaker.getGeneratedSecret()).toCharArray(),
 							handshaker.getRandomIv(), 1024, 128))
 					.getEncoded();
 			SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");

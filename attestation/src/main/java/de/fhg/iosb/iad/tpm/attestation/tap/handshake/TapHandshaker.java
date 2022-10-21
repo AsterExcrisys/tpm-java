@@ -8,8 +8,11 @@ import java.util.Map;
 
 import com.google.protobuf.ByteString;
 
+import de.fhg.iosb.iad.tpm.TpmEngine;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.TpmValidator;
+import de.fhg.iosb.iad.tpm.TpmValidator.TpmValidationException;
 import de.fhg.iosb.iad.tpm.attestation.AbortMessage.ErrorCode;
 import de.fhg.iosb.iad.tpm.attestation.AttestationMessage;
 import de.fhg.iosb.iad.tpm.attestation.Handshaker;
@@ -42,19 +45,11 @@ public abstract class TapHandshaker extends Handshaker {
 	}
 
 	protected void createInit(InitMessage.Builder builder) throws HandshakeException {
-		System.out.println("Protocol type is: " + getProtocolType());
 		builder.setProtocolType(getProtocolType());
 		SecureRandom r = new SecureRandom();
 		r.nextBytes(selfNonce);
 		builder.setNonce(ByteString.copyFrom(selfNonce));
 		builder.addAllPcrSelection(config.getPcrSelection());
-
-		try {
-			selfQk = config.getTpmEngine().getQkPub();
-			builder.setQuotingKey(ByteString.copyFrom(selfQk));
-		} catch (TpmEngineException e) {
-			throw new HandshakeException("Error while using the TPM.", e);
-		}
 	}
 
 	protected void handleInit(InitMessage message) throws HandshakeException {
@@ -63,34 +58,49 @@ public abstract class TapHandshaker extends Handshaker {
 					"Expected protocol type " + getProtocolType() + ", but got " + message.getProtocolType());
 
 		peerNonce = message.getNonce().toByteArray();
-		peerQk = message.getQuotingKey().toByteArray();
 		peerPcrSelection = message.getPcrSelectionList();
 	}
 
 	protected void createAttestation(AttestationMessage.Builder builder) throws HandshakeException {
-		try {
-			builder.putAllPcrValues(config.getTpmEngine().getPcrValues(peerPcrSelection));
-			byte[] quote = config.getTpmEngine().quote(peerNonce, peerPcrSelection);
-			builder.setQuote(ByteString.copyFrom(quote));
-		} catch (TpmEngineException e) {
-			throw new HandshakeException("Error while using the TPM.", e);
+		TpmEngine tpmEngine = config.getTpmEngine();
+		synchronized (tpmEngine) {
+			TpmLoadedKey qk = null;
+			try {
+				qk = tpmEngine.loadQk();
+				selfQk = qk.outPublic;
+				builder.setQuotingKey(ByteString.copyFrom(selfQk));
+				builder.putAllPcrValues(tpmEngine.getPcrValues(peerPcrSelection));
+				byte[] quote = tpmEngine.quote(qk.handle, peerNonce, peerPcrSelection);
+				builder.setQuote(ByteString.copyFrom(quote));
+			} catch (TpmEngineException e) {
+				throw new HandshakeException("Error while using the TPM.", e);
+			} finally {
+				try {
+					if (qk != null)
+						tpmEngine.flushKey(qk.handle);
+				} catch (TpmEngineException e) {
+				}
+			}
 		}
 	}
 
 	protected void handleAttestation(AttestationMessage message) throws HandshakeException {
+		peerQk = message.getQuotingKey().toByteArray();
 		peerPcrValues = message.getPcrValuesMap();
 		byte[] peerQuote = message.getQuote().toByteArray();
 
+		// Validate PCR selection
 		if (!peerPcrValues.keySet().containsAll(config.getPcrSelection())) {
 			throw new HandshakeException(ErrorCode.BAD_PCR_SELECTION,
 					"Requested PCR selection " + config.getPcrSelection() + " but got " + peerPcrValues.keySet());
 		}
 
+		// Validate quote
 		try {
 			if (!new TpmValidator().validateQuote(peerQuote, selfNonce, peerQk, peerPcrValues))
-				throw new HandshakeException(ErrorCode.BAD_QUOTE, "Verification of peer quote failed!");
-		} catch (TpmEngineException e) {
-			throw new HandshakeException("Error while using the TPM.", e);
+				throw new HandshakeException(ErrorCode.BAD_QUOTE, "Validation of peer quote failed!");
+		} catch (TpmValidationException e) {
+			throw new HandshakeException(ErrorCode.BAD_QUOTE, "Validation of peer quote failed!", e);
 		}
 	}
 

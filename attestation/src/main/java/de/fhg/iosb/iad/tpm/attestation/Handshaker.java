@@ -40,7 +40,6 @@ public abstract class Handshaker {
 		if (isAbortMessage(inputMessage) && !inputMessage.hasAbort()
 				|| isInitMessage(inputMessage) && !inputMessage.hasInit()
 				|| isAttestationMessage(inputMessage) && !inputMessage.hasAttestation()
-				|| isKeyEstablishmentMessage(inputMessage) && !inputMessage.hasKeyEstablishment()
 				|| isFinishMessage(inputMessage) && !inputMessage.hasFinish()) {
 			throw new HandshakeException(ErrorCode.BAD_MESSAGE,
 					"Message has missing field for type: " + inputMessage.getType());
@@ -80,11 +79,6 @@ public abstract class Handshaker {
 	private boolean isAttestationMessage(ProtocolMessage message) {
 		return (message.getType() == ProtocolMessageType.CLIENT_ATTESTATION
 				|| message.getType() == ProtocolMessageType.SERVER_ATTESTATION);
-	}
-
-	private boolean isKeyEstablishmentMessage(ProtocolMessage message) {
-		return (message.getType() == ProtocolMessageType.CLIENT_KEY_ESTABLISHMENT
-				|| message.getType() == ProtocolMessageType.SERVER_KEY_ESTABLISHMENT);
 	}
 
 	private boolean isFinishMessage(ProtocolMessage message) {
