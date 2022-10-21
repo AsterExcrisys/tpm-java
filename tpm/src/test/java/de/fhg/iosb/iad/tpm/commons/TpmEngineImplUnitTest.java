@@ -8,9 +8,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.TpmEngineFactory;
 import de.fhg.iosb.iad.tpm.TpmEngineImpl;
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmValidator.TpmValidationException;
 import de.fhg.iosb.iad.tpm.test.Asserter;
 import de.fhg.iosb.iad.tpm.test.TpmEngineImplTest;
 
@@ -52,12 +53,12 @@ public class TpmEngineImplUnitTest {
 
 			@Override
 			public void assertNull(Object actual) {
-				Assert.assertNotNull(actual);
+				Assert.assertNull(actual);
 			}
 
 			@Override
 			public void assertNotNull(Object actual) {
-				Assert.assertNull(actual);
+				Assert.assertNotNull(actual);
 			}
 		});
 	}
@@ -75,7 +76,7 @@ public class TpmEngineImplUnitTest {
 
 	@Test
 	@Ignore
-	public void testQuote() throws TpmEngineException {
+	public void testQuote() throws TpmEngineException, TpmValidationException {
 		tpmTest.testQuote();
 	}
 
@@ -87,7 +88,7 @@ public class TpmEngineImplUnitTest {
 
 	@Test
 	@Ignore
-	public void testKeyExchange() throws TpmEngineException {
+	public void testKeyExchange() throws TpmEngineException, TpmValidationException {
 		tpmTest.testKeyExchange();
 	}
 

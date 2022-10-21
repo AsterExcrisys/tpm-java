@@ -81,63 +81,83 @@ public interface TpmEngine {
 	byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues, TPM_ALG_ID authHashAlg) throws TpmEngineException;
 
 	/**
-	 * Get the public part of the used quoting key.
+	 * Start an authorization session using a PCR policy.
 	 * 
-	 * @return Public part of the quoting key. The exact structure depends on the
-	 *         implementation. Transmit this value to verifyQuote() on the remote
-	 *         system.
+	 * @param pcrNumbers  Numbers of the PCRs to load in the policy.
+	 * @param nonceCaller Nonce of the caller to include in the authorization
+	 *                    session.
+	 * @return Handle of the started authorization session.
 	 */
-	byte[] getQkPub() throws TpmEngineException;
+	int startPcrPolicyAuthSession(Collection<Integer> pcrNumbers, byte[] nonceCaller) throws TpmEngineException;
+
+	/**
+	 * Load the quoting key.
+	 * 
+	 * @return The loaded quoting key.
+	 */
+	TpmLoadedKey loadQk() throws TpmEngineException;
+
+	/**
+	 * Load the storage root key.
+	 * 
+	 * @return The storage root key.
+	 */
+	TpmLoadedKey loadSrk() throws TpmEngineException;
+
+	/**
+	 * Creates an ephemeral Diffie-Hellman key pair.
+	 * 
+	 * @param rootKeyHandle Handle of the key to use as root.
+	 * @return Created Diffie-Hellman key pair.
+	 */
+	TpmKey createEphemeralDhKey(int rootKeyHandle) throws TpmEngineException;
+
+	/**
+	 * Load a key.
+	 * 
+	 * @param rootKeyHandle The handle of the root key to use.
+	 * @param key           The key to load.
+	 * @return Handle of the loaded key.
+	 */
+	int loadKey(int rootKeyHandle, TpmKey key) throws TpmEngineException;
+
+	/**
+	 * Flush a key from the TPM.
+	 * 
+	 * @param handle Key handle to flush.
+	 */
+	void flushKey(int handle) throws TpmEngineException;
+
+	/**
+	 * Certify the public part of a loaded key by signing it with a signature key.
+	 * 
+	 * @param keyHandle      Handle of key to certify.
+	 * @param signerHandle   Handle of key to use for the certification
+	 * @param qualifyingData Nonce to be included in the certificate.
+	 * @return Certificate structure signed with the specified signature key.
+	 */
+	byte[] certifyKey(int keyHandle, int signerHandle, byte[] qualifyingData) throws TpmEngineException;
 
 	/**
 	 * Quote some PCR registers.
 	 * 
-	 * @param qualifyingData User data like nonces to be included in the quote.
-	 * @param pcrNumbers     Numbers of PCR registers to be included in the quote.
-	 * @return the quote. The exact structure depends on the implementation, but it
+	 * @param quotingKeyHandle Handle of the quoting key to use.
+	 * @param qualifyingData   User data like nonces to be included in the quote.
+	 * @param pcrNumbers       Numbers of PCR registers to be included in the quote.
+	 * @return The quote. The exact structure depends on the implementation, but it
 	 *         includes the signature. Transmit this value to verifyQuote() on the
 	 *         remote system.
 	 */
-	byte[] quote(byte[] qualifyingData, Collection<Integer> pcrNumbers) throws TpmEngineException;
+	byte[] quote(int quotingKeyHandle, byte[] qualifyingData, Collection<Integer> pcrNumbers) throws TpmEngineException;
 
 	/**
-	 * Create an ephemeral Diffie-Hellman key pair.
+	 * Generate a shared secret.
 	 * 
-	 * @return Wrapped Diffie-Hellman key pair.
+	 * @param privateKeyHandle Handle of the private key.
+	 * @param publicKey        Public key of the remote party.
+	 * @return Shared secret.
 	 */
-	public byte[] createEphemeralDhKey() throws TpmEngineException;
-
-	/**
-	 * Get the public part of a created DH key.
-	 * 
-	 * @param dhKey Wrapped DH key that has been created by this TPM.
-	 * @return Public part of the key.
-	 */
-	public byte[] getDhKeyPub(byte[] dhKey) throws TpmEngineException;
-
-	/**
-	 * Certify the public part of the created Diffie-Hellman key by signing it with
-	 * the used quoting key.
-	 * 
-	 * @param dhKey          Wrapped DH key that has been created by this TPM.
-	 * @param qualifyingData Nonce of the verifier to be included in the
-	 *                       certificate.
-	 * @return Certificate structure signed with the used quoting key.
-	 */
-	public byte[] certifyEphemeralDhKey(byte[] dhKey, byte[] qualifyingData) throws TpmEngineException;
-
-	/**
-	 * Create a Diffie-Hellman shared secret with the remote party.
-	 * 
-	 * @param dhKey           Wrapped DH key that has been created by this TPM.
-	 * @param peerKeyPub      Public key of the remote party.
-	 * @param peerCertifyInfo Certificate of the remote party.
-	 * @param qualifyingData  My nonce that is expected in the certificate.
-	 * @param quotingKeyPub   Public part of the remote quoting key.
-	 * @return Shared secret or null, if certificate validation failed.
-	 */
-	public byte[] calculateSharedDhSecret(byte[] dhKey, byte[] peerKeyPub, byte[] peerCertifyInfo,
-			byte[] qualifyingData, byte[] quotingKeyPub) throws TpmEngineException;
+	byte[] generateSharedSecret(int privateKeyHandle, byte[] publicKey) throws TpmEngineException;
 
 	/**
 	 * Shut down the TPM and close connection.
@@ -148,6 +168,27 @@ public interface TpmEngine {
 	 * Frees all volatile objects and closes the connection to the TPM.
 	 */
 	void close();
+
+	public class TpmLoadedKey {
+		public final int handle; // TPM_HANDLE.handle
+		public final byte[] outPublic; // TPMT_PUBLIC
+
+		public TpmLoadedKey(int handle, byte[] outPublic) {
+			this.handle = handle;
+			this.outPublic = outPublic;
+		}
+	}
+
+	public class TpmKey {
+		public final byte[] outPrivate; // TPM2B_PRIVATE
+		public final byte[] outPublic; // TPMT_PUBLIC
+
+		public TpmKey(byte[] outPrivate, byte[] outPublic) {
+			this.outPrivate = outPrivate;
+			this.outPublic = outPublic;
+		}
+
+	}
 
 	public class TpmEngineException extends Exception {
 		private static final long serialVersionUID = -1351431211024276395L;

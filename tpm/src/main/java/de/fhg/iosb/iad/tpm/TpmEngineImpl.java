@@ -1,7 +1,6 @@
 package de.fhg.iosb.iad.tpm;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,12 +19,13 @@ import tss.tpm.CreatePrimaryResponse;
 import tss.tpm.CreateResponse;
 import tss.tpm.GetCapabilityResponse;
 import tss.tpm.PCR_ReadResponse;
+import tss.tpm.QuoteResponse;
 import tss.tpm.StartAuthSessionResponse;
 import tss.tpm.TPM2B_DIGEST;
+import tss.tpm.TPM2B_PRIVATE;
 import tss.tpm.TPM2B_PUBLIC_KEY_RSA;
 import tss.tpm.TPMA_OBJECT;
 import tss.tpm.TPML_HANDLE;
-import tss.tpm.TPMS_CERTIFY_INFO;
 import tss.tpm.TPMS_ECC_PARMS;
 import tss.tpm.TPMS_ECC_POINT;
 import tss.tpm.TPMS_KEY_SCHEME_ECDH;
@@ -181,7 +181,8 @@ public class TpmEngineImpl implements TpmEngine {
 		return policyDigest;
 	}
 
-	public synchronized TPM_HANDLE startPcrPolicyAuthSession(Collection<Integer> pcrNumbers, byte[] nonceCaller)
+	@Override
+	public synchronized int startPcrPolicyAuthSession(Collection<Integer> pcrNumbers, byte[] nonceCaller)
 			throws TpmEngineException {
 		StartAuthSessionResponse sessionResponse = null;
 		try {
@@ -189,13 +190,14 @@ public class TpmEngineImpl implements TpmEngine {
 					TPM_SE.POLICY, new TPMT_SYM_DEF(), TPM_ALG_ID.SHA256);
 			tpm.PolicyPCR(sessionResponse.handle, calculatePcrDigest(getPcrValues(pcrNumbers)),
 					new TPMS_PCR_SELECTION[] { TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) });
-			return sessionResponse.handle;
+			return sessionResponse.handle.handle;
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in PolicyPCR()", e);
 		}
 	}
 
-	private synchronized CreatePrimaryResponse loadQk() throws TpmEngineException {
+	@Override
+	public synchronized TpmLoadedKey loadQk() throws TpmEngineException {
 		CreatePrimaryResponse response = null;
 		try {
 			response = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.ENDORSEMENT),
@@ -204,10 +206,11 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
-		return response;
+		return new TpmLoadedKey(response.handle.handle, response.outPublic.toBytes());
 	}
 
-	private synchronized CreatePrimaryResponse loadSrk() throws TpmEngineException {
+	@Override
+	public synchronized TpmLoadedKey loadSrk() throws TpmEngineException {
 		CreatePrimaryResponse response = null;
 		try {
 			response = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.OWNER),
@@ -216,151 +219,89 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
-		return response;
+		return new TpmLoadedKey(response.handle.handle, response.outPublic.toBytes());
 	}
 
 	@Override
-	public synchronized byte[] getQkPub() throws TpmEngineException {
-		CreatePrimaryResponse qk = loadQk();
-		tpm.FlushContext(qk.handle);
-		return qk.outPublic.toBytes();
-	}
-
-	@Override
-	public synchronized byte[] quote(byte[] qualifyingData, Collection<Integer> pcrNumbers) throws TpmEngineException {
-		CreatePrimaryResponse qk = loadQk();
-		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
-				TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) };
-
-		byte[] quote = null;
+	public synchronized TpmKey createEphemeralDhKey(int rootKeyHandle) throws TpmEngineException {
+		CreateResponse response = null;
 		try {
-			quote = tpm.Quote(qk.handle, qualifyingData, new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256), pcrSelection)
-					.toBytes();
-		} catch (Exception e) {
-			throw new TpmEngineException("Error in TPM2_Quote()", e);
-		} finally {
-			tpm.FlushContext(qk.handle);
-		}
-		return quote;
-	}
-
-	@Override
-	public synchronized byte[] createEphemeralDhKey() throws TpmEngineException {
-		// Create new ECDH key pair with SRK as parent
-		CreatePrimaryResponse srk = loadSrk();
-		CreateResponse dhKey = null;
-		try {
-			dhKey = tpm.Create(srk.handle, new TPMS_SENSITIVE_CREATE(new byte[0], new byte[0]), dhTemplate, new byte[0],
-					new TPMS_PCR_SELECTION[0]);
+			response = tpm.Create(TPM_HANDLE.from(rootKeyHandle), new TPMS_SENSITIVE_CREATE(new byte[0], new byte[0]),
+					dhTemplate, new byte[0], new TPMS_PCR_SELECTION[0]);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Create()", e);
-		} finally {
-			tpm.FlushContext(srk.handle);
 		}
-
-		// Return public part of DH key
-		return dhKey.toBytes();
+		return new TpmKey(response.outPrivate.toBytes(), response.outPublic.toBytes());
 	}
 
 	@Override
-	public byte[] getDhKeyPub(byte[] dhKey) throws TpmEngineException {
-		CreateResponse dhKeyResponse = null;
+	public synchronized int loadKey(int rootKeyHandle, TpmKey key) throws TpmEngineException {
+		TPMT_PUBLIC outPublic = null;
+		TPM2B_PRIVATE outPrivate = null;
 		try {
-			dhKeyResponse = CreateResponse.fromBytes(dhKey);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error while parsing TPM data structures", e);
-		}
-		return dhKeyResponse.outPublic.toBytes();
-	}
-
-	@Override
-	public synchronized byte[] certifyEphemeralDhKey(byte[] dhKey, byte[] qualifyingData) throws TpmEngineException {
-		CreateResponse dhKeyResponse = null;
-		try {
-			dhKeyResponse = CreateResponse.fromBytes(dhKey);
+			outPublic = TPMT_PUBLIC.fromBytes(key.outPublic);
+			outPrivate = TPM2B_PRIVATE.fromBytes(key.outPrivate);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error while parsing TPM data structures", e);
 		}
 
-		// First, load the created DH key
-		CreatePrimaryResponse srk = loadSrk();
-		TPM_HANDLE dhKeyH = null;
+		TPM_HANDLE handle = null;
 		try {
-			dhKeyH = tpm.Load(srk.handle, dhKeyResponse.outPrivate, dhKeyResponse.outPublic);
+			handle = tpm.Load(TPM_HANDLE.from(rootKeyHandle), outPrivate, outPublic);
 		} catch (Exception e) {
-			throw new TpmEngineException("Error in TPM2_Load", e);
+			throw new TpmEngineException("Error in TPM2_Create()", e);
 		}
+		return handle.handle;
+	}
 
-		// Then sign the DH key and nonce with the QK
-		CreatePrimaryResponse qk = loadQk();
+	@Override
+	public synchronized void flushKey(int handle) throws TpmEngineException {
+		tpm.FlushContext(TPM_HANDLE.from(handle));
+	}
+
+	@Override
+	public synchronized byte[] certifyKey(int keyHandle, int signerHandle, byte[] qualifyingData)
+			throws TpmEngineException {
 		CertifyResponse cert = null;
 		try {
-			cert = tpm.Certify(dhKeyH, qk.handle, qualifyingData, new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256));
+			cert = tpm.Certify(TPM_HANDLE.from(keyHandle), TPM_HANDLE.from(signerHandle), qualifyingData,
+					new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256));
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Certify", e);
-		} finally {
-			tpm.FlushContext(dhKeyH);
-			tpm.FlushContext(qk.handle);
-			tpm.FlushContext(srk.handle);
 		}
-
-		// Return the certificate info and signature
 		return cert.toBytes();
 	}
 
 	@Override
-	public synchronized byte[] calculateSharedDhSecret(byte[] dhKey, byte[] peerKeyPub, byte[] peerCertifyInfo,
-			byte[] qualifyingData, byte[] quotingKeyPub) throws TpmEngineException {
+	public synchronized byte[] quote(int quotingKeyHandle, byte[] qualifyingData, Collection<Integer> pcrNumbers)
+			throws TpmEngineException {
+		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
+				TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) };
 
-		CreateResponse dhKeyResponse = null;
-		TPMT_PUBLIC remoteDhPub = null;
-		CertifyResponse remoteDhCert = null;
-		TPMT_PUBLIC remoteQk = null;
+		QuoteResponse quote = null;
 		try {
-			dhKeyResponse = CreateResponse.fromBytes(dhKey);
-			remoteDhPub = TPMT_PUBLIC.fromBytes(peerKeyPub);
-			remoteDhCert = CertifyResponse.fromBytes(peerCertifyInfo);
-			remoteQk = TPMT_PUBLIC.fromBytes(quotingKeyPub);
+			quote = tpm.Quote(TPM_HANDLE.from(quotingKeyHandle), qualifyingData,
+					new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256), pcrSelection);
+		} catch (Exception e) {
+			throw new TpmEngineException("Error in TPM2_Quote()", e);
+		}
+		return quote.toBytes();
+	}
+
+	@Override
+	public synchronized byte[] generateSharedSecret(int privateKeyHandle, byte[] publicKey) throws TpmEngineException {
+		TPMT_PUBLIC _publicKey = null;
+		try {
+			_publicKey = TPMT_PUBLIC.fromBytes(publicKey);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error while parsing TPM data structures", e);
 		}
 
-		// Verify that certifyInfo contains the expected nonce
-		if (!Arrays.equals(remoteDhCert.certifyInfo.extraData, qualifyingData)) {
-			LOG.warn("Failed to verify signature of the remote DH public key! Cannot calculate shared secret.");
-			LOG.warn("Reason: The provided DH public key certificate does not contain the expected nonce.");
-			return null;
-		}
-		// Verify that certifyInfo contains the claimed public key
-		if (!Arrays.equals(((TPMS_CERTIFY_INFO) remoteDhCert.certifyInfo.attested).name, remoteDhPub.getName())) {
-			LOG.warn("Failed to verify signature of the remote DH public key! Cannot calculate shared secret.");
-			LOG.warn("Reason: The provided DH public key certificate does not match the presented public key.");
-			return null;
-		}
-		// Verify signature of dhPubKeyA
-		if (!remoteQk.validateSignature(remoteDhCert.certifyInfo.toBytes(), remoteDhCert.signature)) {
-			LOG.warn("Failed to verify signature of the remote DH public key! Cannot calculate shared secret.");
-			LOG.warn("Reason: The certificate signature does not validate under the remote quoting key.");
-			return null;
-		}
-
-		// After verification, load my DH key and generate shared secret
-		CreatePrimaryResponse srk = loadSrk();
-		TPM_HANDLE dhKeyH = null;
-		try {
-			dhKeyH = tpm.Load(srk.handle, dhKeyResponse.outPrivate, dhKeyResponse.outPublic);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error in TPM2_Load", e);
-		}
 		TPMS_ECC_POINT zPoint = null;
 		try {
-			zPoint = tpm.ECDH_ZGen(dhKeyH, (TPMS_ECC_POINT) remoteDhPub.unique);
+			zPoint = tpm.ECDH_ZGen(TPM_HANDLE.from(privateKeyHandle), (TPMS_ECC_POINT) _publicKey.unique);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_ECDH_ZGen", e);
-		} finally {
-			tpm.FlushContext(dhKeyH);
-			tpm.FlushContext(srk.handle);
-			dhKey = null;
 		}
 
 		return zPoint.toBytes();

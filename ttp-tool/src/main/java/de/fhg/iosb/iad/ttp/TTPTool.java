@@ -15,17 +15,25 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
 import de.fhg.iosb.iad.tpm.SecurityHelper;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.TpmEngineFactory;
 import de.fhg.iosb.iad.tpm.TpmEngineImpl;
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 
 public class TTPTool {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TTPTool.class);
 
+	private static String calculateFingerprint(TpmEngineImpl tpmEngine) throws TpmEngineException {
+		TpmLoadedKey qk = tpmEngine.loadQk();
+		String fingerprint = SecurityHelper.sha256String(qk.outPublic);
+		tpmEngine.flushKey(qk.handle);
+		return fingerprint;
+	}
+
 	private static void getFingerprint(TpmEngineImpl tpmEngine) throws TpmEngineException {
 		LOG.info("###################### QK (SHA-256) ############################");
-		LOG.info(SecurityHelper.sha256String(tpmEngine.getQkPub()));
+		LOG.info(calculateFingerprint(tpmEngine));
 		LOG.info("################################################################");
 	}
 
@@ -41,7 +49,7 @@ public class TTPTool {
 		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
 		try {
 			// Insert a new trusted state
-			String systemFingerprint = SecurityHelper.sha256String(tpmEngine.getQkPub());
+			String systemFingerprint = calculateFingerprint(tpmEngine);
 			String trustedState = UUID.randomUUID().toString();
 			String sql = String.format("INSERT INTO TrustedStates(systemFingerprint, trustedState) VALUES('%s', '%s');",
 					systemFingerprint, trustedState);

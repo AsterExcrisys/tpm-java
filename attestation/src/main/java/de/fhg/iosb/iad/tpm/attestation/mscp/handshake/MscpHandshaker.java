@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import com.google.protobuf.ByteString;
 
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
-import de.fhg.iosb.iad.tpm.TpmQuoteVerifier;
+import de.fhg.iosb.iad.tpm.TpmValidator;
 import de.fhg.iosb.iad.tpm.attestation.AbortMessage.ErrorCode;
 import de.fhg.iosb.iad.tpm.attestation.AttestationMessage;
 import de.fhg.iosb.iad.tpm.attestation.FinishMessage;
@@ -70,7 +70,7 @@ public abstract class MscpHandshaker extends TapHandshaker {
 		}
 
 		try {
-			if (!new TpmQuoteVerifier().verifyQuote(peerQuote, selfNonce, peerQk, peerPcrValues))
+			if (!new TpmValidator().validateQuote(peerQuote, selfNonce, peerQk, peerPcrValues))
 				throw new HandshakeException(ErrorCode.BAD_QUOTE, "Verification of peer quote failed!");
 		} catch (TpmEngineException e) {
 			throw new HandshakeException("Error while using the TPM.", e);

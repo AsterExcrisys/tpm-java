@@ -9,8 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import de.fhg.iosb.iad.tpm.SecurityHelper;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmKey;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.TpmEngineImpl;
-import de.fhg.iosb.iad.tpm.TpmQuoteVerifier;
+import de.fhg.iosb.iad.tpm.TpmValidator;
+import de.fhg.iosb.iad.tpm.TpmValidator.TpmValidationException;
 import tss.Helpers;
 import tss.Tpm;
 import tss.TpmException;
@@ -68,94 +71,149 @@ public class TpmEngineImplTest {
 			LOG.info("PCR {} is: {}", pcr, tpmEngine.getPcrValue(pcr));
 	}
 
-	public void testQuote() throws TpmEngineException {
+	public void testQuote() throws TpmEngineException, TpmValidationException {
 		// Put something into the PCRs
 		List<Integer> pcrSelection = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
 		extendPcrsWithRandomData(pcrSelection);
 
-		// Get public part of quoting key
-		byte[] qkPub = tpmEngine.getQkPub();
-		LOG.info("Generated a quoting key of size {} bytes", qkPub.length);
-		// Get some random qualifying data
+		// Load quoting key
+		TpmLoadedKey qk = tpmEngine.loadQk();
+		LOG.info("Loaded a quoting key of size {} bytes", qk.outPublic.length);
+
 		byte[] qualifyingData = Helpers.RandomBytes(17);
-		// Read PCRs to quote
-		Map<Integer, String> pcrs = tpmEngine.getPcrValues(pcrSelection);
-		LOG.info("The current PCR values are: {}", pcrs);
-		// Quote PCRs
-		byte[] quote = tpmEngine.quote(qualifyingData, pcrSelection);
-		LOG.info("Generated a quote of size {} bytes", quote.length);
-		// Verify quote
-		TpmQuoteVerifier verifier = new TpmQuoteVerifier();
-		boolean b = verifier.verifyQuote(quote, qualifyingData, qkPub, pcrs);
+		byte[] quote = null;
+		Map<Integer, String> pcrs = null;
+		try {
+			// Read PCRs to quote
+			pcrs = tpmEngine.getPcrValues(pcrSelection);
+			LOG.info("The current PCR values are: {}", pcrs);
+
+			// Generate quote for the selected PCRs
+			quote = tpmEngine.quote(qk.handle, qualifyingData, pcrSelection);
+			LOG.info("Generated a quote of size {} bytes", quote.length);
+		} finally {
+			// Flush the quoting key
+			tpmEngine.flushKey(qk.handle);
+		}
+
+		// Verify the quote
+		TpmValidator validator = new TpmValidator();
+		boolean b = validator.validateQuote(quote, qualifyingData, qk.outPublic, pcrs);
 		LOG.info("Verifying quote with correct PCRs. Result: {}", b ? "VALID" : "INVALID");
 		a.assertTrue(b);
-		// Change value of one expected PCR and verify again
+
+		// Change value of one expected PCR and verify the quote again
 		pcrs.put(2, "D59AF3AE0DB1648B95B854C3E248D751B8453A6DA86DED2A44C033D08B5B658B");
-		b = verifier.verifyQuote(quote, qualifyingData, qkPub, pcrs);
+		b = validator.validateQuote(quote, qualifyingData, qk.outPublic, pcrs);
 		LOG.info("Verifying quote with wrong PCRs. Result: {}", b ? "VALID!" : "INVALID!");
 		a.assertFalse(b);
 	}
 
 	public void testEphemeralDhKeysAreNotStatic() throws TpmEngineException {
-		// Create an ephemeral DH key pair
-		byte[] dkKey1 = tpmEngine.createEphemeralDhKey();
-		a.assertNotNull(dkKey1);
-		byte[] dkKey2 = tpmEngine.createEphemeralDhKey();
-		a.assertNotNull(dkKey2);
-		a.assertFalse(Arrays.equals(dkKey1, dkKey2));
+		// Load storage root key
+		TpmLoadedKey srk = tpmEngine.loadSrk();
+
+		TpmKey dkKey1 = null;
+		TpmKey dkKey2 = null;
+		try {
+			// Create an ephemeral DH key pair
+			dkKey1 = tpmEngine.createEphemeralDhKey(srk.handle);
+			dkKey2 = tpmEngine.createEphemeralDhKey(srk.handle);
+		} finally {
+			// Flush storage root key
+			tpmEngine.flushKey(srk.handle);
+		}
+
+		a.assertFalse(Arrays.equals(dkKey1.outPublic, dkKey2.outPublic));
 	}
 
-	public void testKeyExchange() throws TpmEngineException {
-		// Alice: Draws random nonce and transmits it to Bob
-		byte[] nonceA = Helpers.RandomBytes(4);
+	public void testKeyExchange() throws TpmEngineException, TpmValidationException {
+		// Load the quoting key and storage root key used for both Alice and Bob
+		TpmLoadedKey qk = tpmEngine.loadQk();
+		TpmLoadedKey srk = tpmEngine.loadSrk();
 
-		// Bob: Draws random nonce and transmits it to Alice
-		byte[] nonceB = Helpers.RandomBytes(4);
+		try {
+			// Alice: Draws random nonce and transmits it to Bob
+			byte[] nonceA = Helpers.RandomBytes(4);
 
-		// Alice: Creates DH key pair
-		byte[] dhKeyA = tpmEngine.createEphemeralDhKey();
-		byte[] dhPubKeyA = tpmEngine.getDhKeyPub(dhKeyA);
-		LOG.info("Created Diffie-Hellman key of size {} bytes for Alice", dhPubKeyA.length);
+			// Bob: Draws random nonce and transmits it to Alice
+			byte[] nonceB = Helpers.RandomBytes(4);
 
-		// Alice: Certifies own DH public key with QK
-		byte[] certA = tpmEngine.certifyEphemeralDhKey(dhKeyA, nonceB);
-		LOG.info("Created Diffie-Hellman certificate of size {} bytes for Alice", certA.length);
+			// Alice: Creates DH key pair
+			TpmKey dhKeyA = tpmEngine.createEphemeralDhKey(srk.handle);
+			byte[] dhKeyPubA = dhKeyA.outPublic;
+			LOG.info("Created Diffie-Hellman key of size {} bytes for Alice", dhKeyPubA.length);
 
-		// Alice: Retrieves public part of the quoting key
-		byte[] qkPubA = tpmEngine.getQkPub();
+			// Alice: Load and certify own DH public key with QK
+			int dhKeyHandleA = tpmEngine.loadKey(srk.handle, dhKeyA);
+			byte[] certA = null;
+			try {
+				certA = tpmEngine.certifyKey(dhKeyHandleA, qk.handle, nonceB);
+				LOG.info("Created Diffie-Hellman certificate of size {} bytes for Alice", certA.length);
+			} finally {
+				tpmEngine.flushKey(dhKeyHandleA);
+			}
 
-		// Alice: Transmits dhPubKeyA, certA and qkPubA to Bob
+			// Alice: Retrieves public part of the quoting key
+			byte[] qkPubA = qk.outPublic;
 
-		// Bob: Creates DH key pair
-		byte[] dhKeyB = tpmEngine.createEphemeralDhKey();
-		byte[] dhPubKeyB = tpmEngine.getDhKeyPub(dhKeyB);
-		LOG.info("Created Diffie-Hellman key of size {} bytes for Bob", dhPubKeyB.length);
+			// Alice: Transmits dhKeyPubA, certA and qkPubA to Bob
 
-		// Bob: Certifies own DH public key with QK (we use the same QK here for
-		// simplicity)
-		byte[] certB = tpmEngine.certifyEphemeralDhKey(dhKeyB, nonceA);
-		LOG.info("Created Diffie-Hellman certificate of size {} bytes for Bob", certB.length);
+			// Bob: Creates DH key pair
+			TpmKey dhKeyB = tpmEngine.createEphemeralDhKey(srk.handle);
+			byte[] dhKeyPubB = dhKeyB.outPublic;
+			LOG.info("Created Diffie-Hellman key of size {} bytes for Bob", dhKeyPubB.length);
 
-		// Bob: Retrieves public part of the quoting key (we use the same QK here for
-		// simplicity)
-		byte[] qkPubB = qkPubA;
+			// Bob: Load and certify own DH public key with QK (we use the same QK here for
+			// simplicity)
+			int dhKeyHandleB = tpmEngine.loadKey(srk.handle, dhKeyB);
+			byte[] certB = null;
+			try {
+				certB = tpmEngine.certifyKey(dhKeyHandleB, qk.handle, nonceA);
+				LOG.info("Created Diffie-Hellman certificate of size {} bytes for Bob", certB.length);
+			} finally {
+				tpmEngine.flushKey(dhKeyHandleB);
+			}
 
-		// Bob: Transmits dhPubKeyB, certB and qkPubB to Bob
+			// Bob: Retrieves public part of the quoting key (we use the same QK here for
+			// simplicity)
+			byte[] qkPubB = qk.outPublic;
 
-		// Alice: Verifies Bob's certificate and calculates shared secret using the TPM
-		byte[] secretA = tpmEngine.calculateSharedDhSecret(dhKeyA, dhPubKeyB, certB, nonceA, qkPubB);
-		a.assertNotNull(secretA);
-		LOG.info("Alice successfully verified Bob's certificate. Her generated secret is: {}",
-				SecurityHelper.bytesToHex(secretA));
+			// Bob: Transmits dhKeyPubB, certB and qkPubB to Bob
 
-		// Bob: Verifies Alice's certificate and calculates shared secret using the TPM
-		byte[] secretB = tpmEngine.calculateSharedDhSecret(dhKeyB, dhPubKeyA, certA, nonceB, qkPubA);
-		a.assertNotNull(secretB);
-		LOG.info("Bob successfully verified Alice's certificate. His generated secret is: {}",
-				SecurityHelper.bytesToHex(secretB));
+			// Alice: Verifies Bob's certificate and calculates shared secret using the TPM
+			a.assertTrue(new TpmValidator().validateKeyCertification(dhKeyPubB, certB, nonceA, qkPubB));
+			dhKeyHandleA = tpmEngine.loadKey(srk.handle, dhKeyA);
+			byte[] secretA = null;
+			try {
+				secretA = tpmEngine.generateSharedSecret(dhKeyHandleA, dhKeyPubB);
+			} finally {
+				tpmEngine.flushKey(dhKeyHandleA);
+			}
+			a.assertNotNull(secretA);
+			LOG.info("Alice successfully verified Bob's certificate. Her generated secret is: {}",
+					SecurityHelper.bytesToHex(secretA));
 
-		LOG.info("Shared secrets {}", (Arrays.equals(secretA, secretB) ? "MATCH!" : "DON'T match!"));
-		a.assertTrue(Arrays.equals(secretA, secretB));
+			// Bob: Verifies Alice's certificate and calculates shared secret using the TPM
+			a.assertTrue(new TpmValidator().validateKeyCertification(dhKeyPubA, certA, nonceB, qkPubA));
+			dhKeyHandleB = tpmEngine.loadKey(srk.handle, dhKeyB);
+			byte[] secretB = null;
+			try {
+				secretB = tpmEngine.generateSharedSecret(dhKeyHandleB, dhKeyPubA);
+			} finally {
+				tpmEngine.flushKey(dhKeyHandleB);
+			}
+			a.assertNotNull(secretB);
+			LOG.info("Bob successfully verified Alice's certificate. His generated secret is: {}",
+					SecurityHelper.bytesToHex(secretB));
+
+			LOG.info("Shared secrets {}", (Arrays.equals(secretA, secretB) ? "MATCH!" : "DON'T match!"));
+			a.assertTrue(Arrays.equals(secretA, secretB));
+		} finally {
+			// Flush storage root key and quoting key
+			tpmEngine.flushKey(srk.handle);
+			tpmEngine.flushKey(qk.handle);
+		}
 	}
 
 	public void testImplicitAttestation() throws TpmEngineException {
@@ -185,7 +243,7 @@ public class TpmEngineImplTest {
 			TPM_HANDLE authHandle = null;
 			try {
 				LOG.info("Loading an implicit attestation key...");
-				authHandle = tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16));
+				authHandle = TPM_HANDLE.from(tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16)));
 				LOG.info("Expected policy digest is: {}", SecurityHelper.bytesToHex(policyDigest));
 				LOG.info("Actual policy digest is:   {}", SecurityHelper.bytesToHex(tpm.PolicyGetDigest(authHandle)));
 
@@ -210,7 +268,7 @@ public class TpmEngineImplTest {
 			boolean success = false;
 			try {
 				LOG.info("Loading the implicit attestation key again after changing the state...");
-				authHandle = tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16));
+				authHandle = TPM_HANDLE.from(tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16)));
 				LOG.info("Expected policy digest is: {}", SecurityHelper.bytesToHex(policyDigest));
 				LOG.info("Actual policy digest is:   {}", SecurityHelper.bytesToHex(tpm.PolicyGetDigest(authHandle)));
 

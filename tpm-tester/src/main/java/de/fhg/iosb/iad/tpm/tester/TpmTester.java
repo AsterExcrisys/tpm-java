@@ -9,9 +9,10 @@ import org.slf4j.LoggerFactory;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.TpmEngineFactory;
 import de.fhg.iosb.iad.tpm.TpmEngineImpl;
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmValidator.TpmValidationException;
 import de.fhg.iosb.iad.tpm.test.TpmEngineImplTest;
 
 public class TpmTester {
@@ -58,7 +59,7 @@ public class TpmTester {
 				LOG.info("********* Finished test in {}ms *********",
 						Duration.between(startTime, Instant.now()).toMillis());
 			}
-		} catch (TpmEngineException e) {
+		} catch (TpmEngineException | TpmValidationException e) {
 			LOG.error("Failed to run tests!", e);
 		}
 
