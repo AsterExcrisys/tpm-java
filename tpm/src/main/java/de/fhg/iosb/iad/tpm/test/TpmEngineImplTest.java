@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fhg.iosb.iad.tpm.SecurityHelper;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.TpmEngineImpl;
 import de.fhg.iosb.iad.tpm.TpmQuoteVerifier;
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import tss.Helpers;
 import tss.Tpm;
 import tss.TpmException;
@@ -170,64 +170,67 @@ public class TpmEngineImplTest {
 		// Create a policy-authorized signing key bound to the created PCR policy.
 		// Note that TPMA_OBJECT.userWithAuth must not be set in this key to enforce
 		// user-level authorization with policy only!
-		TPMT_PUBLIC keyTemplate = new TPMT_PUBLIC(TPM_ALG_ID.SHA256,
-				new TPMA_OBJECT(TPMA_OBJECT.sign, TPMA_OBJECT.sensitiveDataOrigin), policyDigest,
-				new TPMS_RSA_PARMS(new TPMT_SYM_DEF_OBJECT(), new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256), 2048,
-						65537),
-				new TPM2B_PUBLIC_KEY_RSA());
-		Tpm tpm = tpmEngine.getTpmInterface();
-		CreatePrimaryResponse keyResponse = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.ENDORSEMENT),
-				new TPMS_SENSITIVE_CREATE(new byte[0], new byte[0]), keyTemplate, new byte[0],
-				new TPMS_PCR_SELECTION[0]);
+		synchronized (tpmEngine) {
+			Tpm tpm = tpmEngine.getTpmInterface();
+			TPMT_PUBLIC keyTemplate = new TPMT_PUBLIC(TPM_ALG_ID.SHA256,
+					new TPMA_OBJECT(TPMA_OBJECT.sign, TPMA_OBJECT.sensitiveDataOrigin), policyDigest,
+					new TPMS_RSA_PARMS(new TPMT_SYM_DEF_OBJECT(), new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256), 2048,
+							65537),
+					new TPM2B_PUBLIC_KEY_RSA());
+			CreatePrimaryResponse keyResponse = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.ENDORSEMENT),
+					new TPMS_SENSITIVE_CREATE(new byte[0], new byte[0]), keyTemplate, new byte[0],
+					new TPMS_PCR_SELECTION[0]);
 
-		// Start an authorization session and use the new signing key in a valid state
-		TPM_HANDLE authHandle = null;
-		try {
-			LOG.info("Loading an implicit attestation key...");
-			authHandle = tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16));
-			LOG.info("Expected policy digest is: {}", SecurityHelper.bytesToHex(policyDigest));
-			LOG.info("Actual policy digest is:   {}", SecurityHelper.bytesToHex(tpm.PolicyGetDigest(authHandle)));
+			// Start an authorization session and use the new signing key in a valid state
+			TPM_HANDLE authHandle = null;
+			try {
+				LOG.info("Loading an implicit attestation key...");
+				authHandle = tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16));
+				LOG.info("Expected policy digest is: {}", SecurityHelper.bytesToHex(policyDigest));
+				LOG.info("Actual policy digest is:   {}", SecurityHelper.bytesToHex(tpm.PolicyGetDigest(authHandle)));
 
-			// Use the protected signature key in a valid state
-			TPMU_SIGNATURE signature = tpm._withSession(authHandle).Sign(keyResponse.handle,
-					TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, "Something to sign").digest, new TPMS_NULL_SIG_SCHEME(),
-					new TPMT_TK_HASHCHECK());
-			LOG.info("Successfully used the implicit attestation key to create a signature:\n{}", signature.toString());
-		} catch (TpmException e) {
-			LOG.error("Failed to use implicit attestation key in a valid state!", e);
-			tpm.FlushContext(keyResponse.handle);
-			throw e;
-		} finally {
-			if (authHandle != null)
-				tpm.FlushContext(authHandle);
-			authHandle = null;
+				// Use the protected signature key in a valid state
+				TPMU_SIGNATURE signature = tpm._withSession(authHandle).Sign(keyResponse.handle,
+						TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, "Something to sign").digest, new TPMS_NULL_SIG_SCHEME(),
+						new TPMT_TK_HASHCHECK());
+				LOG.info("Successfully used the implicit attestation key to create a signature:\n{}",
+						signature.toString());
+			} catch (TpmException e) {
+				LOG.error("Failed to use implicit attestation key in a valid state!", e);
+				tpm.FlushContext(keyResponse.handle);
+				throw e;
+			} finally {
+				if (authHandle != null)
+					tpm.FlushContext(authHandle);
+				authHandle = null;
+			}
+
+			// Change one of the PCRs and try to use the key again
+			extendPcrsWithRandomData(Arrays.asList(2));
+			boolean success = false;
+			try {
+				LOG.info("Loading the implicit attestation key again after changing the state...");
+				authHandle = tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16));
+				LOG.info("Expected policy digest is: {}", SecurityHelper.bytesToHex(policyDigest));
+				LOG.info("Actual policy digest is:   {}", SecurityHelper.bytesToHex(tpm.PolicyGetDigest(authHandle)));
+
+				// Use the protected signature key in an invalid state. This should fail with
+				// code POLICY_FAIL.
+				tpm._withSession(authHandle).Sign(keyResponse.handle,
+						TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, "Something to sign").digest, new TPMS_NULL_SIG_SCHEME(),
+						new TPMT_TK_HASHCHECK());
+				LOG.error("FAILURE! Created signature despite invalid state!");
+			} catch (TpmException e) {
+				LOG.info("Successfully failed to load the policy because the PCR values are wrong ;)");
+				success = true;
+			} finally {
+				tpm.FlushContext(keyResponse.handle);
+				if (authHandle != null)
+					tpm.FlushContext(authHandle);
+			}
+
+			a.assertTrue(success);
 		}
-
-		// Change one of the PCRs and try to use the key again
-		extendPcrsWithRandomData(Arrays.asList(2));
-		boolean success = false;
-		try {
-			LOG.info("Loading the implicit attestation key again after changing the state...");
-			authHandle = tpmEngine.startPcrPolicyAuthSession(pcrNumbers, Helpers.RandomBytes(16));
-			LOG.info("Expected policy digest is: {}", SecurityHelper.bytesToHex(policyDigest));
-			LOG.info("Actual policy digest is:   {}", SecurityHelper.bytesToHex(tpm.PolicyGetDigest(authHandle)));
-
-			// Use the protected signature key in an invalid state. This should fail with
-			// code POLICY_FAIL.
-			tpm._withSession(authHandle).Sign(keyResponse.handle,
-					TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, "Something to sign").digest, new TPMS_NULL_SIG_SCHEME(),
-					new TPMT_TK_HASHCHECK());
-			LOG.error("FAILURE! Created signature despite invalid state!");
-		} catch (TpmException e) {
-			LOG.info("Successfully failed to load the policy because the PCR values are wrong ;)");
-			success = true;
-		} finally {
-			tpm.FlushContext(keyResponse.handle);
-			if (authHandle != null)
-				tpm.FlushContext(authHandle);
-		}
-
-		a.assertTrue(success);
 	}
 
 }

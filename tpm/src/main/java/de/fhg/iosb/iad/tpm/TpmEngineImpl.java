@@ -86,7 +86,7 @@ public class TpmEngineImpl implements TpmEngine {
 		cleanSlots(TPM_HT.LOADED_SESSION);
 	}
 
-	private void cleanSlots(TPM_HT slotType) {
+	private synchronized void cleanSlots(TPM_HT slotType) {
 		GetCapabilityResponse caps = tpm.GetCapability(TPM_CAP.HANDLES, slotType.toInt() << 24, 8);
 		TPML_HANDLE handles = (TPML_HANDLE) caps.capabilityData;
 
@@ -100,15 +100,15 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public Tpm getTpmInterface() {
+	public synchronized Tpm getTpmInterface() {
 		return tpm;
 	}
 
 	@Override
-	public byte[] getRandomBytes(int number) throws TpmEngineException {
-		tpm.StirRandom(Helpers.RandomBytes(number));
+	public synchronized byte[] getRandomBytes(int number) throws TpmEngineException {
 		byte[] random = null;
 		try {
+			tpm.StirRandom(Helpers.RandomBytes(number));
 			random = tpm.GetRandom(number);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_GetRandom()", e);
@@ -117,7 +117,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public String getPcrValue(int number) throws TpmEngineException {
+	public synchronized String getPcrValue(int number) throws TpmEngineException {
 		PCR_ReadResponse pcrAtStart = null;
 		try {
 			pcrAtStart = tpm.PCR_Read(TPMS_PCR_SELECTION.CreateSelectionArray(pcrHashAlg, number));
@@ -137,7 +137,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public void extendPcr(int number, byte[] data) throws TpmEngineException {
+	public synchronized void extendPcr(int number, byte[] data) throws TpmEngineException {
 		try {
 			tpm.PCR_Event(TPM_HANDLE.pcr(number), data);
 		} catch (Exception e) {
@@ -161,11 +161,10 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues, TPM_ALG_ID authHashAlg)
+	public synchronized byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues, TPM_ALG_ID authHashAlg)
 			throws TpmEngineException {
 		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
 				TpmHelper.createPcrSelection(pcrValues.keySet(), pcrHashAlg) };
-
 		StartAuthSessionResponse sessionResponse = null;
 		byte[] policyDigest = null;
 		try {
@@ -182,9 +181,8 @@ public class TpmEngineImpl implements TpmEngine {
 		return policyDigest;
 	}
 
-	public TPM_HANDLE startPcrPolicyAuthSession(Collection<Integer> pcrNumbers, byte[] nonceCaller)
+	public synchronized TPM_HANDLE startPcrPolicyAuthSession(Collection<Integer> pcrNumbers, byte[] nonceCaller)
 			throws TpmEngineException {
-
 		StartAuthSessionResponse sessionResponse = null;
 		try {
 			sessionResponse = tpm.StartAuthSession(TPM_HANDLE.NULL, TPM_HANDLE.NULL, nonceCaller, new byte[0],
@@ -197,7 +195,7 @@ public class TpmEngineImpl implements TpmEngine {
 		}
 	}
 
-	private CreatePrimaryResponse loadQk() throws TpmEngineException {
+	private synchronized CreatePrimaryResponse loadQk() throws TpmEngineException {
 		CreatePrimaryResponse response = null;
 		try {
 			response = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.ENDORSEMENT),
@@ -209,7 +207,7 @@ public class TpmEngineImpl implements TpmEngine {
 		return response;
 	}
 
-	private CreatePrimaryResponse loadSrk() throws TpmEngineException {
+	private synchronized CreatePrimaryResponse loadSrk() throws TpmEngineException {
 		CreatePrimaryResponse response = null;
 		try {
 			response = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.OWNER),
@@ -222,14 +220,14 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public byte[] getQkPub() throws TpmEngineException {
+	public synchronized byte[] getQkPub() throws TpmEngineException {
 		CreatePrimaryResponse qk = loadQk();
 		tpm.FlushContext(qk.handle);
 		return qk.outPublic.toBytes();
 	}
 
 	@Override
-	public byte[] quote(byte[] qualifyingData, Collection<Integer> pcrNumbers) throws TpmEngineException {
+	public synchronized byte[] quote(byte[] qualifyingData, Collection<Integer> pcrNumbers) throws TpmEngineException {
 		CreatePrimaryResponse qk = loadQk();
 		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
 				TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) };
@@ -247,7 +245,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public byte[] createEphemeralDhKey() throws TpmEngineException {
+	public synchronized byte[] createEphemeralDhKey() throws TpmEngineException {
 		// Create new ECDH key pair with SRK as parent
 		CreatePrimaryResponse srk = loadSrk();
 		CreateResponse dhKey = null;
@@ -276,7 +274,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public byte[] certifyEphemeralDhKey(byte[] dhKey, byte[] qualifyingData) throws TpmEngineException {
+	public synchronized byte[] certifyEphemeralDhKey(byte[] dhKey, byte[] qualifyingData) throws TpmEngineException {
 		CreateResponse dhKeyResponse = null;
 		try {
 			dhKeyResponse = CreateResponse.fromBytes(dhKey);
@@ -311,7 +309,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public byte[] calculateSharedDhSecret(byte[] dhKey, byte[] peerKeyPub, byte[] peerCertifyInfo,
+	public synchronized byte[] calculateSharedDhSecret(byte[] dhKey, byte[] peerKeyPub, byte[] peerCertifyInfo,
 			byte[] qualifyingData, byte[] quotingKeyPub) throws TpmEngineException {
 
 		CreateResponse dhKeyResponse = null;
@@ -369,7 +367,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public void shutdownTpm() throws TpmEngineException {
+	public synchronized void shutdownTpm() throws TpmEngineException {
 		try {
 			if (tpm._getDevice() instanceof TpmDeviceTcp)
 				tpm.Shutdown(TPM_SU.CLEAR);
@@ -380,7 +378,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public void close() {
+	public synchronized void close() {
 		try {
 			tpm.close();
 		} catch (IOException e) {
