@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package de.fhg.iosb.iad.tpm.mscp;
+
+option java_multiple_files = true;
+
+message Greeting {
+  string message = 1;
+}
