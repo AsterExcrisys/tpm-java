@@ -68,10 +68,10 @@ message AbortMessage {
 message InitMessage {
   // Protocol type.
   ProtocolType protocol_type    = 1;
-  // Nonce to use in the attestation. May not be set if the protocol does not include an attestation.
-  bytes nonce                   = 3;
-  // PCR selection to attest. May be empty if the protocol does not include an attestation.
-  repeated uint32 pcr_selection = 4;
+  // Nonce to use in the attestation.
+  bytes nonce                   = 2;
+  // PCR selection to attest.
+  repeated uint32 pcr_selection = 3;
 }
 
 message AttestationMessage {
@@ -82,9 +82,9 @@ message AttestationMessage {
   // PCR values that are included in the quote.
   map<uint32, string> pcr_values = 3;
   // Public key that should be used to authenticate the key establishment. May be empty if protocol does not include key establishment.
-  bytes public_key              = 4;
-  // Certification structure that authenticates the public key. May be empty if protocol does not include key establishment.
-  bytes certificate             = 5;
+  bytes public_key               = 4;
+  // Certification structure that authenticates the public key. May be empty if protocol does not use a certificate in the key establishment.
+  bytes certificate              = 5;
 }
 
 message FinishMessage {

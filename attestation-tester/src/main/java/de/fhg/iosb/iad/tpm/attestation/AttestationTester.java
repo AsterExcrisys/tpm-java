@@ -38,6 +38,9 @@ import de.fhg.iosb.iad.tpm.attestation.mscp.MscpSocket;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapServerSocket;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapSocket;
+import de.fhg.iosb.iad.tpm.attestation.tapdh.TapDhConfiguration;
+import de.fhg.iosb.iad.tpm.attestation.tapdh.TapDhServerSocket;
+import de.fhg.iosb.iad.tpm.attestation.tapdh.TapDhSocket;
 import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslServerSocket;
 import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslServerSocketFactory;
@@ -65,6 +68,8 @@ public class AttestationTester {
 		} else if (type.equalsIgnoreCase("tap-ssl")) {
 			SSLSocketFactory socketFactory = new TapSslSocketFactory(sslContext, new TapSslConfiguration(tpmEngine));
 			return (TapSslSocket) socketFactory.createSocket(host, port);
+		} else if (type.equalsIgnoreCase("tap-dh")) {
+			return new TapDhSocket(host, port, new TapDhConfiguration(tpmEngine));
 		} else if (type.equalsIgnoreCase("mscp")) {
 			return new MscpSocket(host, port, new MscpConfiguration(tpmEngine));
 		} else {
@@ -90,6 +95,8 @@ public class AttestationTester {
 			SSLServerSocketFactory serverSocketFactory = new TapSslServerSocketFactory(sslContext,
 					new TapSslConfiguration(tpmEngine));
 			return (TapSslServerSocket) serverSocketFactory.createServerSocket(port);
+		} else if (type.equalsIgnoreCase("tap-dh")) {
+			return new TapDhServerSocket(port, new TapDhConfiguration(tpmEngine));
 		} else if (type.equalsIgnoreCase("mscp")) {
 			return new MscpServerSocket(port, new MscpConfiguration(tpmEngine));
 		} else {

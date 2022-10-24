@@ -35,13 +35,13 @@ public abstract class TapHandshaker extends Handshaker {
 		this.config = config;
 	}
 
-	public Map<Integer, String> getPeerPcrValues() {
-		return peerPcrValues;
-	}
-
 	@Override
 	public ProtocolType getProtocolType() {
 		return ProtocolType.TPM_TAP;
+	}
+
+	public Map<Integer, String> getPeerPcrValues() {
+		return peerPcrValues;
 	}
 
 	protected void createInit(InitMessage.Builder builder) throws HandshakeException {
