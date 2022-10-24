@@ -44,8 +44,6 @@ public abstract class TapSslHandshaker extends TapHandshaker {
 				selfQk = qk.outPublic;
 				builder.setQuotingKey(ByteString.copyFrom(selfQk));
 				builder.putAllPcrValues(tpmEngine.getPcrValues(peerPcrSelection));
-				System.out.println("Local certs: " + config.getLocalCertificates().length);
-				System.out.println("Remote certs: " + config.getPeerCertificates().length);
 
 				Certificate[] peerCertificates = config.getPeerCertificates();
 				if (peerCertificates == null || peerCertificates.length == 0)
