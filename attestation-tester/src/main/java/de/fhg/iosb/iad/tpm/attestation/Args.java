@@ -15,7 +15,7 @@ public class Args {
 	private int port = 2321;
 
 	@Parameter(names = { "-t",
-			"--type" }, description = "Protocol type to use. Available types are ['plain', 'ssl', 'tap', 'mscp'].")
+			"--type" }, description = "Protocol type to use. Available types are ['plain', 'ssl', 'tap', 'tap-ssl', 'tap-dh', 'mscp'].")
 	private String type = "mscp";
 
 	@Parameter(names = {

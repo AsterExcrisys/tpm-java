@@ -13,11 +13,13 @@ public class TestServer extends Thread {
 	private static final Logger LOG = LoggerFactory.getLogger(TestServer.class);
 
 	private boolean running = false;
+	private final boolean attestable;
 	private final ServerSocket serverSocket;
 
-	public TestServer(ServerSocket serverSocket) {
+	public TestServer(ServerSocket serverSocket, boolean attestable) {
 		assert (serverSocket != null);
 		this.serverSocket = serverSocket;
+		this.attestable = attestable;
 	}
 
 	public boolean isRunning() {
@@ -37,6 +39,11 @@ public class TestServer extends Thread {
 				try {
 					// Wait for client
 					Socket clientSocket = serverSocket.accept();
+
+					if (attestable) {
+						// TODO: Check PCRs
+
+					}
 
 					// Receive greeting
 					Greeting g = Greeting.parseDelimitedFrom(clientSocket.getInputStream());

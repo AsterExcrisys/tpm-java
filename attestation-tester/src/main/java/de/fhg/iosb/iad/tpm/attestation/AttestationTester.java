@@ -1,12 +1,27 @@
 package de.fhg.iosb.iad.tpm.attestation;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedList;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509KeyManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,17 +38,33 @@ import de.fhg.iosb.iad.tpm.attestation.mscp.MscpSocket;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapServerSocket;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapSocket;
+import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslConfiguration;
+import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslServerSocket;
+import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslServerSocketFactory;
+import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslSocket;
+import de.fhg.iosb.iad.tpm.attestation.tapssl.TapSslSocketFactory;
 
 public class AttestationTester {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttestationTester.class);
 
+	private static SSLContext sslContext;
+	private static final String certificatePass = "pass1234";
+
 	private static Socket createSocket(String type, String host, int port, TpmEngine tpmEngine)
 			throws IOException, TpmEngineException {
 		if (type.equalsIgnoreCase("plain")) {
 			return new Socket(host, port);
+		} else if (type.equalsIgnoreCase("ssl")) {
+			SSLSocketFactory socketFactory = sslContext.getSocketFactory();
+			SSLSocket socket = (SSLSocket) socketFactory.createSocket(host, port);
+			socket.setEnabledProtocols(new String[] { "TLSv1.2" });
+			return socket;
 		} else if (type.equalsIgnoreCase("tap")) {
 			return new TapSocket(host, port, new TapConfiguration(tpmEngine));
+		} else if (type.equalsIgnoreCase("tap-ssl")) {
+			SSLSocketFactory socketFactory = new TapSslSocketFactory(sslContext, new TapSslConfiguration(tpmEngine));
+			return (TapSslSocket) socketFactory.createSocket(host, port);
 		} else if (type.equalsIgnoreCase("mscp")) {
 			return new MscpSocket(host, port, new MscpConfiguration(tpmEngine));
 		} else {
@@ -47,8 +78,18 @@ public class AttestationTester {
 			throws IOException, TpmEngineException {
 		if (type.equalsIgnoreCase("plain")) {
 			return new ServerSocket(port);
+		} else if (type.equalsIgnoreCase("ssl")) {
+			SSLServerSocketFactory serverSocketFactory = sslContext.getServerSocketFactory();
+			SSLServerSocket serverSocket = (SSLServerSocket) serverSocketFactory.createServerSocket(port);
+			serverSocket.setNeedClientAuth(true);
+			serverSocket.setEnabledProtocols(new String[] { "TLSv1.2" });
+			return serverSocket;
 		} else if (type.equalsIgnoreCase("tap")) {
 			return new TapServerSocket(port, new TapConfiguration(tpmEngine));
+		} else if (type.equalsIgnoreCase("tap-ssl")) {
+			SSLServerSocketFactory serverSocketFactory = new TapSslServerSocketFactory(sslContext,
+					new TapSslConfiguration(tpmEngine));
+			return (TapSslServerSocket) serverSocketFactory.createServerSocket(port);
 		} else if (type.equalsIgnoreCase("mscp")) {
 			return new MscpServerSocket(port, new MscpConfiguration(tpmEngine));
 		} else {
@@ -56,6 +97,41 @@ public class AttestationTester {
 			System.exit(-1);
 		}
 		return null;
+	}
+
+	private static void initializeSslContext() throws GeneralSecurityException, IOException {
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		InputStream certificate = AttestationTester.class.getClassLoader().getResourceAsStream("certificate.p12");
+		keyStore.load(certificate, certificatePass.toCharArray());
+		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509", "SunJSSE");
+		keyManagerFactory.init(keyStore, certificatePass.toCharArray());
+		X509KeyManager x509KeyManager = null;
+		for (KeyManager keyManager : keyManagerFactory.getKeyManagers()) {
+			if (keyManager instanceof X509KeyManager) {
+				x509KeyManager = (X509KeyManager) keyManager;
+				break;
+			}
+		}
+		if (x509KeyManager == null)
+			throw new IOException("Failed to load X.509 key manager!");
+
+		KeyStore trustStore = KeyStore.getInstance("PKCS12");
+		certificate = AttestationTester.class.getClassLoader().getResourceAsStream("certificate.p12");
+		trustStore.load(certificate, certificatePass.toCharArray());
+		TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("PKIX", "SunJSSE");
+		trustManagerFactory.init(trustStore);
+		X509TrustManager x509TrustManager = null;
+		for (TrustManager trustManager : trustManagerFactory.getTrustManagers()) {
+			if (trustManager instanceof X509TrustManager) {
+				x509TrustManager = (X509TrustManager) trustManager;
+				break;
+			}
+		}
+		if (x509TrustManager == null)
+			throw new IOException("Failed to load X.509 trust manager!");
+
+		sslContext = SSLContext.getInstance("TLS");
+		sslContext.init(new KeyManager[] { x509KeyManager }, new TrustManager[] { x509TrustManager }, null);
 	}
 
 	public static void main(String[] argv) {
@@ -73,16 +149,32 @@ public class AttestationTester {
 			return;
 		}
 
+		// Check the configured protocol type
+		boolean usesSsl = args.getType().equalsIgnoreCase("ssl") || args.getType().equalsIgnoreCase("tap-ssl");
+		boolean usesTpm = args.getType().equalsIgnoreCase("tap") || args.getType().equalsIgnoreCase("tap-ssl")
+				|| args.getType().equalsIgnoreCase("tap-dh") || args.getType().equalsIgnoreCase("mscp");
+
+		// Load SSL certificates
+		if (usesSsl) {
+			try {
+				initializeSslContext();
+			} catch (GeneralSecurityException | IOException e) {
+				LOG.error("Failed to initialize SSL context!", e);
+				System.exit(-1);
+			}
+		}
+
 		// Connect to TPM
 		TpmEngine tpmEngine = null;
-		try {
-			if (args.isSimulator())
-				tpmEngine = TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort());
-			else
-				tpmEngine = TpmEngineFactory.createPlatformInstance();
-		} catch (TpmEngineException e) {
-			LOG.error("Failed to connect to TPM!", e);
-			System.exit(-1);
+		if (usesTpm) {
+			try {
+				tpmEngine = (args.isSimulator())
+						? TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort())
+						: TpmEngineFactory.createPlatformInstance();
+			} catch (TpmEngineException e) {
+				LOG.error("Failed to connect to TPM!", e);
+				System.exit(-1);
+			}
 		}
 
 		// Start server
@@ -90,7 +182,7 @@ public class AttestationTester {
 		try {
 			ServerSocket serverSocket = createServerSocket(args.getType().toUpperCase(), args.getServerPort(),
 					tpmEngine);
-			server = new TestServer(serverSocket);
+			server = new TestServer(serverSocket, usesTpm);
 			server.start();
 		} catch (IOException | TpmEngineException e) {
 			LOG.error("Failed to create {} server!", args.getType().toUpperCase(), e);
@@ -109,43 +201,46 @@ public class AttestationTester {
 				// Create new client and connect
 				Instant startTime = Instant.now();
 				clientSocket = createSocket(args.getType().toUpperCase(), "127.0.0.1", args.getServerPort(), tpmEngine);
-				Duration d = Duration.between(startTime, Instant.now());
-				if (i > 0) { // Remove first run as outlier
-					durations.add(d);
-					LOG.info("Connection {}/{} took {}ms", i, args.getN(), d.toMillis());
+
+				if (usesTpm) {
+					// TODO: Check PCRs
 				}
 
 				// Send message
 				TestClient client = new TestClient(clientSocket);
 				String response = client.greetServer("Hello world :)");
 				LOG.debug("Server responded with: {}", response);
+
+				// Measure time
+				Duration d = Duration.between(startTime, Instant.now());
+				if (i > 0) { // Remove first run as outlier
+					durations.add(d);
+					LOG.info("Connection {}/{} took {}ms", i, args.getN(), d.toMillis());
+				}
 			} catch (IOException | TpmEngineException e) {
 				LOG.error("Failed to connect to server!", e);
-				if (server != null)
-					server.shutdown();
-				System.exit(-1);
+				break;
 			} finally {
-				if (clientSocket != null) {
-					try {
+				try {
+					if (clientSocket != null)
 						clientSocket.close();
-					} catch (IOException e) {
-						LOG.error("Failed to close client connection!", e);
-					}
+				} catch (IOException e) {
+					LOG.error("Failed to close client connection!", e);
 				}
 			}
 		}
 
 		// Shutdown server
-		if (server != null) {
-			try {
+		try {
+			if (server != null) {
 				server.shutdown();
 				server.join();
-			} catch (InterruptedException e) {
-				LOG.error("Failed to shutdown server!", e);
 			}
+		} catch (InterruptedException e) {
+			LOG.error("Failed to shutdown server!", e);
 		}
 
-		// Caculate results
+		// Calculate results
 		double meanMicros = 0;
 		for (Duration d : durations)
 			meanMicros += (double) d.toNanos() / 1000.0d;
