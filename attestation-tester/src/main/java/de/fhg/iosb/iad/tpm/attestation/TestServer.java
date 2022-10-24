@@ -41,8 +41,8 @@ public class TestServer extends Thread {
 					Socket clientSocket = serverSocket.accept();
 
 					if (attestable) {
-						// TODO: Check PCRs
-
+						LOG.info("Client has these PCR values: {}", ((AttestedSocket) clientSocket).getPeerPcrValues());
+						// You should further check the validity of the PCR values...
 					}
 
 					// Receive greeting

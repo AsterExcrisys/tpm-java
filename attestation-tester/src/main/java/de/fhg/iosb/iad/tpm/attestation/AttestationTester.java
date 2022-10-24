@@ -203,7 +203,8 @@ public class AttestationTester {
 				clientSocket = createSocket(args.getType().toUpperCase(), "127.0.0.1", args.getServerPort(), tpmEngine);
 
 				if (usesTpm) {
-					// TODO: Check PCRs
+					LOG.info("Server has these PCR values: {}", ((AttestedSocket) clientSocket).getPeerPcrValues());
+					// You should further check the validity of the PCR values...
 				}
 
 				// Send message
