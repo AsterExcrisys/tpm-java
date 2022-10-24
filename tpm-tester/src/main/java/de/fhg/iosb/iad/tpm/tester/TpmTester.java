@@ -43,7 +43,7 @@ public class TpmTester {
 
 			TpmEngineImplTest tpmTest = new TpmEngineImplTest(tpmEngine);
 			for (String test : args.getTests()) {
-				LOG.info("************* Runnig {} *************", test);
+				LOG.info("************* Running {} *************", test);
 				Instant startTime = Instant.now();
 				if (test.equalsIgnoreCase("testPcrRead"))
 					tpmTest.testPcrRead();
