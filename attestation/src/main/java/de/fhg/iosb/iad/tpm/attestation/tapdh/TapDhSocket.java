@@ -18,7 +18,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.attestation.AttestedSocket;
 import de.fhg.iosb.iad.tpm.attestation.tapdh.handshake.TapDhClientHandshaker;
 import de.fhg.iosb.iad.tpm.attestation.tapdh.handshake.TapDhHandshaker;
@@ -31,18 +30,10 @@ public class TapDhSocket extends Socket implements AttestedSocket {
 	private TapDhHandshaker handshaker;
 	private Cipher encryptCipher, decryptCipher;
 
-	protected TapDhSocket(SocketImpl socketImpl) throws IOException, TpmEngineException {
-		this(socketImpl, new TapDhConfiguration());
-	}
-
 	protected TapDhSocket(SocketImpl socketImpl, TapDhConfiguration config) throws IOException {
 		super(socketImpl);
 		assert (config != null);
 		this.config = config;
-	}
-
-	public TapDhSocket(InetAddress address, int port) throws IOException, TpmEngineException {
-		this(address, port, new TapDhConfiguration());
 	}
 
 	public TapDhSocket(InetAddress address, int port, TapDhConfiguration config) throws IOException {
@@ -50,10 +41,6 @@ public class TapDhSocket extends Socket implements AttestedSocket {
 		assert (config != null);
 		this.config = config;
 		performHandshake(false);
-	}
-
-	public TapDhSocket(String host, int port) throws IOException, TpmEngineException {
-		this(host, port, new TapDhConfiguration());
 	}
 
 	public TapDhSocket(String host, int port, TapDhConfiguration config) throws IOException {

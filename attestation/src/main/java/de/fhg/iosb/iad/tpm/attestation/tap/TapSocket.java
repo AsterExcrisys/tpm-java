@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.net.SocketImpl;
 import java.util.Map;
 
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.attestation.AttestedSocket;
 import de.fhg.iosb.iad.tpm.attestation.tap.handshake.TapClientHandshaker;
 import de.fhg.iosb.iad.tpm.attestation.tap.handshake.TapHandshaker;
@@ -18,18 +17,10 @@ public class TapSocket extends Socket implements AttestedSocket {
 
 	private TapHandshaker handshaker;
 
-	protected TapSocket(SocketImpl socketImpl) throws IOException, TpmEngineException {
-		this(socketImpl, new TapConfiguration());
-	}
-
 	protected TapSocket(SocketImpl socketImpl, TapConfiguration config) throws IOException {
 		super(socketImpl);
 		assert (config != null);
 		this.config = config;
-	}
-
-	public TapSocket(InetAddress address, int port) throws IOException, TpmEngineException {
-		this(address, port, new TapConfiguration());
 	}
 
 	public TapSocket(InetAddress address, int port, TapConfiguration config) throws IOException {
@@ -37,10 +28,6 @@ public class TapSocket extends Socket implements AttestedSocket {
 		assert (config != null);
 		this.config = config;
 		performHandshake(false);
-	}
-
-	public TapSocket(String host, int port) throws IOException, TpmEngineException {
-		this(host, port, new TapConfiguration());
 	}
 
 	public TapSocket(String host, int port, TapConfiguration config) throws IOException {

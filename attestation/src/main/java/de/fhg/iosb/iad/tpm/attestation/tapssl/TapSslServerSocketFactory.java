@@ -7,16 +7,10 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
-
 public class TapSslServerSocketFactory extends SSLServerSocketFactory {
 
 	private final SSLServerSocketFactory socketFactory;
 	private final TapSslConfiguration config;
-
-	public TapSslServerSocketFactory(SSLContext sslContext) throws TpmEngineException {
-		this(sslContext, new TapSslConfiguration());
-	}
 
 	public TapSslServerSocketFactory(SSLContext sslContext, TapSslConfiguration config) {
 		assert (sslContext != null);

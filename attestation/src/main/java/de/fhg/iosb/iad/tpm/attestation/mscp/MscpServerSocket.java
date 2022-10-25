@@ -13,26 +13,14 @@ public class MscpServerSocket extends ServerSocket {
 
 	private final MscpConfiguration config;
 
-	public MscpServerSocket(int port) throws IOException, TpmEngineException {
-		this(port, new MscpConfiguration());
-	}
-
 	public MscpServerSocket(int port, MscpConfiguration config) throws IOException, TpmEngineException {
 		super(port);
 		this.config = config;
 	}
 
-	public MscpServerSocket(int port, int backlog) throws IOException, TpmEngineException {
-		this(port, backlog, new MscpConfiguration());
-	}
-
 	public MscpServerSocket(int port, int backlog, MscpConfiguration config) throws IOException {
 		super(port, backlog);
 		this.config = config;
-	}
-
-	public MscpServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException, TpmEngineException {
-		this(port, backlog, bindAddr, new MscpConfiguration());
 	}
 
 	public MscpServerSocket(int port, int backlog, InetAddress bindAddr, MscpConfiguration config) throws IOException {

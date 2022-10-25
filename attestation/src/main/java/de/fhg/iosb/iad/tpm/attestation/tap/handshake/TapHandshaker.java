@@ -64,9 +64,8 @@ public abstract class TapHandshaker extends Handshaker {
 	protected void createAttestation(AttestationMessage.Builder builder) throws HandshakeException {
 		TpmEngine tpmEngine = config.getTpmEngine();
 		synchronized (tpmEngine) {
-			TpmLoadedKey qk = null;
 			try {
-				qk = tpmEngine.loadQk();
+				TpmLoadedKey qk = config.getQuotingKey();
 				selfQk = qk.outPublic;
 				builder.setQuotingKey(ByteString.copyFrom(selfQk));
 				builder.putAllPcrValues(tpmEngine.getPcrValues(peerPcrSelection));
@@ -74,12 +73,6 @@ public abstract class TapHandshaker extends Handshaker {
 				builder.setQuote(ByteString.copyFrom(quote));
 			} catch (TpmEngineException e) {
 				throw new HandshakeException("Error while using the TPM.", e);
-			} finally {
-				try {
-					if (qk != null)
-						tpmEngine.flushKey(qk.handle);
-				} catch (TpmEngineException e) {
-				}
 			}
 		}
 	}
@@ -103,5 +96,4 @@ public abstract class TapHandshaker extends Handshaker {
 			throw new HandshakeException(ErrorCode.BAD_QUOTE, "Validation of peer quote failed!", e);
 		}
 	}
-
 }

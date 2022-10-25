@@ -13,26 +13,14 @@ public class TapDhServerSocket extends ServerSocket {
 
 	private final TapDhConfiguration config;
 
-	public TapDhServerSocket(int port) throws IOException, TpmEngineException {
-		this(port, new TapDhConfiguration());
-	}
-
 	public TapDhServerSocket(int port, TapDhConfiguration config) throws IOException, TpmEngineException {
 		super(port);
 		this.config = config;
 	}
 
-	public TapDhServerSocket(int port, int backlog) throws IOException, TpmEngineException {
-		this(port, backlog, new TapDhConfiguration());
-	}
-
 	public TapDhServerSocket(int port, int backlog, TapDhConfiguration config) throws IOException {
 		super(port, backlog);
 		this.config = config;
-	}
-
-	public TapDhServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException, TpmEngineException {
-		this(port, backlog, bindAddr, new TapDhConfiguration());
 	}
 
 	public TapDhServerSocket(int port, int backlog, InetAddress bindAddr, TapDhConfiguration config)

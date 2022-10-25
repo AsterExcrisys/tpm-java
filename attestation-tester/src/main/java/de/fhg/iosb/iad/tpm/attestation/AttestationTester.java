@@ -8,6 +8,8 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -31,6 +33,7 @@ import com.beust.jcommander.ParameterException;
 
 import de.fhg.iosb.iad.tpm.TpmEngine;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
+import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.TpmEngineFactory;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpServerSocket;
@@ -51,11 +54,16 @@ public class AttestationTester {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttestationTester.class);
 
+	private static final Collection<Integer> pcrSelection = Arrays.asList(0, 1, 2, 3);
+
 	private static SSLContext sslContext;
 	private static final String certificatePass = "pass1234";
 
-	private static Socket createSocket(String type, String host, int port, TpmEngine tpmEngine)
-			throws IOException, TpmEngineException {
+	private static TpmEngine tpmEngine = null;
+	private static TpmLoadedKey qk = null;
+	private static TpmLoadedKey srk = null;
+
+	private static Socket createSocket(String type, String host, int port) throws IOException, TpmEngineException {
 		if (type.equalsIgnoreCase("plain")) {
 			return new Socket(host, port);
 		} else if (type.equalsIgnoreCase("ssl")) {
@@ -64,14 +72,15 @@ public class AttestationTester {
 			socket.setEnabledProtocols(new String[] { "TLSv1.2" });
 			return socket;
 		} else if (type.equalsIgnoreCase("tap")) {
-			return new TapSocket(host, port, new TapConfiguration(tpmEngine));
+			return new TapSocket(host, port, new TapConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("tap-ssl")) {
-			SSLSocketFactory socketFactory = new TapSslSocketFactory(sslContext, new TapSslConfiguration(tpmEngine));
+			SSLSocketFactory socketFactory = new TapSslSocketFactory(sslContext,
+					new TapSslConfiguration(tpmEngine, qk, pcrSelection));
 			return (TapSslSocket) socketFactory.createSocket(host, port);
 		} else if (type.equalsIgnoreCase("tap-dh")) {
-			return new TapDhSocket(host, port, new TapDhConfiguration(tpmEngine));
+			return new TapDhSocket(host, port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp")) {
-			return new MscpSocket(host, port, new MscpConfiguration(tpmEngine));
+			return new MscpSocket(host, port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else {
 			LOG.error("Invalid protocol type: {}", type);
 			System.exit(-1);
@@ -79,8 +88,7 @@ public class AttestationTester {
 		return null;
 	}
 
-	private static ServerSocket createServerSocket(String type, int port, TpmEngine tpmEngine)
-			throws IOException, TpmEngineException {
+	private static ServerSocket createServerSocket(String type, int port) throws IOException, TpmEngineException {
 		if (type.equalsIgnoreCase("plain")) {
 			return new ServerSocket(port);
 		} else if (type.equalsIgnoreCase("ssl")) {
@@ -90,15 +98,15 @@ public class AttestationTester {
 			serverSocket.setEnabledProtocols(new String[] { "TLSv1.2" });
 			return serverSocket;
 		} else if (type.equalsIgnoreCase("tap")) {
-			return new TapServerSocket(port, new TapConfiguration(tpmEngine));
+			return new TapServerSocket(port, new TapConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("tap-ssl")) {
 			SSLServerSocketFactory serverSocketFactory = new TapSslServerSocketFactory(sslContext,
-					new TapSslConfiguration(tpmEngine));
+					new TapSslConfiguration(tpmEngine, qk, pcrSelection));
 			return (TapSslServerSocket) serverSocketFactory.createServerSocket(port);
 		} else if (type.equalsIgnoreCase("tap-dh")) {
-			return new TapDhServerSocket(port, new TapDhConfiguration(tpmEngine));
+			return new TapDhServerSocket(port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp")) {
-			return new MscpServerSocket(port, new MscpConfiguration(tpmEngine));
+			return new MscpServerSocket(port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else {
 			LOG.error("Invalid protocol type: {}", type);
 			System.exit(-1);
@@ -141,6 +149,19 @@ public class AttestationTester {
 		sslContext.init(new KeyManager[] { x509KeyManager }, new TrustManager[] { x509TrustManager }, null);
 	}
 
+	private static void flushTpmKeys() {
+		if (tpmEngine == null)
+			return;
+		try {
+			if (qk != null)
+				tpmEngine.flushKey(qk.handle);
+			if (srk != null)
+				tpmEngine.flushKey(srk.handle);
+		} catch (TpmEngineException e) {
+			LOG.error("Failed to flush TPM keys!", e);
+		}
+	}
+
 	public static void main(String[] argv) {
 		Args args = new Args();
 		JCommander argsParser = JCommander.newBuilder().addObject(args).build();
@@ -172,14 +193,16 @@ public class AttestationTester {
 		}
 
 		// Connect to TPM
-		TpmEngine tpmEngine = null;
 		if (usesTpm) {
 			try {
 				tpmEngine = (args.isSimulator())
 						? TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort())
 						: TpmEngineFactory.createPlatformInstance();
+				qk = tpmEngine.loadQk();
+				srk = tpmEngine.loadSrk();
 			} catch (TpmEngineException e) {
 				LOG.error("Failed to connect to TPM!", e);
+				flushTpmKeys();
 				System.exit(-1);
 			}
 		}
@@ -187,12 +210,12 @@ public class AttestationTester {
 		// Start server
 		TestServer server = null;
 		try {
-			ServerSocket serverSocket = createServerSocket(args.getType().toUpperCase(), args.getServerPort(),
-					tpmEngine);
+			ServerSocket serverSocket = createServerSocket(args.getType().toUpperCase(), args.getServerPort());
 			server = new TestServer(serverSocket, usesTpm);
 			server.start();
 		} catch (IOException | TpmEngineException e) {
 			LOG.error("Failed to create {} server!", args.getType().toUpperCase(), e);
+			flushTpmKeys();
 			System.exit(-1);
 		}
 		LOG.info("Started {} server on port {}...", args.getType().toUpperCase(), args.getServerPort());
@@ -207,7 +230,7 @@ public class AttestationTester {
 			try {
 				// Create new client and connect
 				Instant startTime = Instant.now();
-				clientSocket = createSocket(args.getType().toUpperCase(), "127.0.0.1", args.getServerPort(), tpmEngine);
+				clientSocket = createSocket(args.getType().toUpperCase(), "127.0.0.1", args.getServerPort());
 
 				if (usesTpm) {
 					LOG.info("Server has these PCR values: {}", ((AttestedSocket) clientSocket).getPeerPcrValues());
@@ -237,6 +260,7 @@ public class AttestationTester {
 				}
 			}
 		}
+		flushTpmKeys();
 
 		// Shutdown server
 		try {

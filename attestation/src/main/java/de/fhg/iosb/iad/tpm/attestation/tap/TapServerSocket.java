@@ -13,30 +13,21 @@ public class TapServerSocket extends ServerSocket {
 
 	private final TapConfiguration config;
 
-	public TapServerSocket(int port) throws IOException, TpmEngineException {
-		this(port, new TapConfiguration());
-	}
-
 	public TapServerSocket(int port, TapConfiguration config) throws IOException, TpmEngineException {
 		super(port);
+		assert (config != null);
 		this.config = config;
-	}
-
-	public TapServerSocket(int port, int backlog) throws IOException, TpmEngineException {
-		this(port, backlog, new TapConfiguration());
 	}
 
 	public TapServerSocket(int port, int backlog, TapConfiguration config) throws IOException {
 		super(port, backlog);
+		assert (config != null);
 		this.config = config;
-	}
-
-	public TapServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException, TpmEngineException {
-		this(port, backlog, bindAddr, new TapConfiguration());
 	}
 
 	public TapServerSocket(int port, int backlog, InetAddress bindAddr, TapConfiguration config) throws IOException {
 		super(port, backlog, bindAddr);
+		assert (config != null);
 		this.config = config;
 	}
 

@@ -57,11 +57,9 @@ public abstract class MscpHandshaker extends TapHandshaker {
 	protected void createAttestation(AttestationMessage.Builder builder) throws HandshakeException {
 		TpmEngine tpmEngine = config.getTpmEngine();
 		synchronized (tpmEngine) {
-			TpmLoadedKey qk = null;
-			TpmLoadedKey srk = null;
 			try {
 				// Create quote
-				qk = tpmEngine.loadQk();
+				TpmLoadedKey qk = config.getQuotingKey();
 				selfQk = qk.outPublic;
 				builder.setQuotingKey(ByteString.copyFrom(selfQk));
 				builder.putAllPcrValues(tpmEngine.getPcrValues(peerPcrSelection));
@@ -69,7 +67,7 @@ public abstract class MscpHandshaker extends TapHandshaker {
 				builder.setQuote(ByteString.copyFrom(quote));
 
 				// Create and certify DH key
-				srk = tpmEngine.loadSrk();
+				TpmLoadedKey srk = config.getRootKey();
 				selfDhKey = tpmEngine.createEphemeralDhKey(srk.handle);
 				builder.setPublicKey(ByteString.copyFrom(selfDhKey.outPublic));
 				int selfDhKeyHandle = tpmEngine.loadKey(srk.handle, selfDhKey);
@@ -81,14 +79,6 @@ public abstract class MscpHandshaker extends TapHandshaker {
 				}
 			} catch (TpmEngineException e) {
 				throw new HandshakeException("Error while using the TPM.", e);
-			} finally {
-				try {
-					if (srk != null)
-						tpmEngine.flushKey(srk.handle);
-					if (qk != null)
-						tpmEngine.flushKey(qk.handle);
-				} catch (TpmEngineException e) {
-				}
 			}
 		}
 	}
@@ -126,9 +116,8 @@ public abstract class MscpHandshaker extends TapHandshaker {
 		// Generate shared secret
 		TpmEngine tpmEngine = config.getTpmEngine();
 		synchronized (tpmEngine) {
-			TpmLoadedKey srk = null;
 			try {
-				srk = tpmEngine.loadSrk();
+				TpmLoadedKey srk = config.getRootKey();
 				int selfDhKeyHandle = tpmEngine.loadKey(srk.handle, selfDhKey);
 				try {
 					generatedSecret = tpmEngine.generateSharedSecret(selfDhKeyHandle, peerDhKeyPub);
@@ -137,12 +126,6 @@ public abstract class MscpHandshaker extends TapHandshaker {
 				}
 			} catch (TpmEngineException e) {
 				throw new HandshakeException("Error while using the TPM.", e);
-			} finally {
-				try {
-					if (srk != null)
-						tpmEngine.flushKey(srk.handle);
-				} catch (TpmEngineException e) {
-				}
 			}
 		}
 	}

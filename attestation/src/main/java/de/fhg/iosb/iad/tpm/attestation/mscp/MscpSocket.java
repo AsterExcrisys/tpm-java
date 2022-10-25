@@ -18,7 +18,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.attestation.AttestedSocket;
 import de.fhg.iosb.iad.tpm.attestation.mscp.handshake.MscpClientHandshaker;
 import de.fhg.iosb.iad.tpm.attestation.mscp.handshake.MscpHandshaker;
@@ -31,18 +30,10 @@ public class MscpSocket extends Socket implements AttestedSocket {
 	private MscpHandshaker handshaker;
 	private Cipher encryptCipher, decryptCipher;
 
-	protected MscpSocket(SocketImpl socketImpl) throws IOException, TpmEngineException {
-		this(socketImpl, new MscpConfiguration());
-	}
-
 	protected MscpSocket(SocketImpl socketImpl, MscpConfiguration config) throws IOException {
 		super(socketImpl);
 		assert (config != null);
 		this.config = config;
-	}
-
-	public MscpSocket(InetAddress address, int port) throws IOException, TpmEngineException {
-		this(address, port, new MscpConfiguration());
 	}
 
 	public MscpSocket(InetAddress address, int port, MscpConfiguration config) throws IOException {
@@ -50,10 +41,6 @@ public class MscpSocket extends Socket implements AttestedSocket {
 		assert (config != null);
 		this.config = config;
 		performHandshake(false);
-	}
-
-	public MscpSocket(String host, int port) throws IOException, TpmEngineException {
-		this(host, port, new MscpConfiguration());
 	}
 
 	public MscpSocket(String host, int port, MscpConfiguration config) throws IOException {
