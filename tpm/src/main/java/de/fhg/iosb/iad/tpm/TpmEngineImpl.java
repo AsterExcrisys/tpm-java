@@ -57,6 +57,7 @@ public class TpmEngineImpl implements TpmEngine {
 	private final TPMT_PUBLIC qkTemplate;
 	private final TPMT_PUBLIC srkTemplate;
 	private final TPMT_PUBLIC dhTemplate;
+	private final Timer timer = new Timer();
 
 	protected TpmEngineImpl(Tpm tpm) {
 		assert (tpm != null);
@@ -106,6 +107,7 @@ public class TpmEngineImpl implements TpmEngine {
 
 	@Override
 	public synchronized byte[] getRandomBytes(int number) throws TpmEngineException {
+		timer.tick();
 		byte[] random = null;
 		try {
 			tpm.StirRandom(Helpers.RandomBytes(number));
@@ -113,36 +115,55 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_GetRandom()", e);
 		}
+		LOG.trace("TpmEngine.getRandomBytes() took {}ms", timer.tock().toMillis());
 		return random;
 	}
 
 	@Override
 	public synchronized String getPcrValue(int number) throws TpmEngineException {
-		PCR_ReadResponse pcrAtStart = null;
+		timer.tick();
+		PCR_ReadResponse pcrValue = null;
 		try {
-			pcrAtStart = tpm.PCR_Read(TPMS_PCR_SELECTION.CreateSelectionArray(pcrHashAlg, number));
+			pcrValue = tpm.PCR_Read(TPMS_PCR_SELECTION.CreateSelectionArray(pcrHashAlg, number));
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_PCR_Read()", e);
 		}
-		return SecurityHelper.bytesToHex(pcrAtStart.pcrValues[0].buffer);
+		LOG.trace("TpmEngine.getPcrValue() took {}ms", timer.tock().toMillis());
+		return SecurityHelper.bytesToHex(pcrValue.pcrValues[0].buffer);
 	}
 
 	@Override
 	public Map<Integer, String> getPcrValues(Collection<Integer> numbers) throws TpmEngineException {
+		timer.tick();
 		Map<Integer, String> result = new HashMap<Integer, String>();
-		for (int n : numbers) {
-			result.put(n, getPcrValue(n));
+		int[] numbersArray = numbers.stream().mapToInt(i -> i).toArray();
+		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
+				TpmHelper.createPcrSelection(numbersArray, pcrHashAlg) };
+
+		PCR_ReadResponse pcrValues = null;
+		try {
+			pcrValues = tpm.PCR_Read(pcrSelection);
+		} catch (Exception e) {
+			throw new TpmEngineException("Error in TPM2_PCR_Read()", e);
 		}
+
+		for (int i = 0; i < numbersArray.length; i++) {
+			result.put(numbersArray[i], SecurityHelper.bytesToHex(pcrValues.pcrValues[i].buffer));
+		}
+
+		LOG.trace("TpmEngine.getPcrValues() took {}ms", timer.tock().toMillis());
 		return result;
 	}
 
 	@Override
 	public synchronized void extendPcr(int number, byte[] data) throws TpmEngineException {
+		timer.tick();
 		try {
 			tpm.PCR_Event(TPM_HANDLE.pcr(number), data);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_PCR_Event()", e);
 		}
+		LOG.trace("TpmEngine.extendPcr() took {}ms", timer.tock().toMillis());
 	}
 
 	@Override
@@ -198,6 +219,7 @@ public class TpmEngineImpl implements TpmEngine {
 
 	@Override
 	public synchronized TpmLoadedKey loadQk() throws TpmEngineException {
+		timer.tick();
 		CreatePrimaryResponse response = null;
 		try {
 			response = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.ENDORSEMENT),
@@ -206,11 +228,13 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
+		LOG.trace("TpmEngine.loadQk() took {}ms", timer.tock().toMillis());
 		return new TpmLoadedKey(response.handle.handle, response.outPublic.toBytes());
 	}
 
 	@Override
 	public synchronized TpmLoadedKey loadSrk() throws TpmEngineException {
+		timer.tick();
 		CreatePrimaryResponse response = null;
 		try {
 			response = tpm.CreatePrimary(TPM_HANDLE.from(TPM_RH.OWNER),
@@ -219,11 +243,13 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
+		LOG.trace("TpmEngine.loadSrk() took {}ms", timer.tock().toMillis());
 		return new TpmLoadedKey(response.handle.handle, response.outPublic.toBytes());
 	}
 
 	@Override
 	public synchronized TpmKey createEphemeralDhKey(int rootKeyHandle) throws TpmEngineException {
+		timer.tick();
 		CreateResponse response = null;
 		try {
 			response = tpm.Create(TPM_HANDLE.from(rootKeyHandle), new TPMS_SENSITIVE_CREATE(new byte[0], new byte[0]),
@@ -231,11 +257,13 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Create()", e);
 		}
+		LOG.trace("TpmEngine.createEphemeralDhKey() took {}ms", timer.tock().toMillis());
 		return new TpmKey(response.outPrivate.toBytes(), response.outPublic.toBytes());
 	}
 
 	@Override
 	public synchronized int loadKey(int rootKeyHandle, TpmKey key) throws TpmEngineException {
+		timer.tick();
 		TPMT_PUBLIC outPublic = null;
 		TPM2B_PRIVATE outPrivate = null;
 		try {
@@ -251,17 +279,21 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Create()", e);
 		}
+		LOG.trace("TpmEngine.loadKey() took {}ms", timer.tock().toMillis());
 		return handle.handle;
 	}
 
 	@Override
 	public synchronized void flushKey(int handle) throws TpmEngineException {
+		timer.tick();
 		tpm.FlushContext(TPM_HANDLE.from(handle));
+		LOG.trace("TpmEngine.flushKey() took {}ms", timer.tock().toMillis());
 	}
 
 	@Override
 	public synchronized byte[] certifyKey(int keyHandle, int signerHandle, byte[] qualifyingData)
 			throws TpmEngineException {
+		timer.tick();
 		CertifyResponse cert = null;
 		try {
 			cert = tpm.Certify(TPM_HANDLE.from(keyHandle), TPM_HANDLE.from(signerHandle), qualifyingData,
@@ -269,12 +301,14 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Certify", e);
 		}
+		LOG.trace("TpmEngine.certifyKey() took {}ms", timer.tock().toMillis());
 		return cert.toBytes();
 	}
 
 	@Override
 	public synchronized byte[] quote(int quotingKeyHandle, byte[] qualifyingData, Collection<Integer> pcrNumbers)
 			throws TpmEngineException {
+		timer.tick();
 		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
 				TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) };
 
@@ -285,11 +319,13 @@ public class TpmEngineImpl implements TpmEngine {
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Quote()", e);
 		}
+		LOG.trace("TpmEngine.quote() took {}ms", timer.tock().toMillis());
 		return quote.toBytes();
 	}
 
 	@Override
 	public synchronized byte[] generateSharedSecret(int privateKeyHandle, byte[] publicKey) throws TpmEngineException {
+		timer.tick();
 		TPMT_PUBLIC _publicKey = null;
 		try {
 			_publicKey = TPMT_PUBLIC.fromBytes(publicKey);
@@ -304,6 +340,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_ECDH_ZGen", e);
 		}
 
+		LOG.trace("TpmEngine.generateSharedSecret() took {}ms", timer.tock().toMillis());
 		return zPoint.toBytes();
 	}
 

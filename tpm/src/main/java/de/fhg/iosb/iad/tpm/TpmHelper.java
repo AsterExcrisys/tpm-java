@@ -23,6 +23,18 @@ public final class TpmHelper {
 	 */
 	public static TPMS_PCR_SELECTION createPcrSelection(Collection<Integer> numbers, TPM_ALG_ID hashAlg) {
 		int[] numbersArray = numbers.stream().mapToInt(i -> i).toArray();
+		return createPcrSelection(numbersArray, hashAlg);
+	}
+
+	/**
+	 * Create PCR selection.
+	 * 
+	 * @param numbersArray Numbers of PCR registers to include in the selection.
+	 *                     This array will be sorted by calling this method.
+	 * @param hashAlg      PCR hash algorithm to use.
+	 * @return The PCR selection.
+	 */
+	public static TPMS_PCR_SELECTION createPcrSelection(int[] numbersArray, TPM_ALG_ID hashAlg) {
 		Arrays.sort(numbersArray); // Sort numbers to make result deterministic
 		return new TPMS_PCR_SELECTION(hashAlg, numbersArray);
 	}
