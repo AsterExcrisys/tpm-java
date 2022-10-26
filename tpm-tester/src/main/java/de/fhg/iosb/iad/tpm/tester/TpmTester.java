@@ -36,10 +36,10 @@ public class TpmTester {
 
 		try {
 			TpmEngineImpl tpmEngine;
-			if (args.isSimulator())
-				tpmEngine = TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort());
-			else
+			if (args.isDevice())
 				tpmEngine = TpmEngineFactory.createPlatformInstance();
+			else
+				tpmEngine = TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort());
 
 			TpmEngineImplTest tpmTest = new TpmEngineImplTest(tpmEngine);
 			for (String test : args.getTests()) {
