@@ -1,11 +1,14 @@
 package de.fhg.iosb.iad.tpm.attestation;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.beust.jcommander.Parameter;
 
 public class Args {
 
-	@Parameter(names = { "-s", "--simulator" }, description = "Use TPM simulator instead of the real thing.")
-	private boolean simulator = true;
+	@Parameter(names = { "-d", "--device" }, description = "Use physical TPM device instead of the simulator.")
+	private boolean device = false;
 
 	@Parameter(names = { "-a",
 			"--address" }, description = "Address of the TPM service.", validateWith = ArgsValidator.class)
@@ -15,21 +18,21 @@ public class Args {
 	private int port = 2321;
 
 	@Parameter(names = { "-t",
-			"--type" }, description = "Protocol type to use. Available types are ['plain', 'ssl', 'tap', 'tap-ssl', 'tap-dh', 'mscp'].")
-	private String type = "mscp";
+			"--type" }, description = "Protocol types to test. Available types are ['plain', 'ssl', 'tap', 'tap-uni', 'tap-ssl', 'tap-dh', 'mscp'].")
+	private List<String> types = Arrays.asList("mscp");
 
 	@Parameter(names = {
 			"--serverPort" }, description = "Port to bind the test server to.", validateWith = ArgsValidator.class)
 	private int serverPort = 1501;
 
 	@Parameter(names = { "-n", "--n" }, description = "Number of handshakes to perform.")
-	private int n = 1;
+	private int n = 100;
 
 	@Parameter(names = { "-h", "--help" }, help = true)
 	private boolean help;
 
-	protected boolean isSimulator() {
-		return simulator;
+	protected boolean isDevice() {
+		return device;
 	}
 
 	protected String getAddress() {
@@ -40,8 +43,8 @@ public class Args {
 		return port;
 	}
 
-	protected String getType() {
-		return type;
+	protected List<String> getTypes() {
+		return types;
 	}
 
 	protected int getN() {

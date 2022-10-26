@@ -182,10 +182,10 @@ public class AttestationTester {
 		}
 
 		// Check the configured protocol type
-		boolean usesSsl = args.getType().equalsIgnoreCase("ssl") || args.getType().equalsIgnoreCase("tap-ssl");
-		boolean usesTpm = args.getType().equalsIgnoreCase("tap") || args.getType().equalsIgnoreCase("tap-uni")
-				|| args.getType().equalsIgnoreCase("tap-ssl") || args.getType().equalsIgnoreCase("tap-dh")
-				|| args.getType().equalsIgnoreCase("mscp");
+		boolean usesSsl = args.getTypes().contains("ssl") || args.getTypes().contains("tap-ssl");
+		boolean usesTpm = args.getTypes().contains("tap") || args.getTypes().contains("tap-uni")
+				|| args.getTypes().contains("tap-ssl") || args.getTypes().contains("tap-dh")
+				|| args.getTypes().contains("mscp");
 
 		// Load SSL certificates
 		if (usesSsl) {
@@ -200,9 +200,10 @@ public class AttestationTester {
 		// Connect to TPM
 		if (usesTpm) {
 			try {
-				tpmEngine = (args.isSimulator())
-						? TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort())
-						: TpmEngineFactory.createPlatformInstance();
+				if (args.isDevice())
+					tpmEngine = TpmEngineFactory.createPlatformInstance();
+				else
+					tpmEngine = TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort());
 				LOG.info("Loading TPM keys...");
 				qk = tpmEngine.loadQk();
 				srk = tpmEngine.loadSrk();
@@ -214,91 +215,92 @@ public class AttestationTester {
 			}
 		}
 
-		// Start server
-		TestServer server = null;
-		try {
-			ServerSocket serverSocket = createServerSocket(args.getType().toUpperCase(), args.getServerPort());
-			server = new TestServer(serverSocket, usesTpm);
-			server.start();
-		} catch (IOException | TpmEngineException e) {
-			LOG.error("Failed to create {} server!", args.getType().toUpperCase(), e);
-			flushTpmKeys();
-			System.exit(-1);
-		}
-		LOG.info("Started {} server on port {}...", args.getType().toUpperCase(), args.getServerPort());
-
-		LOG.info("Connecting to server {} times...", args.getN());
-		LOG.info("##### START ###################################");
-
-		// Connect to the server
-		LinkedList<Duration> durations = new LinkedList<>();
-		for (int i = 0; i < args.getN() + 1; i++) {
-			Socket clientSocket = null;
+		for (String type : args.getTypes()) {
+			// Start server
+			TestServer server = null;
 			try {
-				// Create new client and connect
-				Instant startTime = Instant.now();
-				clientSocket = createSocket(args.getType().toUpperCase(), "127.0.0.1", args.getServerPort());
-
-				if (usesTpm) {
-					LOG.info("Server has these PCR values: {}", ((AttestedSocket) clientSocket).getPeerPcrValues());
-					// You should further check the validity of the PCR values...
-				}
-
-				// Send message
-				TestClient client = new TestClient(clientSocket);
-				String response = client.greetServer("Hello world :)");
-				LOG.debug("Server responded with: {}", response);
-
-				// Measure time
-				Duration d = Duration.between(startTime, Instant.now());
-				if (i > 0) { // Remove first run as outlier
-					durations.add(d);
-					LOG.info("Connection {}/{} took {}ms", i, args.getN(), d.toMillis());
-				}
+				ServerSocket serverSocket = createServerSocket(type.toUpperCase(), args.getServerPort());
+				server = new TestServer(serverSocket, usesTpm);
+				server.start();
 			} catch (IOException | TpmEngineException e) {
-				LOG.error("Failed to connect to server!", e);
-				break;
-			} finally {
+				LOG.error("Failed to create {} server!", type.toUpperCase(), e);
+				continue;
+			}
+			LOG.info("##### START ###################################");
+			LOG.info("Started {} server on port {}...", type.toUpperCase(), args.getServerPort());
+			LOG.info("Connecting to server {} times...", args.getN());
+
+			// Connect to the server
+			LinkedList<Duration> durations = new LinkedList<>();
+			for (int i = 0; i < args.getN() + 1; i++) {
+				Socket clientSocket = null;
 				try {
-					if (clientSocket != null)
-						clientSocket.close();
-				} catch (IOException e) {
-					LOG.error("Failed to close client connection!", e);
+					// Create new client and connect
+					Instant startTime = Instant.now();
+					clientSocket = createSocket(type.toUpperCase(), "127.0.0.1", args.getServerPort());
+
+					if (usesTpm) {
+						LOG.info("Server has these PCR values: {}", ((AttestedSocket) clientSocket).getPeerPcrValues());
+						// You should further check the validity of the PCR values...
+					}
+
+					// Send message
+					TestClient client = new TestClient(clientSocket);
+					String response = client.greetServer("Hello world :)");
+					LOG.debug("Server responded with: {}", response);
+
+					// Measure time
+					Duration d = Duration.between(startTime, Instant.now());
+					if (i > 0) { // Remove first run as outlier
+						durations.add(d);
+						LOG.info("Connection {}/{} took {}ms", i, args.getN(), d.toMillis());
+					}
+				} catch (IOException | TpmEngineException e) {
+					LOG.error("Failed to connect to server!", e);
+					break;
+				} finally {
+					try {
+						if (clientSocket != null)
+							clientSocket.close();
+					} catch (IOException e) {
+						LOG.error("Failed to close client connection!", e);
+					}
 				}
 			}
-		}
-		flushTpmKeys();
 
-		// Shutdown server
-		try {
-			if (server != null) {
-				server.shutdown();
-				server.join();
+			// Shutdown server
+			try {
+				if (server != null) {
+					server.shutdown();
+					server.join();
+				}
+			} catch (InterruptedException e) {
+				LOG.error("Failed to shutdown server!", e);
 			}
-		} catch (InterruptedException e) {
-			LOG.error("Failed to shutdown server!", e);
+
+			// Calculate results
+			double meanMicros = 0;
+			for (Duration d : durations)
+				meanMicros += (double) d.toNanos() / 1000.0d;
+			meanMicros = meanMicros / durations.size();
+
+			double sddMicros = 0;
+			for (Duration d : durations)
+				sddMicros += (((double) d.toNanos() / 1000.0d) - meanMicros)
+						* (((double) d.toNanos() / 1000.0d) - meanMicros);
+			double varMicros = sddMicros / (durations.size() - 1);
+
+			LOG.info("##### RESULTS ################################");
+			LOG.info("Type:   {}", type.toUpperCase());
+			LOG.info("n     = {}", durations.size());
+			LOG.info("min   = {}ms", Collections.min(durations).toMillis());
+			LOG.info("max   = {}ms", Collections.max(durations).toMillis());
+			LOG.info("mean  = {}ms", meanMicros / 1000.0);
+			LOG.info("sigma = {}us", Math.sqrt(varMicros));
+			LOG.info("##############################################");
 		}
 
-		// Calculate results
-		double meanMicros = 0;
-		for (Duration d : durations)
-			meanMicros += (double) d.toNanos() / 1000.0d;
-		meanMicros = meanMicros / durations.size();
-
-		double sddMicros = 0;
-		for (Duration d : durations)
-			sddMicros += (((double) d.toNanos() / 1000.0d) - meanMicros)
-					* (((double) d.toNanos() / 1000.0d) - meanMicros);
-		double varMicros = sddMicros / (durations.size() - 1);
-
-		LOG.info("##### RESULTS ################################");
-		LOG.info("Type:   {}", args.getType().toUpperCase());
-		LOG.info("n     = {}", durations.size());
-		LOG.info("min   = {}ms", Collections.min(durations).toMillis());
-		LOG.info("max   = {}ms", Collections.max(durations).toMillis());
-		LOG.info("mean  = {}ms", meanMicros / 1000.0);
-		LOG.info("sigma = {}us", Math.sqrt(varMicros));
-		LOG.info("##############################################");
+		flushTpmKeys();
 	}
 
 }
