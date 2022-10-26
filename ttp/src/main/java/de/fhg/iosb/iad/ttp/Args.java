@@ -13,7 +13,7 @@ public class Args {
 	@Parameter(names = { "-n", "--noTLS" }, description = "Offer insecure plaintext connections instead of using TLS.")
 	protected boolean noTLS = false;
 
-	@Parameter(names = "--help", help = true)
+	@Parameter(names = { "-h", "--help" }, help = true)
 	protected boolean help;
 
 }
