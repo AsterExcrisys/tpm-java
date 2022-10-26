@@ -8,9 +8,10 @@ option java_multiple_files = true;
 enum ProtocolType {
   UNKNOWN_PROTOCOL = 0;
   TPM_TAP          = 1;
-  TPM_TAP_SSL      = 2;
-  TPM_TAP_DH       = 3;
-  TPM_MSCP         = 4;
+  TPM_TAP_UNI      = 2;
+  TPM_TAP_SSL      = 3;
+  TPM_TAP_DH       = 4;
+  TPM_MSCP         = 5;
 }
 
 // Enum that describes the type of a protocol message.

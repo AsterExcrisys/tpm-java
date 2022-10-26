@@ -91,9 +91,12 @@ public class TapServerHandshaker extends TapHandshaker {
 	private void handleClientAttestation(AttestationMessage attestationMessage,
 			AttestationMessage.Builder outputMessage) throws HandshakeException {
 		LOG.debug("Received CLIENT_ATTESTATION\n{}", attestationMessage);
-		handleAttestation(attestationMessage);
-		createAttestation(outputMessage);
-		LOG.debug("CLIENT_ATTESTATION succesfully verified");
+		if (config.isAttestClient()) {
+			handleAttestation(attestationMessage);
+			LOG.debug("CLIENT_ATTESTATION succesfully verified");
+		}
+		if (config.isAttestServer())
+			createAttestation(outputMessage);
 	}
 
 	private void handleClientSuccess(SuccessMessage successMessage) throws HandshakeException {

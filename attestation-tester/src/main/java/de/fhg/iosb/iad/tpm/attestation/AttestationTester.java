@@ -73,6 +73,8 @@ public class AttestationTester {
 			return socket;
 		} else if (type.equalsIgnoreCase("tap")) {
 			return new TapSocket(host, port, new TapConfiguration(tpmEngine, qk, pcrSelection));
+		} else if (type.equalsIgnoreCase("tap-uni")) {
+			return new TapSocket(host, port, new TapConfiguration(tpmEngine, qk, pcrSelection, true, false));
 		} else if (type.equalsIgnoreCase("tap-ssl")) {
 			SSLSocketFactory socketFactory = new TapSslSocketFactory(sslContext,
 					new TapSslConfiguration(tpmEngine, qk, pcrSelection));
@@ -99,6 +101,8 @@ public class AttestationTester {
 			return serverSocket;
 		} else if (type.equalsIgnoreCase("tap")) {
 			return new TapServerSocket(port, new TapConfiguration(tpmEngine, qk, pcrSelection));
+		} else if (type.equalsIgnoreCase("tap-uni")) {
+			return new TapServerSocket(port, new TapConfiguration(tpmEngine, qk, pcrSelection, true, false));
 		} else if (type.equalsIgnoreCase("tap-ssl")) {
 			SSLServerSocketFactory serverSocketFactory = new TapSslServerSocketFactory(sslContext,
 					new TapSslConfiguration(tpmEngine, qk, pcrSelection));
@@ -179,8 +183,9 @@ public class AttestationTester {
 
 		// Check the configured protocol type
 		boolean usesSsl = args.getType().equalsIgnoreCase("ssl") || args.getType().equalsIgnoreCase("tap-ssl");
-		boolean usesTpm = args.getType().equalsIgnoreCase("tap") || args.getType().equalsIgnoreCase("tap-ssl")
-				|| args.getType().equalsIgnoreCase("tap-dh") || args.getType().equalsIgnoreCase("mscp");
+		boolean usesTpm = args.getType().equalsIgnoreCase("tap") || args.getType().equalsIgnoreCase("tap-uni")
+				|| args.getType().equalsIgnoreCase("tap-ssl") || args.getType().equalsIgnoreCase("tap-dh")
+				|| args.getType().equalsIgnoreCase("mscp");
 
 		// Load SSL certificates
 		if (usesSsl) {
@@ -198,8 +203,10 @@ public class AttestationTester {
 				tpmEngine = (args.isSimulator())
 						? TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort())
 						: TpmEngineFactory.createPlatformInstance();
+				LOG.info("Loading TPM keys...");
 				qk = tpmEngine.loadQk();
 				srk = tpmEngine.loadSrk();
+				LOG.info("TPM keys loaded");
 			} catch (TpmEngineException e) {
 				LOG.error("Failed to connect to TPM!", e);
 				flushTpmKeys();

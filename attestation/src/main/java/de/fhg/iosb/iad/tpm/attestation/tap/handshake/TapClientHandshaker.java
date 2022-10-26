@@ -94,13 +94,16 @@ public class TapClientHandshaker extends TapHandshaker {
 			throws HandshakeException {
 		LOG.debug("Received SERVER_INIT\n{}", initMessage);
 		handleInit(initMessage);
-		createAttestation(outputMessage);
+		if (config.isAttestClient())
+			createAttestation(outputMessage);
 	}
 
 	private void handleServerAttestation(AttestationMessage attestationMessage, SuccessMessage.Builder outputMessage)
 			throws HandshakeException {
 		LOG.debug("Received SERVER_ATTESTATION\n{}", attestationMessage);
-		handleAttestation(attestationMessage);
-		LOG.debug("SERVER_ATTESTATION succesfully verified");
+		if (config.isAttestServer()) {
+			handleAttestation(attestationMessage);
+			LOG.debug("SERVER_ATTESTATION succesfully verified");
+		}
 	}
 }

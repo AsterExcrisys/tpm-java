@@ -27,7 +27,7 @@ public abstract class TapHandshaker extends Handshaker {
 	protected Collection<Integer> peerPcrSelection;
 	protected Map<Integer, String> peerPcrValues;
 
-	private final TapConfiguration config;
+	protected final TapConfiguration config;
 
 	protected TapHandshaker(InputStream inputStream, OutputStream outputStream, TapConfiguration config) {
 		super(inputStream, outputStream);
@@ -37,6 +37,8 @@ public abstract class TapHandshaker extends Handshaker {
 
 	@Override
 	public ProtocolType getProtocolType() {
+		if (!config.isAttestClient() || !config.isAttestServer())
+			return ProtocolType.TPM_TAP_UNI;
 		return ProtocolType.TPM_TAP;
 	}
 
