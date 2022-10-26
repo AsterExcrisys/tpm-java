@@ -17,7 +17,6 @@ import tss.tpm.TPM_SU;
  * @author wagner
  *
  */
-
 public final class TpmEngineFactory {
 
 	private static boolean tssSimInitialized = false;
@@ -37,8 +36,12 @@ public final class TpmEngineFactory {
 	}
 
 	public static TpmEngineImpl createPlatformInstance() throws TpmEngineException {
+		return createPlatformInstance("localhost", 2323);
+	}
+
+	public static TpmEngineImpl createPlatformInstance(String host, int port) throws TpmEngineException {
 		try {
-			return new TpmEngineImpl(platformTpm());
+			return new TpmEngineImpl(platformTpm(host, port));
 		} catch (Exception e) {
 			throw new TpmEngineException("Failed to connect to platform TPM!", e);
 		}
@@ -56,15 +59,15 @@ public final class TpmEngineFactory {
 		return tpm;
 	}
 
-	private static Tpm remoteTpm(String hostName, int port) {
+	private static Tpm remoteTpm(String host, int port) {
 		Tpm tpm = new Tpm();
-		TpmDevice device = new TpmDeviceTcp(hostName, port);
+		TpmDevice device = new TpmDeviceTcp(host, port);
 		device.connect();
 		tpm._setDevice(device);
 		return tpm;
 	}
 
-	private static Tpm platformTpm() {
+	private static Tpm platformTpm(String host, int port) {
 		Tpm tpm = new Tpm();
 		String osName = System.getProperty("os.name");
 		TpmDevice device = null;
@@ -77,7 +80,7 @@ public final class TpmEngineFactory {
 				device = new TpmDeviceLinux();
 			} catch (Exception e) {
 				// Now try to connect to the user mode TRM (TPM resource manager)
-				device = new TpmDeviceTcp("localhost", 2323, true);
+				device = new TpmDeviceTcp(host, port, true);
 				// System.out.println("Connected to the user mode TPM Resource Manager");
 			}
 		}
