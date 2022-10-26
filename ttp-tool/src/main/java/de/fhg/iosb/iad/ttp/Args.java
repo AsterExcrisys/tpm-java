@@ -7,8 +7,8 @@ import com.beust.jcommander.Parameter;
 
 public class Args {
 
-	@Parameter(names = { "-s", "--simulator" }, description = "Use TPM simulator instead of the real thing.")
-	private boolean simulator = true;
+	@Parameter(names = { "-d", "--device" }, description = "Use physical TPM device instead of the simulator.")
+	private boolean device = false;
 
 	@Parameter(names = { "-a",
 			"--address" }, description = "Address of the TPM service.", validateWith = ArgsValidator.class)
@@ -32,8 +32,8 @@ public class Args {
 	@Parameter(names = { "-h", "--help" }, help = true)
 	private boolean help;
 
-	protected boolean isSimulator() {
-		return simulator;
+	protected boolean isDevice() {
+		return device;
 	}
 
 	protected String getAddress() {

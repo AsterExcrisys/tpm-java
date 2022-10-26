@@ -86,10 +86,10 @@ public class TTPTool {
 
 		try {
 			TpmEngineImpl tpmEngine;
-			if (args.isSimulator())
-				tpmEngine = TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort());
-			else
+			if (args.isDevice())
 				tpmEngine = TpmEngineFactory.createPlatformInstance();
+			else
+				tpmEngine = TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort());
 
 			for (String command : args.getCommands()) {
 				if (command.equalsIgnoreCase("getFingerprint"))
