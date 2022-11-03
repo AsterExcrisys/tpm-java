@@ -1,0 +1,6 @@
+@echo off
+
+echo Running attestation protocol tests using the simulator...
+call build\install\attestation-tester\bin\attestation-tester.bat --type ssl --type tap-uni --type tap --type tap-ssl --type tap-dh --type mscp --n 100 > results-sim.log
+echo Running attestation protocol tests using the physical device...
+call build\install\attestation-tester\bin\attestation-tester.bat --device --type tap-uni --type tap --type tap-ssl --type tap-dh --type mscp --n 100 > results-hw.log
