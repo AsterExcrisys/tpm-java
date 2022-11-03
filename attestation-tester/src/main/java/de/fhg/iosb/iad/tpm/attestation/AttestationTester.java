@@ -220,7 +220,7 @@ public class AttestationTester {
 			TestServer server = null;
 			try {
 				ServerSocket serverSocket = createServerSocket(type.toUpperCase(), args.getServerPort());
-				server = new TestServer(serverSocket, usesTpm);
+				server = new TestServer(serverSocket);
 				server.start();
 			} catch (IOException | TpmEngineException e) {
 				LOG.error("Failed to create {} server!", type.toUpperCase(), e);
@@ -239,7 +239,7 @@ public class AttestationTester {
 					Instant startTime = Instant.now();
 					clientSocket = createSocket(type.toUpperCase(), "127.0.0.1", args.getServerPort());
 
-					if (usesTpm) {
+					if (clientSocket instanceof AttestedSocket) {
 						LOG.info("Server has these PCR values: {}", ((AttestedSocket) clientSocket).getPeerPcrValues());
 						// You should further check the validity of the PCR values...
 					}

@@ -13,13 +13,11 @@ public class TestServer extends Thread {
 	private static final Logger LOG = LoggerFactory.getLogger(TestServer.class);
 
 	private boolean running = false;
-	private final boolean attestable;
 	private final ServerSocket serverSocket;
 
-	public TestServer(ServerSocket serverSocket, boolean attestable) {
+	public TestServer(ServerSocket serverSocket) {
 		assert (serverSocket != null);
 		this.serverSocket = serverSocket;
-		this.attestable = attestable;
 	}
 
 	public boolean isRunning() {
@@ -40,7 +38,7 @@ public class TestServer extends Thread {
 					// Wait for client
 					Socket clientSocket = serverSocket.accept();
 
-					if (attestable) {
+					if (clientSocket instanceof AttestedSocket) {
 						LOG.info("Client has these PCR values: {}", ((AttestedSocket) clientSocket).getPeerPcrValues());
 						// You should further check the validity of the PCR values...
 					}
