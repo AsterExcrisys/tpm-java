@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package de.fhg.iosb.iad.tpm.ttp;
-
+package tpm.ttp;
+option java_package = "de.fhg.iosb.iad.tpm.ttp";
 option java_multiple_files = true;
 
 service TTPService {

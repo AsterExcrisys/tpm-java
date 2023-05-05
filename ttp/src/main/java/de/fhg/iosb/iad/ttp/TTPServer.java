@@ -25,8 +25,8 @@ public class TTPServer {
 		}
 
 		LOG.info("Using database file {}{}{}...", System.getProperty("user.dir"), System.getProperty("file.separator"),
-				args.dbFile);
-		ServerBuilder<?> builder = ServerBuilder.forPort(args.port).addService(new TTPService(args.dbFile));
+				args.db);
+		ServerBuilder<?> builder = ServerBuilder.forPort(args.port).addService(new TTPService(args.db));
 		if (!args.noTLS) {
 			InputStream certChain = TTPServer.class.getResourceAsStream("/ttp.crt");
 			InputStream privateKey = TTPServer.class.getResourceAsStream("/ttp.pem");

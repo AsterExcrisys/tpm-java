@@ -7,8 +7,8 @@ public class Args {
 	@Parameter(names = { "-p", "--port" }, description = "Server port.", validateWith = ArgsValidator.class)
 	protected int port = 5001;
 
-	@Parameter(names = { "-d", "--dbFile" }, description = "Database file.", validateWith = ArgsValidator.class)
-	protected String dbFile = "ttp.sqlite";
+	@Parameter(names = { "-d", "--db" }, description = "Database file.", validateWith = ArgsValidator.class)
+	protected String db = "ttp.sqlite";
 
 	@Parameter(names = { "-n", "--noTLS" }, description = "Offer insecure plaintext connections instead of using TLS.")
 	protected boolean noTLS = false;

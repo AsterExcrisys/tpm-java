@@ -11,9 +11,9 @@ public class ArgsValidator implements IParameterValidator {
 				throw new ParameterException("Invalid port. Found: " + value);
 		}
 
-		if (name.equalsIgnoreCase("-d") || name.equalsIgnoreCase("--dbFile")) {
-			if (value.isEmpty())
-				throw new ParameterException("Invalid database file. Found: " + value);
+		if (name.equalsIgnoreCase("-d") || name.equalsIgnoreCase("--db")) {
+			if (value.isBlank())
+				throw new ParameterException("Database file cannot be empty!");
 		}
 	}
 
