@@ -32,6 +32,7 @@ Currently the library supports the following protocols:
   - TAP (DHKE)
   - TAP (SSL)
   - MSCP
+
 For each protocol, the library provides server and client socket classes.
 Created sockets can be individually configured with uni- or bidirectional attestations and PCR selections.
 Attestations and the establishment of encrypted channels is performed automatically on socket connection.
