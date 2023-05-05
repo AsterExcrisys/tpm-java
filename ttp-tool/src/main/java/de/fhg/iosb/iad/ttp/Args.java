@@ -22,7 +22,7 @@ public class Args {
 	private List<String> commands = Arrays.asList("getFingerprint", "readPcrs");
 
 	@Parameter(names = {
-			"--pcrs" }, description = "Range of PCRs to include. Used for commands 'readPcrs' and 'createSql'.", converter = ArgsIntRangeParser.class)
+			"--pcrs" }, description = "Range of PCRs to include. Used for commands 'readPcrs' and 'createSql'.", listConverter = ArgsIntRangeParser.class)
 	private List<Integer> pcrs = Arrays.asList(0, 1, 2, 3, 4, 5, 6);
 
 	@Parameter(names = { "-f",
