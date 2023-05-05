@@ -3,8 +3,13 @@
 apply plugin: 'java-library'
 
 dependencies {
-    implementation group: 'com.microsoft.azure', name: 'TSS.Java', version: '1.0.0'
-    
-    testImplementation group: 'junit', name: 'junit', version: libraryVersions.junit
-    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: libraryVersions.slf4j
+  implementation group: 'com.microsoft.azure', name: 'TSS.Java', version: '1.0.0'
+  
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: libraryVersions.junit
+  testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: libraryVersions.junit
+  testRuntimeOnly group: 'org.slf4j', name: 'slf4j-simple', version: libraryVersions.slf4j
+}
+
+test {
+  useJUnitPlatform()
 }

@@ -1,37 +1,33 @@
 // attestation
 
 buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.1'
-    }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.3'
+  }
 }
 
 apply plugin: 'java-library'
 apply plugin: 'com.google.protobuf'
 
 dependencies {
-    implementation project(':tpm')
-    
-    implementation group: 'com.google.protobuf', name: 'protobuf-java', version: libraryVersions.protobuf
-    
-    testImplementation group: 'junit', name: 'junit', version: libraryVersions.junit
-    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: libraryVersions.slf4j
+  implementation project(':tpm')
+  
+  implementation group: 'com.google.protobuf', name: 'protobuf-java', version: libraryVersions.protobuf
 }
 
 protobuf {
-    protoc {
-        artifact = 'com.google.protobuf:protoc:' + libraryVersions.protobuf
-    }
+  protoc {
+    artifact = 'com.google.protobuf:protoc:' + libraryVersions.protobuf
+  }
 }
 
 sourceSets {
-    main {
-        java {
-            srcDirs 'build/generated/source/proto/main/java'
-        }
+  main {
+    java {
+      srcDirs 'build/generated/source/proto/main/java'
     }
+  }
 }

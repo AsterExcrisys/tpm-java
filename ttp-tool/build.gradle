@@ -5,8 +5,9 @@ apply plugin: 'application'
 mainClassName = 'de.fhg.iosb.iad.ttp.TTPTool'
 
 dependencies {
-    implementation project(':tpm')
-    
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
-    implementation group: 'com.beust', name: 'jcommander', version: '1.82'
+  implementation project(':tpm')
+  
+  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
+  
+  implementation group: 'com.beust', name: 'jcommander', version: '1.82'
 }

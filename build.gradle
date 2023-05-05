@@ -1,43 +1,42 @@
 // tpm-java
 
 buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
+  repositories {
+    mavenCentral()
+  }
 }
 
 allprojects {
-    ext.libraryVersions = [
-        slf4j    : '1.7.36',
-        log4j    : '2.19.0',
-        junit    : '4.13.2',
-        protobuf : '3.21.7',
-        grpc     : '1.49.2'
-    ]
+  ext.libraryVersions = [
+    slf4j       : '2.0.7',
+    log4j       : '2.20.0',
+    junit       : '5.9.3',
+    protobuf    : '3.22.3',
+    grpc        : '1.54.1'
+  ]
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven-publish'
-
-    group = 'de.fhg.iosb.iad.tpm.commons'
-    version = '1.0'
-
-    dependencies {
-        implementation group: 'org.slf4j', name: 'slf4j-api', version: libraryVersions.slf4j
-    }
+  apply plugin: 'java'
+  apply plugin: 'maven-publish'
   
-    repositories {
-        mavenCentral()
-        mavenLocal()
+  group = 'de.fhg.iosb.iad.tpm.commons'
+  version = '1.0'
+  
+  dependencies {
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: libraryVersions.slf4j
+  }
+  
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+  
+  publishing {
+    publications {
+      Libs(MavenPublication) {
+        from components.java
+      }
     }
-    
-    publishing {
-        publications {
-            Libs(MavenPublication) {
-                from components.java
-            }
-        }
-    }
+  }
 }

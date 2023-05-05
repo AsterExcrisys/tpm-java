@@ -1,13 +1,12 @@
 // attestation-tester
 
 buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.1'
-    }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.3'
+  }
 }
 
 apply plugin: 'application'
@@ -16,25 +15,26 @@ apply plugin: 'com.google.protobuf'
 mainClassName = 'de.fhg.iosb.iad.tpm.attestation.AttestationTester'
 
 dependencies {
-    implementation project(':tpm')
-    implementation project(':attestation')
-    
-    implementation group: 'com.google.protobuf', name: 'protobuf-java', version: libraryVersions.protobuf
-    
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
-    implementation group: 'com.beust', name: 'jcommander', version: '1.82'
+  implementation project(':tpm')
+  implementation project(':attestation')
+  
+  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
+  
+  implementation group: 'com.google.protobuf', name: 'protobuf-java', version: libraryVersions.protobuf
+  
+  implementation group: 'com.beust', name: 'jcommander', version: '1.82'
 }
 
 protobuf {
-    protoc {
-        artifact = 'com.google.protobuf:protoc:' + libraryVersions.protobuf
-    }
+  protoc {
+    artifact = 'com.google.protobuf:protoc:' + libraryVersions.protobuf
+  }
 }
 
 sourceSets {
-    main {
-        java {
-            srcDirs 'build/generated/source/proto/main/java'
-        }
+  main {
+    java {
+      srcDirs 'build/generated/source/proto/main/java'
     }
+  }
 }

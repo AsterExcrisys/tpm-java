@@ -1,13 +1,12 @@
 // ttp
 
 buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.1'
-    }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.3'
+  }
 }
 
 apply plugin: 'application'
@@ -16,41 +15,48 @@ apply plugin: 'com.google.protobuf'
 mainClassName = 'de.fhg.iosb.iad.ttp.TTPServer'
 
 dependencies {
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
+  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
+  
+  implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: libraryVersions.grpc
+  implementation group: 'io.grpc', name: 'grpc-protobuf', version: libraryVersions.grpc
+  implementation group: 'io.grpc', name: 'grpc-stub', version: libraryVersions.grpc
+  compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+  
+  implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.2'
+  
+  implementation group: 'com.beust', name: 'jcommander', version: '1.82'
+  
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: libraryVersions.junit
+  testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: libraryVersions.junit
+}
 
-    implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: libraryVersions.grpc
-    implementation group: 'io.grpc', name: 'grpc-protobuf', version: libraryVersions.grpc
-    implementation group: 'io.grpc', name: 'grpc-stub', version: libraryVersions.grpc
-    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
-    
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.2'
-    
-    implementation group: 'com.beust', name: 'jcommander', version: '1.82'
-    
-    testImplementation group: 'junit', name: 'junit', version: libraryVersions.junit
+test {
+  useJUnitPlatform()
 }
 
 protobuf {
-    protoc {
-        artifact = 'com.google.protobuf:protoc:' + libraryVersions.protobuf
+  protoc {
+    artifact = 'com.google.protobuf:protoc:' + libraryVersions.protobuf
+  }
+  plugins {
+    grpc {
+      artifact = 'io.grpc:protoc-gen-grpc-java:' + libraryVersions.grpc
     }
-    plugins {
-        grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:' + libraryVersions.grpc
-        }
+  }
+  generateProtoTasks {
+    all().configureEach { task ->
+      task.plugins {
+        grpc { }
+      }
     }
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
-    }
+  }
 }
 
 sourceSets {
-    main {
-        java {
-            srcDirs 'build/generated/source/proto/main/grpc'
-            srcDirs 'build/generated/source/proto/main/java'
-        }
+  main {
+    java {
+      srcDirs 'build/generated/source/proto/main/grpc'
+      srcDirs 'build/generated/source/proto/main/java'
     }
+  }
 }

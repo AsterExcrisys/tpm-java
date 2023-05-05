@@ -1,21 +1,21 @@
 package de.fhg.iosb.iad.ttp.database;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class DatabaseTest {
 
 	private static Database database = null;
 
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() throws SQLException {
 		database = new Database("test.sqlite");
 	}
@@ -31,7 +31,8 @@ public class DatabaseTest {
 
 	@Test
 	public void testGetPCRValues() throws SQLException {
-		Map<Integer, String> pcrValues = database.getPCRValuesForTrustedState(UUID.fromString("5721d09d-4118-4768-8989-99af69d89f1a"));
+		Map<Integer, String> pcrValues = database
+				.getPCRValuesForTrustedState(UUID.fromString("5721d09d-4118-4768-8989-99af69d89f1a"));
 
 		assertEquals(3, pcrValues.size());
 		assertEquals("07CD877F1286496295ABDF54BCEC329C4B3DF21412C66B4B9B30E36EC204D91D", pcrValues.get(5));

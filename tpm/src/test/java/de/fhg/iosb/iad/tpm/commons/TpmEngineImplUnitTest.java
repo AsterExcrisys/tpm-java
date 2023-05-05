@@ -2,11 +2,11 @@ package de.fhg.iosb.iad.tpm.commons;
 
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.TpmEngineFactory;
@@ -27,73 +27,74 @@ public class TpmEngineImplUnitTest {
 	private TpmEngineImpl tpm = null;
 	private TpmEngineImplTest tpmTest = null;
 
-	@Before
+	@BeforeEach
 	public void before() throws TpmEngineException {
 		tpm = TpmEngineFactory.createSimulatorInstance();
 		tpmTest = new TpmEngineImplTest(tpm, new Asserter() {
 			@Override
 			public void assertTrue(boolean b) {
-				Assert.assertTrue(b);
+
+				Assertions.assertTrue(b);
 			}
 
 			@Override
 			public void assertFalse(boolean b) {
-				Assert.assertFalse(b);
+				Assertions.assertFalse(b);
 			}
 
 			@Override
 			public void assertEquals(Object expected, Object actual) {
-				Assert.assertEquals(expected, actual);
+				Assertions.assertEquals(expected, actual);
 			}
 
 			@Override
 			public void assertNotEquals(Object expected, Object actual) {
-				Assert.assertNotEquals(expected, actual);
+				Assertions.assertNotEquals(expected, actual);
 			}
 
 			@Override
 			public void assertNull(Object actual) {
-				Assert.assertNull(actual);
+				Assertions.assertNull(actual);
 			}
 
 			@Override
 			public void assertNotNull(Object actual) {
-				Assert.assertNotNull(actual);
+				Assertions.assertNotNull(actual);
 			}
 		});
 	}
 
-	@After
+	@AfterEach
 	public void after() {
 		tpm.close();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testPcrRead() throws TpmEngineException {
 		tpmTest.testPcrRead();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testQuote() throws TpmEngineException, TpmValidationException {
 		tpmTest.testQuote();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testEphemeralDhKeysAreNotStatic() throws TpmEngineException {
 		tpmTest.testEphemeralDhKeysAreNotStatic();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testKeyExchange() throws TpmEngineException, TpmValidationException {
 		tpmTest.testKeyExchange();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testImplicitAttestation() throws TpmEngineException, IOException {
 		tpmTest.testImplicitAttestation();
 	}
