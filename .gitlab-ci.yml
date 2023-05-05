@@ -1,0 +1,15 @@
+default: 
+  tags:
+    - asprunner
+
+compile_gradle:
+  image: gradle:8.1.1-jdk17
+  script:
+    - chmod +x ./build-gradle.sh && ./build-gradle.sh
+  artifacts:
+    paths:
+      - attestation-tester/build/distributions
+      - tpm-tester/build/distributions
+      - ttp/build/distributions
+      - ttp-tool/build/distributions
+    expire_in: '1yrs'
