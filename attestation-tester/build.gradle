@@ -18,7 +18,7 @@ dependencies {
   implementation project(':tpm')
   implementation project(':attestation')
   
-  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
+  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: libraryVersions.log4j
   
   implementation group: 'com.google.protobuf', name: 'protobuf-java', version: libraryVersions.protobuf
   

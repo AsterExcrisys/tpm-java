@@ -15,7 +15,7 @@ apply plugin: 'com.google.protobuf'
 mainClassName = 'de.fhg.iosb.iad.ttp.TTPServer'
 
 dependencies {
-  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
+  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: libraryVersions.log4j
   
   implementation group: 'io.grpc', name: 'grpc-netty-shaded', version: libraryVersions.grpc
   implementation group: 'io.grpc', name: 'grpc-protobuf', version: libraryVersions.grpc

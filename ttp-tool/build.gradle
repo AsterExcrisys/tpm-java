@@ -7,7 +7,7 @@ mainClassName = 'de.fhg.iosb.iad.ttp.TTPTool'
 dependencies {
   implementation project(':tpm')
   
-  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: libraryVersions.log4j
+  runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: libraryVersions.log4j
   
   implementation group: 'com.beust', name: 'jcommander', version: '1.82'
 }
