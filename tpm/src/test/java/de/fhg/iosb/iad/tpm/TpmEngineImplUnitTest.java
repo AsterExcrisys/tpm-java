@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.commons;
+package de.fhg.iosb.iad.tpm;
 
 import java.io.IOException;
 
@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
-import de.fhg.iosb.iad.tpm.TpmEngineFactory;
-import de.fhg.iosb.iad.tpm.TpmEngineImpl;
 import de.fhg.iosb.iad.tpm.TpmValidator.TpmValidationException;
 import de.fhg.iosb.iad.tpm.test.Asserter;
 import de.fhg.iosb.iad.tpm.test.TpmEngineImplTest;
@@ -33,7 +31,6 @@ public class TpmEngineImplUnitTest {
 		tpmTest = new TpmEngineImplTest(tpm, new Asserter() {
 			@Override
 			public void assertTrue(boolean b) {
-
 				Assertions.assertTrue(b);
 			}
 

@@ -182,8 +182,7 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
-	public synchronized byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues, TPM_ALG_ID authHashAlg)
-			throws TpmEngineException {
+	public synchronized byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues) throws TpmEngineException {
 		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
 				TpmHelper.createPcrSelection(pcrValues.keySet(), pcrHashAlg) };
 		StartAuthSessionResponse sessionResponse = null;

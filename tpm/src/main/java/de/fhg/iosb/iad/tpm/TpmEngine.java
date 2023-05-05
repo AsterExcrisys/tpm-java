@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import tss.Tpm;
-import tss.tpm.TPM_ALG_ID;
 
 /**
  * Generic TPM engine to abstract from TPM internals and retrieve some common
@@ -31,23 +30,23 @@ public interface TpmEngine {
 	byte[] getRandomBytes(int number) throws TpmEngineException;
 
 	/**
-	 * Get the value of a single PCR register.
+	 * Get the value of a single PCR register from the SHA256 bank.
 	 * 
 	 * @param number Number of the PCR register
-	 * @return The value of the PCR register as a hex string
+	 * @return The value of the SHA256 PCR register as a hex string
 	 */
 	String getPcrValue(int number) throws TpmEngineException;
 
 	/**
-	 * Get the values of multiple PCR registers at once.
+	 * Get the values of multiple PCR registers from the SHA256 bank at once.
 	 * 
 	 * @param numbers Numbers of the PCR registers
-	 * @returnThe values of the PCR registers as hex strings
+	 * @return The values of the SHA256 PCR registers as hex strings
 	 */
 	Map<Integer, String> getPcrValues(Collection<Integer> numbers) throws TpmEngineException;
 
 	/**
-	 * Extend a single PCR register with some user data.
+	 * Extend a single PCR register in the SHA256 bank with some user data.
 	 * 
 	 * @param number Number of the PCR register
 	 * @param data   The user data to extend the PCR register with. The data will be
@@ -56,29 +55,28 @@ public interface TpmEngine {
 	void extendPcr(int number, byte[] data) throws TpmEngineException;
 
 	/**
-	 * Extend multiple PCR registers with some user data.
+	 * Extend multiple PCR registers in the SHA256 bank with some user data.
 	 * 
 	 * @param data The map of PCR registers and user data. The data will be hashed
-	 *             with SHA256.
+	 *             with SHA256 before extending.
 	 */
 	void extendPcrs(Map<Integer, byte[]> data) throws TpmEngineException;
 
 	/**
-	 * Calculate the digest of a set of PCR values.
+	 * Calculate the SHA256 digest of a set of PCR values.
 	 * 
 	 * @param pcrValues Map of PCR values to create the digest for.
-	 * @return Digest of specified PCR values.
+	 * @return SHA256 digest of specified PCR values.
 	 */
 	byte[] calculatePcrDigest(Map<Integer, String> pcrValues);
 
 	/**
-	 * Calculate the digest of a PCR policy.
+	 * Calculate the SHA256 digest of a PCR policy.
 	 * 
-	 * @param pcrValues   Map of PCR values to create policy digest for.
-	 * @param authHashAlg Hash algorithm to use for the policy digest.
-	 * @return Digest of a PCR policy bound to the specified PCR values.
+	 * @param pcrValues Map of PCR values to create policy digest for.
+	 * @return SHA256 digest of a PCR policy bound to the specified PCR values.
 	 */
-	byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues, TPM_ALG_ID authHashAlg) throws TpmEngineException;
+	byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues) throws TpmEngineException;
 
 	/**
 	 * Start an authorization session using a PCR policy.
@@ -105,7 +103,7 @@ public interface TpmEngine {
 	TpmLoadedKey loadSrk() throws TpmEngineException;
 
 	/**
-	 * Creates an ephemeral Diffie-Hellman key pair.
+	 * Create an ephemeral Diffie-Hellman key pair.
 	 * 
 	 * @param rootKeyHandle Handle of the key to use as root.
 	 * @return Created Diffie-Hellman key pair.

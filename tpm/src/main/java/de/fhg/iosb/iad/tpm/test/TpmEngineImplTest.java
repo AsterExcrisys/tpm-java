@@ -223,7 +223,7 @@ public class TpmEngineImplTest {
 
 		// Calculate the policy digest using the current PCR values
 		Map<Integer, String> pcrValues = tpmEngine.getPcrValues(pcrNumbers);
-		byte[] policyDigest = tpmEngine.calculatePcrPolicyDigest(pcrValues, TPM_ALG_ID.SHA256);
+		byte[] policyDigest = tpmEngine.calculatePcrPolicyDigest(pcrValues);
 
 		// Create a policy-authorized signing key bound to the created PCR policy.
 		// Note that TPMA_OBJECT.userWithAuth must not be set in this key to enforce
