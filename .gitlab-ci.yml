@@ -2,10 +2,11 @@ default:
   tags:
     - asprunner
 
-compile_gradle:
+gradle-build:
+  stage: build
   image: gradle:8.1.1-jdk17
   script:
-    - chmod +x ./build-gradle.sh && ./build-gradle.sh
+    - chmod +x ./gradlew && ./gradlew build
   artifacts:
     paths:
       - attestation-tester/build/distributions
@@ -13,3 +14,27 @@ compile_gradle:
       - ttp/build/distributions
       - ttp-tool/build/distributions
     expire_in: '1yrs'
+
+kaniko-deploy-ttp-default:
+  stage: deploy
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --target ttp --destination $CI_REGISTRY_IMAGE/ttp --force
+  only:
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+kaniko-deploy-ttp:
+  stage: deploy
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --target ttp --destination $CI_REGISTRY_IMAGE/ttp:$CI_COMMIT_REF_SLUG  --force
+  except:
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

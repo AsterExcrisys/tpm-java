@@ -67,3 +67,19 @@ Run the TTP tool with
 Use the option `--args="--command createSql --pcrs 0-15"` to create an SQL file that inserts the current PCR configuration of registers 0 to 15 into the set of trusted system configurations.
 For this you again need to run the [MSR TPM simulator](https://gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-simulator), or use `--args="--device"` to read the PCR values from the platform TPM.
 The option `--args="-h"` displays a list of all available configuration parameters.
+
+### Use the Docker Image
+You can also use the Docker image to run a TTP instance.
+
+To pull and run the image from the Docker registry, use
+```
+docker login registry.gitlab.cc-asp.fraunhofer.de
+docker run --rm -it -p 5001:5001 -v /path/to/db.sqlite:/ttp/ttp.sqlite registry.gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-java/ttp
+```
+
+To build and run the image locally, use
+```
+git clone https://gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-java && cd tpm-java
+docker build --target ttp -t tpm-20-commons/tpm-java/ttp .
+docker run --rm -it -p 5001:5001 -v /path/to/db.sqlite:/ttp/ttp.sqlite tpm-20-commons/tpm-java/ttp
+```
