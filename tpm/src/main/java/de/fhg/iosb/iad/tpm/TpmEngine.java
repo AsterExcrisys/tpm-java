@@ -1,9 +1,14 @@
 package de.fhg.iosb.iad.tpm;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 import tss.Tpm;
+import tss.tpm.CreatePrimaryResponse;
+import tss.tpm.CreateResponse;
+import tss.tpm.TPMS_CREATION_DATA;
+import tss.tpm.TPMT_TK_CREATION;
 
 /**
  * Generic TPM engine to abstract from TPM internals and retrieve some common
@@ -106,9 +111,14 @@ public interface TpmEngine {
 	 * Create an ephemeral Diffie-Hellman key pair.
 	 * 
 	 * @param rootKeyHandle Handle of the key to use as root.
+	 * @param pcrNumbers    Numbers of the PCRs to include in the creation data.
 	 * @return Created Diffie-Hellman key pair.
 	 */
-	TpmKey createEphemeralDhKey(int rootKeyHandle) throws TpmEngineException;
+	TpmKey createEphemeralDhKey(int rootKeyHandle, Collection<Integer> pcrNumbers) throws TpmEngineException;
+
+	default TpmKey createEphemeralDhKey(int rootKeyHandle) throws TpmEngineException {
+		return createEphemeralDhKey(rootKeyHandle, new HashSet<Integer>());
+	}
 
 	/**
 	 * Load a key.
@@ -135,6 +145,19 @@ public interface TpmEngine {
 	 * @return Certificate structure signed with the specified signature key.
 	 */
 	byte[] certifyKey(int keyHandle, int signerHandle, byte[] qualifyingData) throws TpmEngineException;
+
+	/**
+	 * Certify the creation of a loaded key by signing its creation data with a
+	 * signature key.
+	 * 
+	 * @param keyHandle      Handle of key to certify.
+	 * @param signerHandle   Handle of key to use for the certification
+	 * @param qualifyingData Nonce to be included in the certificate.
+	 * @param creationInfo   Creation information from the created key.
+	 * @return Certificate structure signed with the specified signature key.
+	 */
+	byte[] certifyCreation(int keyHandle, int signerHandle, byte[] qualifyingData, TpmKeyCreationInfo creationInfo)
+			throws TpmEngineException;
 
 	/**
 	 * Quote some PCR registers.
@@ -171,21 +194,37 @@ public interface TpmEngine {
 		public final int handle; // TPM_HANDLE.handle
 		public final byte[] outPublic; // TPMT_PUBLIC
 
-		public TpmLoadedKey(int handle, byte[] outPublic) {
-			this.handle = handle;
-			this.outPublic = outPublic;
+		public TpmLoadedKey(CreatePrimaryResponse response) {
+			this.handle = response.handle.handle;
+			this.outPublic = response.outPublic.toBytes();
+
 		}
 	}
 
 	public class TpmKey {
 		public final byte[] outPrivate; // TPM2B_PRIVATE
 		public final byte[] outPublic; // TPMT_PUBLIC
+		public final TpmKeyCreationInfo creationInfo;
 
-		public TpmKey(byte[] outPrivate, byte[] outPublic) {
-			this.outPrivate = outPrivate;
-			this.outPublic = outPublic;
+		public TpmKey(CreateResponse response) {
+			this.outPrivate = response.outPrivate.toBytes();
+			this.outPublic = response.outPublic.toBytes();
+			this.creationInfo = new TpmKeyCreationInfo(response.creationData, response.creationHash,
+					response.creationTicket);
 		}
+	}
 
+	public class TpmKeyCreationInfo {
+		public final byte[] creationData; // TPMS_CREATION_DATA
+		public final byte[] creationHash; // byte[]
+		public final byte[] creationTicket; // TPMT_TK_CREATION
+
+		public TpmKeyCreationInfo(TPMS_CREATION_DATA creationData, byte[] creationHash,
+				TPMT_TK_CREATION creationTicket) {
+			this.creationData = creationData.toBytes();
+			this.creationHash = creationHash;
+			this.creationTicket = creationTicket.toBytes();
+		}
 	}
 
 	public class TpmEngineException extends Exception {

@@ -40,6 +40,21 @@ public final class TpmHelper {
 	}
 
 	/**
+	 * Create PCR selection array with one element.
+	 * 
+	 * @param numbers Numbers of PCR registers to include in the first element of
+	 *                the selection array. If empty, an empty array will be
+	 *                returned.
+	 * @param hashAlg PCR hash algorithm to use.
+	 * @return The PCR selection array.
+	 */
+	public static TPMS_PCR_SELECTION[] createPcrSelectionArray(Collection<Integer> numbers, TPM_ALG_ID hashAlg) {
+		if (numbers.isEmpty())
+			return new TPMS_PCR_SELECTION[0];
+		return new TPMS_PCR_SELECTION[] { createPcrSelection(numbers, hashAlg) };
+	}
+
+	/**
 	 * Create PCR digest.
 	 * 
 	 * @param pcrValues PCR values to digest.

@@ -216,6 +216,49 @@ public class TpmEngineImplTest {
 		}
 	}
 
+	public void testCreationCertification() throws TpmEngineException {
+		// Load the quoting key and storage root key
+		TpmLoadedKey qk = tpmEngine.loadQk();
+		TpmLoadedKey srk = tpmEngine.loadSrk();
+
+		// Put something into the PCRs
+		List<Integer> pcrNumbers = Arrays.asList(0, 1, 2, 3, 4);
+		extendPcrsWithRandomData(pcrNumbers);
+		Map<Integer, String> expectedPCRs = tpmEngine.getPcrValues(pcrNumbers);
+
+		try {
+			// Create a new DH key pair
+			TpmKey dhKey = tpmEngine.createEphemeralDhKey(srk.handle, pcrNumbers);
+			byte[] dhKeyPub = dhKey.outPublic;
+			LOG.info("Created Diffie-Hellman key of size {} bytes", dhKeyPub.length);
+
+			// Load and certify creation of DH public key with QK
+			int dhKeyHandle = tpmEngine.loadKey(srk.handle, dhKey);
+			byte[] cert = null;
+			byte[] nonce = Helpers.RandomBytes(4);
+			try {
+				cert = tpmEngine.certifyCreation(dhKeyHandle, qk.handle, nonce, dhKey.creationInfo);
+				LOG.info("Created creation certificate of size {} bytes", cert.length);
+			} finally {
+				tpmEngine.flushKey(dhKeyHandle);
+			}
+
+			// Validate certification
+			try {
+				a.assertTrue(new TpmValidator().validateCreationCertification(dhKeyPub, cert, nonce, qk.outPublic,
+						dhKey.creationInfo.creationData, expectedPCRs));
+				LOG.info("Certificate successfully validated!");
+			} catch (TpmValidationException e) {
+				LOG.error("Error while validating creation certificate!");
+				a.assertTrue(false);
+			}
+		} finally {
+			// Flush storage root key and quoting key
+			tpmEngine.flushKey(srk.handle);
+			tpmEngine.flushKey(qk.handle);
+		}
+	}
+
 	public void testImplicitAttestation() throws TpmEngineException {
 		// Put something into the PCRs
 		List<Integer> pcrNumbers = Arrays.asList(0, 1, 2, 3, 4);

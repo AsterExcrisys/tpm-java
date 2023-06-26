@@ -3,12 +3,16 @@ package de.fhg.iosb.iad.tpm;
 import java.util.Arrays;
 import java.util.Map;
 
+import tss.Crypto;
+import tss.TpmBuffer;
+import tss.tpm.CertifyCreationResponse;
 import tss.tpm.CertifyResponse;
 import tss.tpm.PCR_ReadResponse;
 import tss.tpm.QuoteResponse;
 import tss.tpm.TPMA_OBJECT;
 import tss.tpm.TPMS_CERTIFY_INFO;
-import tss.tpm.TPMS_PCR_SELECTION;
+import tss.tpm.TPMS_CREATION_DATA;
+import tss.tpm.TPMS_CREATION_INFO;
 import tss.tpm.TPMT_PUBLIC;
 import tss.tpm.TPM_ALG_ID;
 
@@ -50,7 +54,68 @@ public class TpmValidator {
 		if (!Arrays.equals(((TPMS_CERTIFY_INFO) _certifyInfo.certifyInfo.attested).name, _keyPub.getName()))
 			throw new TpmValidationException("Provided certification does not certify the expected public key!");
 
-		// Verify signature of dhPubKeyA
+		// Verify signature of certifyInfo
+		return _signerKeyPub.validateSignature(_certifyInfo.certifyInfo.toBytes(), _certifyInfo.signature);
+	}
+
+	/**
+	 * Validate a creation certification.
+	 * 
+	 * @param keyPub         Public part of the certified key.
+	 * @param certifyInfo    Certification information for the public key to verify.
+	 * @param qualifyingData User data like nonces that is expected in the
+	 *                       certification.
+	 * @param signerKeyPub   Public key of the signer.
+	 * @param creationData   Creation data of the certified key.
+	 * @param pcrValues      Map of PCR values as hex strings that are expected in
+	 *                       the creation data.
+	 * @return True if the provided signature validated correctly for this key,
+	 *         false otherwise.
+	 * @throws TpmValidationException If validation failed.
+	 */
+	public boolean validateCreationCertification(byte[] keyPub, byte[] certifyInfo, byte[] qualifyingData,
+			byte[] signerKeyPub, byte[] creationData, Map<Integer, String> pcrValues) throws TpmValidationException {
+
+		TPMT_PUBLIC _keyPub = null;
+		CertifyCreationResponse _certifyInfo = null;
+		TPMT_PUBLIC _signerKeyPub = null;
+		TPMS_CREATION_DATA _creationData = null;
+		try {
+			_keyPub = TPMT_PUBLIC.fromBytes(keyPub);
+			_certifyInfo = CertifyCreationResponse.fromBytes(certifyInfo);
+			_signerKeyPub = TPMT_PUBLIC.fromBytes(signerKeyPub);
+			_creationData = TPMS_CREATION_DATA.fromBytes(creationData);
+		} catch (Exception e) {
+			throw new TpmValidationException("Error while parsing TPM data structures", e);
+		}
+
+		// Verify that certifyInfo contains the expected qualifyingData
+		if (!Arrays.equals(_certifyInfo.certifyInfo.extraData, qualifyingData))
+			throw new TpmValidationException("Provided certification does not contain the expected qualifying data!");
+
+		// Verify that certifyInfo contains the claimed public key
+		if (!Arrays.equals(((TPMS_CREATION_INFO) _certifyInfo.certifyInfo.attested).objectName, _keyPub.getName()))
+			throw new TpmValidationException("Provided certification does not certify the expected public key!");
+
+		// Verify that certifyInfo contains the claimed creationData
+		byte[] expectedCreationHash = Crypto.hash(_keyPub.nameAlg, creationData);
+		if (!Arrays.equals(((TPMS_CREATION_INFO) _certifyInfo.certifyInfo.attested).creationHash, expectedCreationHash))
+			throw new TpmValidationException("Provided certification does not certify the expected creation data!");
+
+		// Verify that creationData contains the claimed PCRs
+		PCR_ReadResponse expectedPcrs = new PCR_ReadResponse();
+		expectedPcrs.pcrSelectionOut = TpmHelper.createPcrSelectionArray(pcrValues.keySet(), pcrHashAlg);
+		expectedPcrs.pcrValues = TpmHelper.createPcrDigests(pcrValues);
+		expectedPcrs.pcrUpdateCounter = 0;
+		TpmBuffer pcrBuf = new TpmBuffer();
+		for (int j = 0; j < expectedPcrs.pcrValues.length; j++) {
+			pcrBuf.writeByteBuf(expectedPcrs.pcrValues[j].buffer);
+		}
+		byte[] expectedPcrDigest = Crypto.hash(_creationData.parentNameAlg, pcrBuf.trim());
+		if (!Arrays.equals(_creationData.pcrDigest, expectedPcrDigest))
+			throw new TpmValidationException("Provided certification does not contain the expected PCR values!");
+
+		// Verify signature of certifyInfo
 		return _signerKeyPub.validateSignature(_certifyInfo.certifyInfo.toBytes(), _certifyInfo.signature);
 	}
 
@@ -86,8 +151,7 @@ public class TpmValidator {
 
 		// Validate quote
 		PCR_ReadResponse expectedPcrs = new PCR_ReadResponse();
-		expectedPcrs.pcrSelectionOut = new TPMS_PCR_SELECTION[] {
-				TpmHelper.createPcrSelection(pcrValues.keySet(), pcrHashAlg) };
+		expectedPcrs.pcrSelectionOut = TpmHelper.createPcrSelectionArray(pcrValues.keySet(), pcrHashAlg);
 		expectedPcrs.pcrValues = TpmHelper.createPcrDigests(pcrValues);
 		expectedPcrs.pcrUpdateCounter = 0;
 		return remoteQk.validateQuote(expectedPcrs, qualifyingData, remoteQuote);

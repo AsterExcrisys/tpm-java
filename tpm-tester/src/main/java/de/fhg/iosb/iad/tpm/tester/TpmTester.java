@@ -51,6 +51,8 @@ public class TpmTester {
 					tpmTest.testQuote();
 				else if (test.equalsIgnoreCase("testKeyExchange"))
 					tpmTest.testKeyExchange();
+				else if (test.equalsIgnoreCase("testCreationCertification"))
+					tpmTest.testCreationCertification();
 				else if (test.equalsIgnoreCase("testImplicitAttestation"))
 					tpmTest.testImplicitAttestation();
 				else

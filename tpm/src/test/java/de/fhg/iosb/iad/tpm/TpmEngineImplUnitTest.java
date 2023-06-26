@@ -92,6 +92,12 @@ public class TpmEngineImplUnitTest {
 
 	@Test
 	@Disabled
+	public void testCreationCertification() throws TpmEngineException, TpmValidationException {
+		tpmTest.testCreationCertification();
+	}
+
+	@Test
+	@Disabled
 	public void testImplicitAttestation() throws TpmEngineException, IOException {
 		tpmTest.testImplicitAttestation();
 	}

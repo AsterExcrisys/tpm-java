@@ -14,6 +14,7 @@ import tss.Helpers;
 import tss.Tpm;
 import tss.TpmBuffer;
 import tss.TpmDeviceTcp;
+import tss.tpm.CertifyCreationResponse;
 import tss.tpm.CertifyResponse;
 import tss.tpm.CreatePrimaryResponse;
 import tss.tpm.CreateResponse;
@@ -38,6 +39,7 @@ import tss.tpm.TPMS_SIG_SCHEME_RSASSA;
 import tss.tpm.TPMT_PUBLIC;
 import tss.tpm.TPMT_SYM_DEF;
 import tss.tpm.TPMT_SYM_DEF_OBJECT;
+import tss.tpm.TPMT_TK_CREATION;
 import tss.tpm.TPM_ALG_ID;
 import tss.tpm.TPM_CAP;
 import tss.tpm.TPM_ECC_CURVE;
@@ -183,14 +185,13 @@ public class TpmEngineImpl implements TpmEngine {
 
 	@Override
 	public synchronized byte[] calculatePcrPolicyDigest(Map<Integer, String> pcrValues) throws TpmEngineException {
-		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
-				TpmHelper.createPcrSelection(pcrValues.keySet(), pcrHashAlg) };
 		StartAuthSessionResponse sessionResponse = null;
 		byte[] policyDigest = null;
 		try {
 			sessionResponse = tpm.StartAuthSession(TPM_HANDLE.NULL, TPM_HANDLE.NULL, Helpers.RandomBytes(16),
 					new byte[0], TPM_SE.TRIAL, new TPMT_SYM_DEF(), TPM_ALG_ID.SHA256);
-			tpm.PolicyPCR(sessionResponse.handle, calculatePcrDigest(pcrValues), pcrSelection);
+			tpm.PolicyPCR(sessionResponse.handle, calculatePcrDigest(pcrValues),
+					TpmHelper.createPcrSelectionArray(pcrValues.keySet(), pcrHashAlg));
 			policyDigest = tpm.PolicyGetDigest(sessionResponse.handle);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in PolicyPCR()", e);
@@ -209,7 +210,7 @@ public class TpmEngineImpl implements TpmEngine {
 			sessionResponse = tpm.StartAuthSession(TPM_HANDLE.NULL, TPM_HANDLE.NULL, nonceCaller, new byte[0],
 					TPM_SE.POLICY, new TPMT_SYM_DEF(), TPM_ALG_ID.SHA256);
 			tpm.PolicyPCR(sessionResponse.handle, calculatePcrDigest(getPcrValues(pcrNumbers)),
-					new TPMS_PCR_SELECTION[] { TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) });
+					TpmHelper.createPcrSelectionArray(pcrNumbers, pcrHashAlg));
 			return sessionResponse.handle.handle;
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in PolicyPCR()", e);
@@ -228,7 +229,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
 		LOG.trace("TpmEngine.loadQk() took {}ms", timer.tock().toMillis());
-		return new TpmLoadedKey(response.handle.handle, response.outPublic.toBytes());
+		return new TpmLoadedKey(response);
 	}
 
 	@Override
@@ -243,21 +244,22 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
 		LOG.trace("TpmEngine.loadSrk() took {}ms", timer.tock().toMillis());
-		return new TpmLoadedKey(response.handle.handle, response.outPublic.toBytes());
+		return new TpmLoadedKey(response);
 	}
 
 	@Override
-	public synchronized TpmKey createEphemeralDhKey(int rootKeyHandle) throws TpmEngineException {
+	public synchronized TpmKey createEphemeralDhKey(int rootKeyHandle, Collection<Integer> pcrNumbers)
+			throws TpmEngineException {
 		timer.tick();
 		CreateResponse response = null;
 		try {
 			response = tpm.Create(TPM_HANDLE.from(rootKeyHandle), new TPMS_SENSITIVE_CREATE(new byte[0], new byte[0]),
-					dhTemplate, new byte[0], new TPMS_PCR_SELECTION[0]);
+					dhTemplate, new byte[0], TpmHelper.createPcrSelectionArray(pcrNumbers, pcrHashAlg));
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Create()", e);
 		}
 		LOG.trace("TpmEngine.createEphemeralDhKey() took {}ms", timer.tock().toMillis());
-		return new TpmKey(response.outPrivate.toBytes(), response.outPublic.toBytes());
+		return new TpmKey(response);
 	}
 
 	@Override
@@ -305,16 +307,30 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
+	public synchronized byte[] certifyCreation(int keyHandle, int signerHandle, byte[] qualifyingData,
+			TpmKeyCreationInfo creationInfo) throws TpmEngineException {
+		timer.tick();
+		CertifyCreationResponse cert = null;
+		try {
+			cert = tpm.CertifyCreation(TPM_HANDLE.from(signerHandle), TPM_HANDLE.from(keyHandle), qualifyingData,
+					creationInfo.creationHash, new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256),
+					TPMT_TK_CREATION.fromBytes(creationInfo.creationTicket));
+		} catch (Exception e) {
+			throw new TpmEngineException("Error in TPM2_CertifyCreation", e);
+		}
+		LOG.trace("TpmEngine.certifyCreation() took {}ms", timer.tock().toMillis());
+		return cert.toBytes();
+	}
+
+	@Override
 	public synchronized byte[] quote(int quotingKeyHandle, byte[] qualifyingData, Collection<Integer> pcrNumbers)
 			throws TpmEngineException {
 		timer.tick();
-		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
-				TpmHelper.createPcrSelection(pcrNumbers, pcrHashAlg) };
-
 		QuoteResponse quote = null;
 		try {
 			quote = tpm.Quote(TPM_HANDLE.from(quotingKeyHandle), qualifyingData,
-					new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256), pcrSelection);
+					new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256),
+					TpmHelper.createPcrSelectionArray(pcrNumbers, pcrHashAlg));
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Quote()", e);
 		}
