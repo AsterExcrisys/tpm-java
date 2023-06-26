@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscporg;
+package de.fhg.iosb.iad.tpm.attestation.mscp;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,32 +19,31 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import de.fhg.iosb.iad.tpm.attestation.AttestedSocket;
-import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
-import de.fhg.iosb.iad.tpm.attestation.mscporg.handshake.MscpOrgClientHandshaker;
-import de.fhg.iosb.iad.tpm.attestation.mscporg.handshake.MscpOrgHandshaker;
-import de.fhg.iosb.iad.tpm.attestation.mscporg.handshake.MscpOrgServerHandshaker;
+import de.fhg.iosb.iad.tpm.attestation.mscp.handshake.MscpClientHandshaker;
+import de.fhg.iosb.iad.tpm.attestation.mscp.handshake.MscpHandshaker;
+import de.fhg.iosb.iad.tpm.attestation.mscp.handshake.MscpServerHandshaker;
 
-public class MscpOrgSocket extends Socket implements AttestedSocket {
+public class MscpSocket extends Socket implements AttestedSocket {
 
 	private final MscpConfiguration config;
 
-	private MscpOrgHandshaker handshaker;
+	private MscpHandshaker handshaker;
 	private Cipher encryptCipher, decryptCipher;
 
-	protected MscpOrgSocket(SocketImpl socketImpl, MscpConfiguration config) throws IOException {
+	protected MscpSocket(SocketImpl socketImpl, MscpConfiguration config) throws IOException {
 		super(socketImpl);
 		assert (config != null);
 		this.config = config;
 	}
 
-	public MscpOrgSocket(InetAddress address, int port, MscpConfiguration config) throws IOException {
+	public MscpSocket(InetAddress address, int port, MscpConfiguration config) throws IOException {
 		super(address, port);
 		assert (config != null);
 		this.config = config;
 		performHandshake(false);
 	}
 
-	public MscpOrgSocket(String host, int port, MscpConfiguration config) throws IOException {
+	public MscpSocket(String host, int port, MscpConfiguration config) throws IOException {
 		super(host, port);
 		assert (config != null);
 		this.config = config;
@@ -52,8 +51,8 @@ public class MscpOrgSocket extends Socket implements AttestedSocket {
 	}
 
 	protected void performHandshake(boolean server) throws IOException {
-		this.handshaker = server ? new MscpOrgServerHandshaker(super.getInputStream(), super.getOutputStream(), config)
-				: new MscpOrgClientHandshaker(super.getInputStream(), super.getOutputStream(), config);
+		this.handshaker = server ? new MscpServerHandshaker(super.getInputStream(), super.getOutputStream(), config)
+				: new MscpClientHandshaker(super.getInputStream(), super.getOutputStream(), config);
 		this.handshaker.performHandshake();
 
 		initializeCiphers();

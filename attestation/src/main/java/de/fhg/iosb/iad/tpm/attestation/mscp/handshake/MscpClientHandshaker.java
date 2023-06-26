@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscporg.handshake;
+package de.fhg.iosb.iad.tpm.attestation.mscp.handshake;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +16,11 @@ import de.fhg.iosb.iad.tpm.attestation.ProtocolMessageType;
 import de.fhg.iosb.iad.tpm.attestation.SuccessMessage;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 
-public class MscpOrgClientHandshaker extends MscpOrgHandshaker {
+public class MscpClientHandshaker extends MscpHandshaker {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MscpOrgClientHandshaker.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MscpClientHandshaker.class);
 
-	public MscpOrgClientHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
+	public MscpClientHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
 		super(inputStream, outputStream, config);
 	}
 

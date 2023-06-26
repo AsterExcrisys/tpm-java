@@ -35,7 +35,9 @@ import de.fhg.iosb.iad.tpm.TpmEngine;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.TpmEngineFactory;
-import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgConfiguration;
+import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
+import de.fhg.iosb.iad.tpm.attestation.mscp.MscpServerSocket;
+import de.fhg.iosb.iad.tpm.attestation.mscp.MscpSocket;
 import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgServerSocket;
 import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgSocket;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapConfiguration;
@@ -81,8 +83,10 @@ public class AttestationTester {
 			return (TapSslSocket) socketFactory.createSocket(host, port);
 		} else if (type.equalsIgnoreCase("tap-dh")) {
 			return new TapDhSocket(host, port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
+		} else if (type.equalsIgnoreCase("mscp")) {
+			return new MscpSocket(host, port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp-org")) {
-			return new MscpOrgSocket(host, port, new MscpOrgConfiguration(tpmEngine, qk, srk, pcrSelection));
+			return new MscpOrgSocket(host, port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else {
 			LOG.error("Invalid protocol type: {}", type);
 			System.exit(-1);
@@ -109,8 +113,10 @@ public class AttestationTester {
 			return (TapSslServerSocket) serverSocketFactory.createServerSocket(port);
 		} else if (type.equalsIgnoreCase("tap-dh")) {
 			return new TapDhServerSocket(port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
+		} else if (type.equalsIgnoreCase("mscp")) {
+			return new MscpServerSocket(port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp-org")) {
-			return new MscpOrgServerSocket(port, new MscpOrgConfiguration(tpmEngine, qk, srk, pcrSelection));
+			return new MscpOrgServerSocket(port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else {
 			LOG.error("Invalid protocol type: {}", type);
 			System.exit(-1);

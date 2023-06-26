@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscporg.handshake;
+package de.fhg.iosb.iad.tpm.attestation.mscp.handshake;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,9 +24,9 @@ import de.fhg.iosb.iad.tpm.attestation.ProtocolType;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.tap.handshake.TapHandshaker;
 
-public abstract class MscpOrgHandshaker extends TapHandshaker {
+public abstract class MscpHandshaker extends TapHandshaker {
 
-	protected final String hmacString = "MSCP original key exchange protocol";
+	protected final String hmacString = "MSCP key exchange protocol";
 	protected TpmKey selfDhKey;
 	protected byte[] generatedSecret;
 	protected byte[] hmac;
@@ -34,7 +34,7 @@ public abstract class MscpOrgHandshaker extends TapHandshaker {
 
 	protected final MscpConfiguration config;
 
-	protected MscpOrgHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
+	protected MscpHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
 		super(inputStream, outputStream, config);
 		assert (config != null);
 		this.config = config;
@@ -42,7 +42,7 @@ public abstract class MscpOrgHandshaker extends TapHandshaker {
 
 	@Override
 	public ProtocolType getProtocolType() {
-		return ProtocolType.TPM_MSCP_ORG;
+		return ProtocolType.TPM_MSCP;
 	}
 
 	public byte[] getGeneratedSecret() {
@@ -58,21 +58,23 @@ public abstract class MscpOrgHandshaker extends TapHandshaker {
 		TpmEngine tpmEngine = config.getTpmEngine();
 		synchronized (tpmEngine) {
 			try {
-				// Create quote
+				// Create DH key
+				TpmLoadedKey srk = config.getRootKey();
+				selfDhKey = tpmEngine.createEphemeralDhKey(srk.handle, peerPcrSelection);
+				builder.setPublicKey(ByteString.copyFrom(selfDhKey.outPublic));
+
+				// Set quoting key and creation data
 				TpmLoadedKey qk = config.getQuotingKey();
 				selfQk = qk.outPublic;
 				builder.setQuotingKey(ByteString.copyFrom(selfQk));
+				builder.setQuote(ByteString.copyFrom(selfDhKey.creationInfo.creationData));
 				builder.putAllPcrValues(tpmEngine.getPcrValues(peerPcrSelection));
-				byte[] quote = tpmEngine.quote(qk.handle, peerNonce, peerPcrSelection);
-				builder.setQuote(ByteString.copyFrom(quote));
 
-				// Create and certify DH key
-				TpmLoadedKey srk = config.getRootKey();
-				selfDhKey = tpmEngine.createEphemeralDhKey(srk.handle);
-				builder.setPublicKey(ByteString.copyFrom(selfDhKey.outPublic));
+				// Certify DH key
 				int selfDhKeyHandle = tpmEngine.loadKey(srk.handle, selfDhKey);
 				try {
-					byte[] cert = tpmEngine.certifyKey(selfDhKeyHandle, qk.handle, peerNonce);
+					byte[] cert = tpmEngine.certifyCreation(selfDhKeyHandle, qk.handle, peerNonce,
+							selfDhKey.creationInfo);
 					builder.setCertificate(ByteString.copyFrom(cert));
 				} finally {
 					tpmEngine.flushKey(selfDhKeyHandle);
@@ -87,7 +89,7 @@ public abstract class MscpOrgHandshaker extends TapHandshaker {
 	protected void handleAttestation(AttestationMessage message) throws HandshakeException {
 		peerQk = message.getQuotingKey().toByteArray();
 		peerPcrValues = message.getPcrValuesMap();
-		byte[] peerQuote = message.getQuote().toByteArray();
+		byte[] peerCreationData = message.getQuote().toByteArray();
 
 		// Validate PCR selection
 		if (!peerPcrValues.keySet().containsAll(config.getPcrSelection())) {
@@ -95,19 +97,12 @@ public abstract class MscpOrgHandshaker extends TapHandshaker {
 					"Requested PCR selection " + config.getPcrSelection() + " but got " + peerPcrValues.keySet());
 		}
 
-		// Validate quote
-		try {
-			if (!new TpmValidator().validateQuote(peerQuote, selfNonce, peerQk, peerPcrValues))
-				throw new HandshakeException(ErrorCode.BAD_QUOTE, "Validation of peer quote failed!");
-		} catch (TpmValidationException e) {
-			throw new HandshakeException(ErrorCode.BAD_QUOTE, "Validation of peer quote failed!", e);
-		}
-
 		// Validate certificate
 		byte[] peerDhKeyPub = message.getPublicKey().toByteArray();
 		byte[] peerDhCert = message.getCertificate().toByteArray();
 		try {
-			if (!new TpmValidator().validateKeyCertification(peerDhKeyPub, peerDhCert, selfNonce, peerQk))
+			if (!new TpmValidator().validateCreationCertification(peerDhKeyPub, peerDhCert, selfNonce, peerQk,
+					peerCreationData, peerPcrValues))
 				throw new HandshakeException(ErrorCode.BAD_CERT, "Validation of presented certificate failed!");
 		} catch (TpmValidationException e) {
 			throw new HandshakeException(ErrorCode.BAD_CERT, "Validation of presented certificate failed!", e);

@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscporg.handshake;
+package de.fhg.iosb.iad.tpm.attestation.mscp.handshake;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,11 +23,11 @@ import de.fhg.iosb.iad.tpm.attestation.ProtocolMessageType;
 import de.fhg.iosb.iad.tpm.attestation.SuccessMessage;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 
-public class MscpOrgServerHandshaker extends MscpOrgHandshaker {
+public class MscpServerHandshaker extends MscpHandshaker {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MscpOrgServerHandshaker.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MscpServerHandshaker.class);
 
-	public MscpOrgServerHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
+	public MscpServerHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
 		super(inputStream, outputStream, config);
 	}
 
@@ -131,22 +131,21 @@ public class MscpOrgServerHandshaker extends MscpOrgHandshaker {
 		TpmEngine tpmEngine = config.getTpmEngine();
 		synchronized (tpmEngine) {
 			try {
-				// Create quote
+				// Create DH key
+				TpmLoadedKey srk = config.getRootKey();
+				selfDhKey = tpmEngine.createEphemeralDhKey(srk.handle, peerPcrSelection);
+				outputBuilder.setPublicKey(ByteString.copyFrom(selfDhKey.outPublic));
+
+				// Set quoting key and creation data
 				TpmLoadedKey qk = config.getQuotingKey();
 				selfQk = qk.outPublic;
 				outputBuilder.setQuotingKey(ByteString.copyFrom(selfQk));
+				outputBuilder.setQuote(ByteString.copyFrom(selfDhKey.creationInfo.creationData));
 				outputBuilder.putAllPcrValues(tpmEngine.getPcrValues(peerPcrSelection));
-				byte[] quote = tpmEngine.quote(qk.handle, peerNonce, peerPcrSelection);
-				outputBuilder.setQuote(ByteString.copyFrom(quote));
-
-				// Create DH key
-				TpmLoadedKey srk = config.getRootKey();
-				selfDhKey = tpmEngine.createEphemeralDhKey(srk.handle);
-				outputBuilder.setPublicKey(ByteString.copyFrom(selfDhKey.outPublic));
 
 				peerQk = inputMessage.getQuotingKey().toByteArray();
 				peerPcrValues = inputMessage.getPcrValuesMap();
-				byte[] peerQuote = inputMessage.getQuote().toByteArray();
+				byte[] peerCreationData = inputMessage.getQuote().toByteArray();
 
 				// Validate PCR selection
 				if (!peerPcrValues.keySet().containsAll(config.getPcrSelection())) {
@@ -154,28 +153,22 @@ public class MscpOrgServerHandshaker extends MscpOrgHandshaker {
 							+ config.getPcrSelection() + " but got " + peerPcrValues.keySet());
 				}
 
-				// Validate quote
-				try {
-					if (!new TpmValidator().validateQuote(peerQuote, selfNonce, peerQk, peerPcrValues))
-						throw new HandshakeException(ErrorCode.BAD_QUOTE, "Validation of peer quote failed!");
-				} catch (TpmValidationException e) {
-					throw new HandshakeException(ErrorCode.BAD_QUOTE, "Validation of peer quote failed!", e);
-				}
-
 				// Validate certificate
 				byte[] peerDhKeyPub = inputMessage.getPublicKey().toByteArray();
 				byte[] peerDhCert = inputMessage.getCertificate().toByteArray();
 				try {
-					if (!new TpmValidator().validateKeyCertification(peerDhKeyPub, peerDhCert, selfNonce, peerQk))
+					if (!new TpmValidator().validateCreationCertification(peerDhKeyPub, peerDhCert, selfNonce, peerQk,
+							peerCreationData, peerPcrValues))
 						throw new HandshakeException(ErrorCode.BAD_CERT, "Validation of presented certificate failed!");
 				} catch (TpmValidationException e) {
 					throw new HandshakeException(ErrorCode.BAD_CERT, "Validation of presented certificate failed!", e);
 				}
 
-				// Certify DH secret and generate secret
+				// Certify DH key and generate secret
 				int selfDhKeyHandle = tpmEngine.loadKey(srk.handle, selfDhKey);
 				try {
-					byte[] cert = tpmEngine.certifyKey(selfDhKeyHandle, qk.handle, peerNonce);
+					byte[] cert = tpmEngine.certifyCreation(selfDhKeyHandle, qk.handle, peerNonce,
+							selfDhKey.creationInfo);
 					outputBuilder.setCertificate(ByteString.copyFrom(cert));
 					generatedSecret = tpmEngine.generateSharedSecret(selfDhKeyHandle, peerDhKeyPub);
 				} finally {
