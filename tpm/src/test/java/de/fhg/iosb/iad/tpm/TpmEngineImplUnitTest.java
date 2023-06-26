@@ -74,6 +74,12 @@ public class TpmEngineImplUnitTest {
 
 	@Test
 	@Disabled
+	public void testPcrReset() throws TpmEngineException {
+		tpmTest.testPcrReset();
+	}
+
+	@Test
+	@Disabled
 	public void testQuote() throws TpmEngineException, TpmValidationException {
 		tpmTest.testQuote();
 	}

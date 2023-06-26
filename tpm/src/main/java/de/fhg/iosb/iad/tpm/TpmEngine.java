@@ -51,6 +51,13 @@ public interface TpmEngine {
 	Map<Integer, String> getPcrValues(Collection<Integer> numbers) throws TpmEngineException;
 
 	/**
+	 * Reset a PCR register in the SHA256 bank.
+	 * 
+	 * @param number Number of the PCR register.
+	 */
+	void resetPcr(int number) throws TpmEngineException;
+
+	/**
 	 * Extend a single PCR register in the SHA256 bank with some user data.
 	 * 
 	 * @param number Number of the PCR register

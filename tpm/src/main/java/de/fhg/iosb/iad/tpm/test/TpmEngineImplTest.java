@@ -66,9 +66,29 @@ public class TpmEngineImplTest {
 		List<Integer> pcrSelection = Arrays.asList(0, 1, 2, 3, 4);
 		extendPcrsWithRandomData(pcrSelection);
 
-		// Read the PCRs again
-		for (int pcr : pcrSelection)
-			LOG.info("PCR {} is: {}", pcr, tpmEngine.getPcrValue(pcr));
+		// Read the PCRs
+		for (int pcr : pcrSelection) {
+			String _pcr = tpmEngine.getPcrValue(pcr);
+			LOG.info("PCR {} is: {}", pcr, _pcr);
+			a.assertNotEquals("0000000000000000000000000000000000000000000000000000000000000000", _pcr);
+		}
+	}
+
+	public void testPcrReset() throws TpmEngineException {
+		// Put something into PCR 16
+		tpmEngine.extendPcr(16, Helpers.RandomBytes(16));
+
+		// Read the PCR
+		String pcr = tpmEngine.getPcrValue(16);
+		LOG.info("PCR 16 is: {}", pcr);
+		a.assertNotEquals("0000000000000000000000000000000000000000000000000000000000000000", pcr);
+
+		// Reset and read the PCR again
+		LOG.info("Reset PCR 16...");
+		tpmEngine.resetPcr(16);
+		pcr = tpmEngine.getPcrValue(16);
+		LOG.info("PCR 16 is: {}", pcr);
+		a.assertEquals("0000000000000000000000000000000000000000000000000000000000000000", pcr);
 	}
 
 	public void testQuote() throws TpmEngineException, TpmValidationException {
@@ -216,7 +236,7 @@ public class TpmEngineImplTest {
 		}
 	}
 
-	public void testCreationCertification() throws TpmEngineException {
+	public void testCreationCertification() throws TpmEngineException, TpmValidationException {
 		// Load the quoting key and storage root key
 		TpmLoadedKey qk = tpmEngine.loadQk();
 		TpmLoadedKey srk = tpmEngine.loadSrk();
@@ -244,14 +264,9 @@ public class TpmEngineImplTest {
 			}
 
 			// Validate certification
-			try {
-				a.assertTrue(new TpmValidator().validateCreationCertification(dhKeyPub, cert, nonce, qk.outPublic,
-						dhKey.creationInfo.creationData, expectedPCRs));
-				LOG.info("Certificate successfully validated!");
-			} catch (TpmValidationException e) {
-				LOG.error("Error while validating creation certificate!");
-				a.assertTrue(false);
-			}
+			a.assertTrue(new TpmValidator().validateCreationCertification(dhKeyPub, cert, nonce, qk.outPublic,
+					dhKey.creationInfo.creationData, expectedPCRs));
+			LOG.info("Certificate successfully validated!");
 		} finally {
 			// Flush storage root key and quoting key
 			tpmEngine.flushKey(srk.handle);

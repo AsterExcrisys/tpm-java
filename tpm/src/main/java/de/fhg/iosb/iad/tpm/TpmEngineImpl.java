@@ -158,6 +158,18 @@ public class TpmEngineImpl implements TpmEngine {
 	}
 
 	@Override
+	public synchronized void resetPcr(int number) throws TpmEngineException {
+		timer.tick();
+		try {
+			tpm.PCR_Reset(TPM_HANDLE.pcr(number));
+		} catch (Exception e) {
+			throw new TpmEngineException("Error in TPM2_PCR_Reset()", e);
+		}
+		LOG.trace("TpmEngine.resetPcr() took {}ms", timer.tock().toMillis());
+	}
+
+	
+	@Override
 	public synchronized void extendPcr(int number, byte[] data) throws TpmEngineException {
 		timer.tick();
 		try {
