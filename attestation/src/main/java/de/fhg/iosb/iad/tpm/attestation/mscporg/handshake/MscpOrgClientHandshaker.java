@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscp.handshake;
+package de.fhg.iosb.iad.tpm.attestation.mscporg.handshake;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,19 +8,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fhg.iosb.iad.tpm.attestation.AbortMessage.ErrorCode;
+import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.AttestationMessage;
 import de.fhg.iosb.iad.tpm.attestation.FinishMessage;
 import de.fhg.iosb.iad.tpm.attestation.InitMessage;
 import de.fhg.iosb.iad.tpm.attestation.ProtocolMessage;
 import de.fhg.iosb.iad.tpm.attestation.ProtocolMessageType;
 import de.fhg.iosb.iad.tpm.attestation.SuccessMessage;
-import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 
-public class MscpClientHandshaker extends MscpHandshaker {
+public class MscpOrgClientHandshaker extends MscpOrgHandshaker {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MscpClientHandshaker.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MscpOrgClientHandshaker.class);
 
-	public MscpClientHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
+	public MscpOrgClientHandshaker(InputStream inputStream, OutputStream outputStream, MscpOrgConfiguration config) {
 		super(inputStream, outputStream, config);
 	}
 

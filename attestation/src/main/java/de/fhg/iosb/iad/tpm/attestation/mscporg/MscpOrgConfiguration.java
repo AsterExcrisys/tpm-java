@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscp;
+package de.fhg.iosb.iad.tpm.attestation.mscporg;
 
 import java.util.Collection;
 
@@ -6,11 +6,11 @@ import de.fhg.iosb.iad.tpm.TpmEngine;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapConfiguration;
 
-public class MscpConfiguration extends TapConfiguration {
+public class MscpOrgConfiguration extends TapConfiguration {
 
 	private final TpmLoadedKey rootKey;
 
-	public MscpConfiguration(TpmEngine tpmEngine, TpmLoadedKey quotingKey, TpmLoadedKey rootKey,
+	public MscpOrgConfiguration(TpmEngine tpmEngine, TpmLoadedKey quotingKey, TpmLoadedKey rootKey,
 			Collection<Integer> pcrSelection) {
 		super(tpmEngine, quotingKey, pcrSelection);
 		assert (rootKey != null);

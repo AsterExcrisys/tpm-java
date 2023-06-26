@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscp.handshake;
+package de.fhg.iosb.iad.tpm.attestation.mscporg.handshake;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,19 +15,19 @@ import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.TpmValidator;
 import de.fhg.iosb.iad.tpm.TpmValidator.TpmValidationException;
 import de.fhg.iosb.iad.tpm.attestation.AbortMessage.ErrorCode;
+import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.AttestationMessage;
 import de.fhg.iosb.iad.tpm.attestation.FinishMessage;
 import de.fhg.iosb.iad.tpm.attestation.InitMessage;
 import de.fhg.iosb.iad.tpm.attestation.ProtocolMessage;
 import de.fhg.iosb.iad.tpm.attestation.ProtocolMessageType;
 import de.fhg.iosb.iad.tpm.attestation.SuccessMessage;
-import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 
-public class MscpServerHandshaker extends MscpHandshaker {
+public class MscpOrgServerHandshaker extends MscpOrgHandshaker {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MscpServerHandshaker.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MscpOrgServerHandshaker.class);
 
-	public MscpServerHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
+	public MscpOrgServerHandshaker(InputStream inputStream, OutputStream outputStream, MscpOrgConfiguration config) {
 		super(inputStream, outputStream, config);
 	}
 

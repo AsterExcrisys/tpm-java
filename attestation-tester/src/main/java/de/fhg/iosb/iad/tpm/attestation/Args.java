@@ -18,7 +18,7 @@ public class Args {
 	private int port = 2321;
 
 	@Parameter(names = { "-t",
-			"--type" }, description = "Protocol types to test. Available types are ['plain', 'ssl', 'tap', 'tap-uni', 'tap-ssl', 'tap-dh', 'mscp'].")
+			"--type" }, description = "Protocol types to test. Available types are ['plain', 'ssl', 'tap', 'tap-uni', 'tap-ssl', 'tap-dh', 'mscp', 'mscp-ext', 'mscp-org'].")
 	private List<String> types = Arrays.asList("mscp");
 
 	@Parameter(names = {

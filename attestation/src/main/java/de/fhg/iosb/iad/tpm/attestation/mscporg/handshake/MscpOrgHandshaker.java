@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscp.handshake;
+package de.fhg.iosb.iad.tpm.attestation.mscporg.handshake;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,13 +18,13 @@ import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
 import de.fhg.iosb.iad.tpm.TpmValidator;
 import de.fhg.iosb.iad.tpm.TpmValidator.TpmValidationException;
 import de.fhg.iosb.iad.tpm.attestation.AbortMessage.ErrorCode;
+import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.AttestationMessage;
 import de.fhg.iosb.iad.tpm.attestation.FinishMessage;
 import de.fhg.iosb.iad.tpm.attestation.ProtocolType;
-import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.tap.handshake.TapHandshaker;
 
-public abstract class MscpHandshaker extends TapHandshaker {
+public abstract class MscpOrgHandshaker extends TapHandshaker {
 
 	protected final String hmacString = "MSCP key exchange protocol";
 	protected TpmKey selfDhKey;
@@ -32,9 +32,9 @@ public abstract class MscpHandshaker extends TapHandshaker {
 	protected byte[] hmac;
 	protected byte[] randomIv;
 
-	protected final MscpConfiguration config;
+	protected final MscpOrgConfiguration config;
 
-	protected MscpHandshaker(InputStream inputStream, OutputStream outputStream, MscpConfiguration config) {
+	protected MscpOrgHandshaker(InputStream inputStream, OutputStream outputStream, MscpOrgConfiguration config) {
 		super(inputStream, outputStream, config);
 		assert (config != null);
 		this.config = config;
@@ -42,7 +42,7 @@ public abstract class MscpHandshaker extends TapHandshaker {
 
 	@Override
 	public ProtocolType getProtocolType() {
-		return ProtocolType.TPM_MSCP;
+		return ProtocolType.TPM_MSCP_ORG;
 	}
 
 	public byte[] getGeneratedSecret() {

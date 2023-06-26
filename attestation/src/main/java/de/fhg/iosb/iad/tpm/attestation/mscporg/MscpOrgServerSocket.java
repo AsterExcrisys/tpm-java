@@ -1,4 +1,4 @@
-package de.fhg.iosb.iad.tpm.attestation.mscp;
+package de.fhg.iosb.iad.tpm.attestation.mscporg;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -9,21 +9,21 @@ import java.net.SocketImpl;
 
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 
-public class MscpServerSocket extends ServerSocket {
+public class MscpOrgServerSocket extends ServerSocket {
 
-	private final MscpConfiguration config;
+	private final MscpOrgConfiguration config;
 
-	public MscpServerSocket(int port, MscpConfiguration config) throws IOException, TpmEngineException {
+	public MscpOrgServerSocket(int port, MscpOrgConfiguration config) throws IOException, TpmEngineException {
 		super(port);
 		this.config = config;
 	}
 
-	public MscpServerSocket(int port, int backlog, MscpConfiguration config) throws IOException {
+	public MscpOrgServerSocket(int port, int backlog, MscpOrgConfiguration config) throws IOException {
 		super(port, backlog);
 		this.config = config;
 	}
 
-	public MscpServerSocket(int port, int backlog, InetAddress bindAddr, MscpConfiguration config) throws IOException {
+	public MscpOrgServerSocket(int port, int backlog, InetAddress bindAddr, MscpOrgConfiguration config) throws IOException {
 		super(port, backlog, bindAddr);
 		this.config = config;
 	}
@@ -34,7 +34,7 @@ public class MscpServerSocket extends ServerSocket {
 			throw new SocketException("Socket is closed");
 		if (!isBound())
 			throw new SocketException("Socket is not bound yet");
-		MscpSocket s = new MscpSocket((SocketImpl) null, config);
+		MscpOrgSocket s = new MscpOrgSocket((SocketImpl) null, config);
 		implAccept(s);
 		s.performHandshake(true);
 		return s;

@@ -12,6 +12,8 @@ enum ProtocolType {
   TPM_TAP_SSL      = 3;
   TPM_TAP_DH       = 4;
   TPM_MSCP         = 5;
+  TPM_MSCP_EXT     = 6;
+  TPM_MSCP_ORG     = 7;
 }
 
 // Enum that describes the type of a protocol message.
