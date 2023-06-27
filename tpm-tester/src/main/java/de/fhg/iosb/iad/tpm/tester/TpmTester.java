@@ -47,6 +47,8 @@ public class TpmTester {
 				Instant startTime = Instant.now();
 				if (test.equalsIgnoreCase("testPcrRead"))
 					tpmTest.testPcrRead();
+				else if (test.equalsIgnoreCase("testPcrReset"))
+					tpmTest.testPcrReset();
 				else if (test.equalsIgnoreCase("testQuote"))
 					tpmTest.testQuote();
 				else if (test.equalsIgnoreCase("testKeyExchange"))

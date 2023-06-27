@@ -66,7 +66,7 @@ public abstract class TapDhHandshaker extends TapHandshaker {
 		return randomIv;
 	}
 
-	private static ECPublicKey decodeEcPublicKey(ECParameterSpec params, final byte[] pubkey)
+	protected static ECPublicKey decodeEcPublicKey(ECParameterSpec params, final byte[] pubkey)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
 		int keySizeBytes = params.getOrder().bitLength() / Byte.SIZE;
 
@@ -82,7 +82,7 @@ public abstract class TapDhHandshaker extends TapHandshaker {
 		return otherKey;
 	}
 
-	private static byte[] encodeEcPublicKey(ECPublicKey pubKey) {
+	protected static byte[] encodeEcPublicKey(ECPublicKey pubKey) {
 		int keyLengthBytes = pubKey.getParams().getOrder().bitLength() / Byte.SIZE;
 		byte[] publicKeyEncoded = new byte[2 * keyLengthBytes];
 

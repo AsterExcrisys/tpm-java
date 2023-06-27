@@ -26,7 +26,7 @@ public class Args {
 	private int serverPort = 1501;
 
 	@Parameter(names = { "-n", "--n" }, description = "Number of handshakes to perform.")
-	private int n = 10;
+	private int n = 100;
 
 	@Parameter(names = { "-h", "--help" }, help = true)
 	private boolean help;

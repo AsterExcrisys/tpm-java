@@ -38,6 +38,8 @@ import de.fhg.iosb.iad.tpm.TpmEngineFactory;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpConfiguration;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpServerSocket;
 import de.fhg.iosb.iad.tpm.attestation.mscp.MscpSocket;
+import de.fhg.iosb.iad.tpm.attestation.mscpext.MscpExtServerSocket;
+import de.fhg.iosb.iad.tpm.attestation.mscpext.MscpExtSocket;
 import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgServerSocket;
 import de.fhg.iosb.iad.tpm.attestation.mscporg.MscpOrgSocket;
 import de.fhg.iosb.iad.tpm.attestation.tap.TapConfiguration;
@@ -85,6 +87,8 @@ public class AttestationTester {
 			return new TapDhSocket(host, port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp")) {
 			return new MscpSocket(host, port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
+		} else if (type.equalsIgnoreCase("mscp-ext")) {
+			return new MscpExtSocket(host, port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp-org")) {
 			return new MscpOrgSocket(host, port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else {
@@ -115,6 +119,8 @@ public class AttestationTester {
 			return new TapDhServerSocket(port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp")) {
 			return new MscpServerSocket(port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
+		} else if (type.equalsIgnoreCase("mscp-ext")) {
+			return new MscpExtServerSocket(port, new TapDhConfiguration(tpmEngine, qk, pcrSelection));
 		} else if (type.equalsIgnoreCase("mscp-org")) {
 			return new MscpOrgServerSocket(port, new MscpConfiguration(tpmEngine, qk, srk, pcrSelection));
 		} else {
