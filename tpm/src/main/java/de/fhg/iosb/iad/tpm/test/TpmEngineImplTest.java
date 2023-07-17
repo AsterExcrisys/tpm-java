@@ -409,6 +409,39 @@ public class TpmEngineImplTest {
 			}
 			printResults("TPM2_PCR_Read", durations);
 
+			// Test PCR reset speed
+			durations.clear();
+			LOG.info("##### START ###################################");
+			LOG.info("Testing performance of command TPM2_PCR_Reset(16)...");
+			for (int i = 0; i < n + 1; i++) {
+				timer.tick();
+				tpmEngine.resetPcr(16);
+
+				if (i > 0) { // Remove first run as outlier
+					Duration d = timer.tock();
+					durations.add(d);
+					LOG.info("Reset PCR 16 ({}/{}) in {}ms", i, n, d.toMillis());
+				}
+			}
+			printResults("TPM2_PCR_Reset(16)", durations);
+
+			// Test PCR extend speed
+			durations.clear();
+			LOG.info("##### START ###################################");
+			LOG.info("Testing performance of command TPM2_PCR_Extend(16)...");
+			for (int i = 0; i < n + 1; i++) {
+				byte[] qualifyingData = Helpers.RandomBytes(96);
+				timer.tick();
+				tpmEngine.extendPcr(16, qualifyingData);
+
+				if (i > 0) { // Remove first run as outlier
+					Duration d = timer.tock();
+					durations.add(d);
+					LOG.info("Extend PCR 16 ({}/{}) in {}ms", i, n, d.toMillis());
+				}
+			}
+			printResults("TPM2_PCR_Extend(16)", durations);
+
 			// Test quoting speed
 			durations.clear();
 			LOG.info("##### START ###################################");
