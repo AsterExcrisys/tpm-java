@@ -57,6 +57,8 @@ public class TpmTester {
 					tpmTest.testCreationCertification();
 				else if (test.equalsIgnoreCase("testImplicitAttestation"))
 					tpmTest.testImplicitAttestation();
+				else if (test.equalsIgnoreCase("testTpmSpeed"))
+					tpmTest.testTpmSpeed(100);
 				else
 					LOG.error("Test {} not found!", test);
 

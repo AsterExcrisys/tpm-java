@@ -1,0 +1,6 @@
+@echo off
+
+echo Running TPM tests using the simulator...
+call build\install\tpm-tester\bin\tpm-tester.bat --test testTpmSpeed > results-sim.log
+echo Running TPM tests using the physical device...
+call build\install\tpm-tester\bin\tpm-tester.bat --device --test testTpmSpeed > results-hw.log

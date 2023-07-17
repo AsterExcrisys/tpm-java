@@ -1,6 +1,9 @@
 package de.fhg.iosb.iad.tpm.test;
 
+import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fhg.iosb.iad.tpm.SecurityHelper;
+import de.fhg.iosb.iad.tpm.Timer;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmEngineException;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmKey;
 import de.fhg.iosb.iad.tpm.TpmEngine.TpmLoadedKey;
@@ -347,6 +351,149 @@ public class TpmEngineImplTest {
 
 			a.assertTrue(success);
 		}
+	}
+
+	private void printResults(String command, LinkedList<Duration> durations) {
+		// Calculate results
+		double meanMicros = 0;
+		for (Duration d : durations)
+			meanMicros += (double) d.toNanos() / 1000.0d;
+		meanMicros = meanMicros / durations.size();
+
+		double sddMicros = 0;
+		for (Duration d : durations)
+			sddMicros += (((double) d.toNanos() / 1000.0d) - meanMicros)
+					* (((double) d.toNanos() / 1000.0d) - meanMicros);
+		double varMicros = sddMicros / (durations.size() - 1);
+
+		LOG.info("##### RESULTS ################################");
+		LOG.info("Command: {}", command);
+		LOG.info("n      = {}", durations.size());
+		LOG.info("min    = {}ms", Collections.min(durations).toMillis());
+		LOG.info("max    = {}ms", Collections.max(durations).toMillis());
+		LOG.info("mean   = {}ms", meanMicros / 1000.0);
+		LOG.info("sigma  = {}us", Math.sqrt(varMicros));
+		LOG.info("##############################################");
+	}
+
+	public void testTpmSpeed(int n) throws TpmEngineException, TpmValidationException {
+		Timer timer = new Timer();
+		List<Integer> pcrSelection = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
+
+		// Load quoting key
+		LOG.info("Loading quoting key...");
+		timer.tick();
+		TpmLoadedKey qk = tpmEngine.loadQk();
+		LOG.info("Loaded a quoting key of size {} bytes in {}s", qk.outPublic.length, timer.tock().toSeconds());
+
+		// Load root key
+		LOG.info("Loading storage root key...");
+		timer.tick();
+		TpmLoadedKey srk = tpmEngine.loadSrk();
+		LOG.info("Loaded a storage root key of size {} bytes in {}s", srk.outPublic.length, timer.tock().toSeconds());
+
+		LinkedList<Duration> durations = new LinkedList<>();
+		try {
+			// Test PCR read speed
+			LOG.info("##### START ###################################");
+			LOG.info("Testing performance of command TPM2_PCR_Read...");
+			for (int i = 0; i < n + 1; i++) {
+				timer.tick();
+				Map<Integer, String> pcrs = tpmEngine.getPcrValues(pcrSelection);
+
+				if (i > 0) { // Remove first run as outlier
+					Duration d = timer.tock();
+					durations.add(d);
+					LOG.info("Read {} PCRs ({}/{}) in {}ms", pcrs.size(), i, n, d.toMillis());
+				}
+			}
+			printResults("TPM2_PCR_Read", durations);
+
+			// Test quoting speed
+			durations.clear();
+			LOG.info("##### START ###################################");
+			LOG.info("Testing performance of command TPM2_Quote...");
+			for (int i = 0; i < n + 1; i++) {
+				byte[] qualifyingData = Helpers.RandomBytes(32);
+				timer.tick();
+				byte[] quote = tpmEngine.quote(qk.handle, qualifyingData, pcrSelection);
+
+				if (i > 0) { // Remove first run as outlier
+					Duration d = timer.tock();
+					durations.add(d);
+					LOG.info("Generated quote {}/{} of size {} in {}ms", i, n, quote.length, d.toMillis());
+				}
+			}
+			printResults("TPM2_Quote", durations);
+
+			// Test DH key creation
+			durations.clear();
+			LinkedList<Duration> durations_create = new LinkedList<>();
+			LinkedList<Duration> durations_load = new LinkedList<>();
+			LinkedList<Duration> durations_certkey = new LinkedList<>();
+			LinkedList<Duration> durations_certcreation = new LinkedList<>();
+			LinkedList<Duration> durations_zgen = new LinkedList<>();
+			LOG.info("##### START ###################################");
+			LOG.info("Testing performance of ECDH key exchange...");
+			for (int i = 0; i < n + 1; i++) {
+				timer.tick();
+				TpmKey dh = tpmEngine.createEphemeralDhKey(srk.handle, pcrSelection);
+				if (i > 0) { // Remove first run as outlier
+					Duration d = timer.tock();
+					durations_create.add(d);
+					LOG.info("Generated ECDH key {}/{} in {}ms", i, n, d.toMillis());
+				}
+
+				timer.tick();
+				int dhh = tpmEngine.loadKey(srk.handle, dh);
+				if (i > 0) { // Remove first run as outlier
+					Duration d = timer.tock();
+					durations_load.add(d);
+					LOG.info("Loaded ECDH key {}/{} in {}ms", i, n, d.toMillis());
+				}
+
+				try {
+					byte[] qualifyingData = Helpers.RandomBytes(32);
+					timer.tick();
+					tpmEngine.certifyKey(dhh, qk.handle, qualifyingData);
+					if (i > 0) { // Remove first run as outlier
+						Duration d = timer.tock();
+						durations_certkey.add(d);
+						LOG.info("Certified ECDH key {}/{} in {}ms", i, n, d.toMillis());
+					}
+
+					qualifyingData = Helpers.RandomBytes(32);
+					timer.tick();
+					tpmEngine.certifyCreation(dhh, qk.handle, qualifyingData, dh.creationInfo);
+					if (i > 0) { // Remove first run as outlier
+						Duration d = timer.tock();
+						durations_certcreation.add(d);
+						LOG.info("Certified ECDH key creation {}/{} in {}ms", i, n, d.toMillis());
+					}
+
+					timer.tick();
+					tpmEngine.generateSharedSecret(dhh, dh.outPublic);
+					if (i > 0) { // Remove first run as outlier
+						Duration d = timer.tock();
+						durations_zgen.add(d);
+						LOG.info("Generated shared secret {}/{} in {}ms", i, n, d.toMillis());
+					}
+				} finally {
+					tpmEngine.flushKey(dhh);
+				}
+			}
+			printResults("TPM2_Create(ECDH)", durations_create);
+			printResults("TPM2_Load(ECDH)", durations_load);
+			printResults("TPM2_Certify(ECDH)", durations_certkey);
+			printResults("TPM2_CertifyCreation(ECDH)", durations_certcreation);
+			printResults("TPM2_ECDH_ZGen()", durations_zgen);
+		} finally {
+			// Flush the keys
+			tpmEngine.flushKey(srk.handle);
+			tpmEngine.flushKey(qk.handle);
+		}
+
+		a.assertTrue(true);
 	}
 
 }
