@@ -1,8 +1,11 @@
 package de.fhg.iosb.iad.tpm;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -60,6 +63,8 @@ public class TpmEngineImpl implements TpmEngine {
 	private final TPMT_PUBLIC srkTemplate;
 	private final TPMT_PUBLIC dhTemplate;
 	private final Timer timer = new Timer();
+	private final Map<String, List<Duration>> durations = new HashMap<String, List<Duration>>();
+	private boolean measureDurations = false;
 
 	protected TpmEngineImpl(Tpm tpm) {
 		assert (tpm != null);
@@ -102,6 +107,30 @@ public class TpmEngineImpl implements TpmEngine {
 			}
 	}
 
+	private void logDuration(String key, Duration duration) {
+		if (!measureDurations)
+			return;
+		List<Duration> l = durations.getOrDefault("TPM2_" + key, new LinkedList<>());
+		l.add(duration);
+		durations.put("TPM2_" + key, l);
+	}
+
+	@Override
+	public void activateDurations(boolean measureDurations) {
+		clearDurations();
+		this.measureDurations = measureDurations;
+	}
+
+	@Override
+	public Map<String, List<Duration>> getDurations() {
+		return durations;
+	}
+
+	@Override
+	public void clearDurations() {
+		durations.clear();
+	}
+
 	@Override
 	public synchronized Tpm getTpmInterface() {
 		return tpm;
@@ -118,6 +147,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_GetRandom()", e);
 		}
 		LOG.trace("TpmEngine.getRandomBytes() took {}ms", timer.tock().toMillis());
+		logDuration("GetRandom", timer.lastTock());
 		return random;
 	}
 
@@ -131,6 +161,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_PCR_Read()", e);
 		}
 		LOG.trace("TpmEngine.getPcrValue() took {}ms", timer.tock().toMillis());
+		logDuration("PCR_Read", timer.lastTock());
 		return SecurityHelper.bytesToHex(pcrValue.pcrValues[0].buffer);
 	}
 
@@ -154,6 +185,7 @@ public class TpmEngineImpl implements TpmEngine {
 		}
 
 		LOG.trace("TpmEngine.getPcrValues() took {}ms", timer.tock().toMillis());
+		logDuration("PCR_Read", timer.lastTock());
 		return result;
 	}
 
@@ -166,9 +198,9 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_PCR_Reset()", e);
 		}
 		LOG.trace("TpmEngine.resetPcr() took {}ms", timer.tock().toMillis());
+		logDuration("PCR_Reset", timer.lastTock());
 	}
 
-	
 	@Override
 	public synchronized void extendPcr(int number, byte[] data) throws TpmEngineException {
 		timer.tick();
@@ -178,6 +210,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_PCR_Event()", e);
 		}
 		LOG.trace("TpmEngine.extendPcr() took {}ms", timer.tock().toMillis());
+		logDuration("PCR_Extend", timer.lastTock());
 	}
 
 	@Override
@@ -241,6 +274,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
 		LOG.trace("TpmEngine.loadQk() took {}ms", timer.tock().toMillis());
+		logDuration("CreatePrimary", timer.lastTock());
 		return new TpmLoadedKey(response);
 	}
 
@@ -256,6 +290,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_CreatePrimary()", e);
 		}
 		LOG.trace("TpmEngine.loadSrk() took {}ms", timer.tock().toMillis());
+		logDuration("CreatePrimary", timer.lastTock());
 		return new TpmLoadedKey(response);
 	}
 
@@ -271,6 +306,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_Create()", e);
 		}
 		LOG.trace("TpmEngine.createEphemeralDhKey() took {}ms", timer.tock().toMillis());
+		logDuration("Create", timer.lastTock());
 		return new TpmKey(response);
 	}
 
@@ -293,6 +329,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_Create()", e);
 		}
 		LOG.trace("TpmEngine.loadKey() took {}ms", timer.tock().toMillis());
+		logDuration("Load", timer.lastTock());
 		return handle.handle;
 	}
 
@@ -301,6 +338,7 @@ public class TpmEngineImpl implements TpmEngine {
 		timer.tick();
 		tpm.FlushContext(TPM_HANDLE.from(handle));
 		LOG.trace("TpmEngine.flushKey() took {}ms", timer.tock().toMillis());
+		logDuration("FlushContext", timer.lastTock());
 	}
 
 	@Override
@@ -315,6 +353,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_Certify", e);
 		}
 		LOG.trace("TpmEngine.certifyKey() took {}ms", timer.tock().toMillis());
+		logDuration("Certify", timer.lastTock());
 		return cert.toBytes();
 	}
 
@@ -331,6 +370,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_CertifyCreation", e);
 		}
 		LOG.trace("TpmEngine.certifyCreation() took {}ms", timer.tock().toMillis());
+		logDuration("CertifyCreation", timer.lastTock());
 		return cert.toBytes();
 	}
 
@@ -347,6 +387,7 @@ public class TpmEngineImpl implements TpmEngine {
 			throw new TpmEngineException("Error in TPM2_Quote()", e);
 		}
 		LOG.trace("TpmEngine.quote() took {}ms", timer.tock().toMillis());
+		logDuration("Quote", timer.lastTock());
 		return quote.toBytes();
 	}
 
@@ -368,6 +409,7 @@ public class TpmEngineImpl implements TpmEngine {
 		}
 
 		LOG.trace("TpmEngine.generateSharedSecret() took {}ms", timer.tock().toMillis());
+		logDuration("ECDH_ZGen", timer.lastTock());
 		return zPoint.toBytes();
 	}
 

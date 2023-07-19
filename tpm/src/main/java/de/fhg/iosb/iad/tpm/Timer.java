@@ -6,12 +6,18 @@ import java.time.Instant;
 public class Timer {
 
 	private Instant tickTime = Instant.now();
+	private Duration lastTock = Duration.ZERO;
 
 	public void tick() {
 		tickTime = Instant.now();
 	}
 
 	public Duration tock() {
-		return Duration.between(tickTime, Instant.now());
+		lastTock = Duration.between(tickTime, Instant.now());
+		return lastTock;
+	}
+
+	public Duration lastTock() {
+		return lastTock;
 	}
 }

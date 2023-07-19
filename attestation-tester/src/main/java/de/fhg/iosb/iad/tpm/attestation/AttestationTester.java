@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -178,6 +180,27 @@ public class AttestationTester {
 		}
 	}
 
+	private static void printResults(String type, List<Duration> durations) {
+		// Calculate results
+		double meanMicros = 0;
+		for (Duration d : durations)
+			meanMicros += (double) d.toNanos() / 1000.0d;
+		meanMicros = meanMicros / durations.size();
+
+		double sddMicros = 0;
+		for (Duration d : durations)
+			sddMicros += (((double) d.toNanos() / 1000.0d) - meanMicros)
+					* (((double) d.toNanos() / 1000.0d) - meanMicros);
+		double varMicros = sddMicros / (durations.size() - 1);
+
+		LOG.info("Type:   {}", type);
+		LOG.info("n     = {}", durations.size());
+		LOG.info("min   = {}ms", Collections.min(durations).toMillis());
+		LOG.info("max   = {}ms", Collections.max(durations).toMillis());
+		LOG.info("mean  = {}ms", meanMicros / 1000.0);
+		LOG.info("sigma = {}us", Math.sqrt(varMicros));
+	}
+
 	public static void main(String[] argv) {
 		Args args = new Args();
 		JCommander argsParser = JCommander.newBuilder().addObject(args).build();
@@ -217,6 +240,7 @@ public class AttestationTester {
 					tpmEngine = TpmEngineFactory.createPlatformInstance();
 				else
 					tpmEngine = TpmEngineFactory.createSimulatorInstance(args.getAddress(), args.getPort());
+				tpmEngine.activateDurations(true);
 				LOG.info("Loading TPM keys...");
 				qk = tpmEngine.loadQk();
 				srk = tpmEngine.loadSrk();
@@ -245,6 +269,7 @@ public class AttestationTester {
 
 			// Connect to the server
 			LinkedList<Duration> durations = new LinkedList<>();
+			tpmEngine.clearDurations();
 			for (int i = 0; i < args.getN() + 1; i++) {
 				Socket clientSocket = null;
 				try {
@@ -264,10 +289,9 @@ public class AttestationTester {
 
 					// Measure time
 					Duration d = Duration.between(startTime, Instant.now());
-					if (i > 0) { // Remove first run as outlier
-						durations.add(d);
+					durations.add(d);
+					if (i > 0)
 						LOG.info("Connection {}/{} took {}ms", i, args.getN(), d.toMillis());
-					}
 				} catch (IOException | TpmEngineException e) {
 					LOG.error("Failed to connect to server!", e);
 					break;
@@ -291,26 +315,20 @@ public class AttestationTester {
 				LOG.error("Failed to shutdown server!", e);
 			}
 
-			// Calculate results
-			double meanMicros = 0;
-			for (Duration d : durations)
-				meanMicros += (double) d.toNanos() / 1000.0d;
-			meanMicros = meanMicros / durations.size();
-
-			double sddMicros = 0;
-			for (Duration d : durations)
-				sddMicros += (((double) d.toNanos() / 1000.0d) - meanMicros)
-						* (((double) d.toNanos() / 1000.0d) - meanMicros);
-			double varMicros = sddMicros / (durations.size() - 1);
-
+			// Calculate and print results
 			LOG.info("##### RESULTS ################################");
-			LOG.info("Type:   {}", type.toUpperCase());
-			LOG.info("n     = {}", durations.size());
-			LOG.info("min   = {}ms", Collections.min(durations).toMillis());
-			LOG.info("max   = {}ms", Collections.max(durations).toMillis());
-			LOG.info("mean  = {}ms", meanMicros / 1000.0);
-			LOG.info("sigma = {}us", Math.sqrt(varMicros));
-			LOG.info("##############################################");
+			durations.remove(0); // Remove first element as outlier
+			printResults(type.toUpperCase(), durations);
+
+			Map<String, List<Duration>> m = tpmEngine.getDurations();
+			if (m.size() > 0)
+				LOG.info("##### TPM Command Timings ####################");
+			for (String command : m.keySet()) {
+				List<Duration> l = m.get(command);
+				l.remove(0); // Remove first element as outlier
+				printResults(command, l);
+				LOG.info("##############################################");
+			}
 		}
 
 		flushTpmKeys();

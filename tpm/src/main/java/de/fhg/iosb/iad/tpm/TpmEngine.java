@@ -1,7 +1,9 @@
 package de.fhg.iosb.iad.tpm;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import tss.Tpm;
@@ -18,6 +20,26 @@ import tss.tpm.TPMT_TK_CREATION;
  *
  */
 public interface TpmEngine {
+
+	/**
+	 * Activate measurement of durations.
+	 * 
+	 * @param activate Set to true to activate measurements, false to deactivate
+	 *                 measurements.
+	 */
+	public void activateDurations(boolean activate);
+
+	/**
+	 * Return map of measured durations.
+	 * 
+	 * @return Map of measured durations.
+	 */
+	public Map<String, List<Duration>> getDurations();
+
+	/**
+	 * Clear map of measured durations.
+	 */
+	public void clearDurations();
 
 	/**
 	 * Get the underlying TPM interface.
