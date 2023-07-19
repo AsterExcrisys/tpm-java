@@ -1,774 +1,1002 @@
 # Executed on a Thinkpad T480s, i7-8550U, 16GB RAM, Windows 10
-# Using MSR.TSS tpm simulator
+# Using MSR.TSS TPM simulator
 
-2023-07-17 11:21:28 DEBUG TpmEngineImpl:97 - No dangling TRANSIENT handles
-2023-07-17 11:21:28 DEBUG TpmEngineImpl:97 - No dangling LOADED_SESSION handles
-2023-07-17 11:21:28 INFO  TpmTester:46 - ************* Running testTpmSpeed *************
-2023-07-17 11:21:28 INFO  TpmEngineImplTest:384 - Loading quoting key...
-2023-07-17 11:21:28 INFO  TpmEngineImplTest:387 - Loaded a quoting key of size 280 bytes in 0s
-2023-07-17 11:21:28 INFO  TpmEngineImplTest:390 - Loading storage root key...
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:393 - Loaded a storage root key of size 282 bytes in 0s
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:398 - ##### START ###################################
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:399 - Testing performance of command TPM2_PCR_Read...
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (1/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (2/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (3/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (4/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (5/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (6/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (7/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (8/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (9/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (10/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (11/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (12/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (13/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (14/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (15/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (16/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (17/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (18/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (19/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (20/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (21/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (22/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (23/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (24/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (25/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (26/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (27/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (28/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (29/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (30/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (31/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (32/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (33/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (34/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (35/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (36/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (37/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (38/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (39/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (40/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (41/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (42/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (43/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (44/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (45/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (46/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (47/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (48/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (49/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (50/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (51/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (52/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (53/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (54/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (55/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (56/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (57/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (58/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (59/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (60/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (61/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (62/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (63/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (64/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (65/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (66/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (67/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (68/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (69/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (70/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (71/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (72/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (73/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (74/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (75/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (76/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (77/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (78/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (79/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (80/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (81/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (82/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (83/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (84/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (85/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (86/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (87/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (88/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (89/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (90/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (91/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (92/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (93/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (94/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (95/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (96/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (97/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (98/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (99/100) in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:407 - Read 8 PCRs (100/100) in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:369 - ##### RESULTS ################################
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:370 - Command: TPM2_PCR_Read
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:371 - n      = 100
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:372 - min    = 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:373 - max    = 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:374 - mean   = 0.35100999999999993ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:375 - sigma  = 480.83784063850374us
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:376 - ##############################################
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:414 - ##### START ###################################
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:415 - Testing performance of command TPM2_Quote...
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 1/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 2/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 3/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 4/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 5/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 6/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 7/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 8/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 9/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 10/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 11/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 12/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 13/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 14/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 15/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 16/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 17/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 18/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 19/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 20/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 21/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 22/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 23/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 24/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 25/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 26/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 27/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 28/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 29/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 30/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 31/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 32/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 33/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 34/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 35/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 36/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 37/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 38/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 39/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 40/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 41/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 42/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 43/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 44/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 45/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 46/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 47/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 48/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 49/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 50/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 51/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 52/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 53/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 54/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 55/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 56/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 57/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 58/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 59/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 60/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 61/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 62/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 63/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 64/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 65/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 66/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 67/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 68/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 69/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 70/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 71/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 72/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 73/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 74/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 75/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 76/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 77/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 78/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 79/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 80/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 81/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 82/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 83/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 84/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 85/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 86/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 87/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 88/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 89/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 90/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 91/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 92/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 93/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 94/100 of size 409 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 95/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 96/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 97/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 98/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 99/100 of size 409 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:424 - Generated quote 100/100 of size 409 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:369 - ##### RESULTS ################################
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:370 - Command: TPM2_Quote
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:371 - n      = 100
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:372 - min    = 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:373 - max    = 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:374 - mean   = 4.136462ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:375 - sigma  = 345.2835309180446us
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:376 - ##############################################
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:436 - ##### START ###################################
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:437 - Testing performance of ECDH key exchange...
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 1/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 1/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 1/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 1/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 1/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 2/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 2/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 2/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 2/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 2/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 3/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 3/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 3/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 3/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 3/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 4/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 4/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 4/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 4/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 4/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 5/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 5/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 5/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 5/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 5/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 6/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 6/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 6/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 6/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 6/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 7/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 7/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 7/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 7/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 7/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 8/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 8/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 8/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 8/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 8/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 9/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 9/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 9/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 9/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 9/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 10/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 10/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 10/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 10/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 10/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 11/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 11/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 11/100 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 11/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 11/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 12/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 12/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 12/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 12/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 12/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 13/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 13/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 13/100 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 13/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 13/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 14/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 14/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 14/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 14/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 14/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 15/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 15/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 15/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 15/100 in 5ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 15/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 16/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 16/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 16/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 16/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 16/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 17/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 17/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 17/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 17/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 17/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 18/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 18/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 18/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 18/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 18/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 19/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 19/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 19/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 19/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 19/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 20/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 20/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 20/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 20/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 20/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 21/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 21/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 21/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 21/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 21/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 22/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 22/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 22/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 22/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 22/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 23/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 23/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 23/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 23/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 23/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 24/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 24/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 24/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 24/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 24/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 25/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 25/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 25/100 in 3ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 25/100 in 4ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:479 - Generated shared secret 25/100 in 2ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:444 - Generated ECDH key 26/100 in 1ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:452 - Loaded ECDH key 26/100 in 0ms
-2023-07-17 11:21:29 INFO  TpmEngineImplTest:462 - Certified ECDH key 26/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 26/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 26/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 27/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 27/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 27/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 27/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 27/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 28/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 28/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 28/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 28/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 28/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 29/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 29/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 29/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 29/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 29/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 30/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 30/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 30/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 30/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 30/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 31/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 31/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 31/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 31/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 31/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 32/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 32/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 32/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 32/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 32/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 33/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 33/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 33/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 33/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 33/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 34/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 34/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 34/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 34/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 34/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 35/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 35/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 35/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 35/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 35/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 36/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 36/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 36/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 36/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 36/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 37/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 37/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 37/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 37/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 37/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 38/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 38/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 38/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 38/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 38/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 39/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 39/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 39/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 39/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 39/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 40/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 40/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 40/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 40/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 40/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 41/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 41/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 41/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 41/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 41/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 42/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 42/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 42/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 42/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 42/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 43/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 43/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 43/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 43/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 43/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 44/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 44/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 44/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 44/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 44/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 45/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 45/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 45/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 45/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 45/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 46/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 46/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 46/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 46/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 46/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 47/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 47/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 47/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 47/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 47/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 48/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 48/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 48/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 48/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 48/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 49/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 49/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 49/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 49/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 49/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 50/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 50/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 50/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 50/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 50/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 51/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 51/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 51/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 51/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 51/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 52/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 52/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 52/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 52/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 52/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 53/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 53/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 53/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 53/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 53/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 54/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 54/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 54/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 54/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 54/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 55/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 55/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 55/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 55/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 55/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 56/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 56/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 56/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 56/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 56/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 57/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 57/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 57/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 57/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 57/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 58/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 58/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 58/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 58/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 58/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 59/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 59/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 59/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 59/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 59/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 60/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 60/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 60/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 60/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 60/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 61/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 61/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 61/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 61/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 61/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 62/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 62/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 62/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 62/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 62/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 63/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 63/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 63/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 63/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 63/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 64/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 64/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 64/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 64/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 64/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 65/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 65/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 65/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 65/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 65/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 66/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 66/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 66/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 66/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 66/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 67/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 67/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 67/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 67/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 67/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 68/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 68/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 68/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 68/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 68/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 69/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 69/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 69/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 69/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 69/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 70/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 70/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 70/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 70/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 70/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 71/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 71/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 71/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 71/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 71/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 72/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 72/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 72/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 72/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 72/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 73/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 73/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 73/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 73/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 73/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 74/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 74/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 74/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 74/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 74/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 75/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 75/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 75/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 75/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 75/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 76/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 76/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 76/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 76/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 76/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 77/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 77/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 77/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 77/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 77/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 78/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 78/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 78/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 78/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 78/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 79/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 79/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 79/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 79/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 79/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 80/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 80/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 80/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 80/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 80/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 81/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 81/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 81/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 81/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 81/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 82/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 82/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 82/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 82/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 82/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 83/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 83/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 83/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 83/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 83/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 84/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 84/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 84/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 84/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 84/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 85/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 85/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 85/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 85/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 85/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 86/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 86/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 86/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 86/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 86/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 87/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 87/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 87/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 87/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 87/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 88/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 88/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 88/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 88/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 88/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 89/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 89/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 89/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 89/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 89/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 90/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 90/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 90/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 90/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 90/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 91/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 91/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 91/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 91/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 91/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 92/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 92/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 92/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 92/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 92/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 93/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 93/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 93/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 93/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 93/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 94/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 94/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 94/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 94/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 94/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 95/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 95/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 95/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 95/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 95/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 96/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 96/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 96/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 96/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 96/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 97/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 97/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 97/100 in 6ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 97/100 in 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 97/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 98/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 98/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 98/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 98/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 98/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 99/100 in 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 99/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 99/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 99/100 in 4ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 99/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:444 - Generated ECDH key 100/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:452 - Loaded ECDH key 100/100 in 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:462 - Certified ECDH key 100/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:471 - Certified ECDH key creation 100/100 in 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:479 - Generated shared secret 100/100 in 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:369 - ##### RESULTS ################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:370 - Command: TPM2_Create(ECDH)
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:371 - n      = 100
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:372 - min    = 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:373 - max    = 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:374 - mean   = 1.2703129999999996ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:375 - sigma  = 468.81777568580935us
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:376 - ##############################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:369 - ##### RESULTS ################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:370 - Command: TPM2_Load(ECDH)
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:371 - n      = 100
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:372 - min    = 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:373 - max    = 1ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:374 - mean   = 0.23005300000000004ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:375 - sigma  = 423.05156321945464us
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:376 - ##############################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:369 - ##### RESULTS ################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:370 - Command: TPM2_Certify(ECDH)
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:371 - n      = 100
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:372 - min    = 2ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:373 - max    = 6ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:374 - mean   = 4.098117000000002ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:375 - sigma  = 481.9209080619689us
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:376 - ##############################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:369 - ##### RESULTS ################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:370 - Command: TPM2_CertifyCreation(ECDH)
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:371 - n      = 100
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:372 - min    = 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:373 - max    = 5ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:374 - mean   = 4.109904ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:375 - sigma  = 345.18421108126887us
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:376 - ##############################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:369 - ##### RESULTS ################################
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:370 - Command: TPM2_ECDH_ZGen()
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:371 - n      = 100
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:372 - min    = 0ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:373 - max    = 3ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:374 - mean   = 1.296271ms
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:375 - sigma  = 477.3829336205067us
-2023-07-17 11:21:30 INFO  TpmEngineImplTest:376 - ##############################################
-2023-07-17 11:21:30 INFO  TpmTester:65 - ********* Finished test in 2036ms *********
-2023-07-17 11:21:30 INFO  TpmTester:72 - Done.
+2023-07-19 15:25:55 DEBUG TpmEngineImpl:102 - No dangling TRANSIENT handles
+2023-07-19 15:25:55 DEBUG TpmEngineImpl:102 - No dangling LOADED_SESSION handles
+2023-07-19 15:25:55 INFO  TpmTester:46 - ************* Running testTpmSpeed *************
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:382 - Loading quoting key...
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:385 - Loaded a quoting key of size 280 bytes in 0s
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:388 - Loading storage root key...
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:391 - Loaded a storage root key of size 282 bytes in 0s
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:395 - ##### START ###################################
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:396 - Testing performance of command TPM2_PCR_Read...
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (1/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (2/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (3/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (4/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (5/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (6/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (7/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (8/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (9/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (10/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (11/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (12/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (13/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (14/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (15/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (16/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (17/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (18/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (19/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (20/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (21/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (22/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (23/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (24/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (25/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (26/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (27/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (28/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (29/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (30/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (31/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (32/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (33/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (34/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (35/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (36/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (37/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (38/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (39/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (40/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (41/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (42/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (43/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (44/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (45/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (46/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (47/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (48/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (49/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (50/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (51/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (52/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (53/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (54/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (55/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (56/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (57/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (58/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (59/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (60/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (61/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (62/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (63/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (64/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (65/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (66/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (67/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (68/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (69/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (70/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (71/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (72/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (73/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (74/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (75/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (76/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (77/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (78/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (79/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (80/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (81/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (82/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (83/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (84/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (85/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (86/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (87/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (88/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (89/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (90/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (91/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (92/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (93/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (94/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (95/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (96/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (97/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (98/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (99/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:401 - Read PCRs (100/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:403 - ##############################################
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:406 - Testing performance of command TPM2_PCR_Reset(16)...
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (1/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (2/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (3/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (4/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (5/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (6/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (7/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (8/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (9/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (10/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (11/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (12/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (13/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (14/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (15/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (16/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (17/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (18/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (19/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (20/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (21/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (22/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (23/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (24/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (25/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (26/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (27/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (28/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (29/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (30/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (31/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (32/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (33/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (34/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (35/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (36/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (37/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (38/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (39/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (40/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (41/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (42/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (43/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (44/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (45/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (46/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (47/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (48/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (49/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (50/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (51/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (52/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (53/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (54/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (55/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (56/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (57/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (58/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (59/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (60/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (61/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (62/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (63/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (64/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (65/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (66/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (67/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (68/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (69/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (70/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (71/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (72/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (73/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (74/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (75/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (76/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (77/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (78/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (79/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (80/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (81/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (82/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (83/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (84/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (85/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (86/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (87/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (88/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (89/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (90/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (91/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (92/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (93/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (94/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (95/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (96/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (97/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (98/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (99/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:411 - Reset PCR (100/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:413 - ##############################################
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:416 - Testing performance of command TPM2_PCR_Extend(16)...
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (1/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (2/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (3/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (4/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (5/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (6/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (7/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (8/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (9/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (10/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (11/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (12/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (13/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (14/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (15/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (16/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (17/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (18/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (19/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (20/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (21/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (22/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (23/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (24/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (25/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (26/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (27/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (28/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (29/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (30/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (31/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (32/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (33/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (34/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (35/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (36/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (37/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (38/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (39/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (40/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (41/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (42/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (43/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (44/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (45/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (46/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (47/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (48/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (49/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (50/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (51/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (52/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (53/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (54/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (55/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (56/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (57/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (58/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (59/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (60/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (61/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (62/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (63/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (64/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (65/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (66/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (67/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (68/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (69/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (70/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (71/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (72/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (73/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (74/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (75/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (76/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (77/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (78/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (79/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (80/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (81/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (82/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (83/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (84/100) in 6ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (85/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (86/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (87/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (88/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (89/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (90/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (91/100) in 1ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (92/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (93/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (94/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (95/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (96/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (97/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (98/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (99/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:422 - Extend PCR (100/100) in 0ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:424 - ##############################################
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:427 - Testing performance of command TPM2_Quote...
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 1/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 2/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 3/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 4/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 5/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 6/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 7/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 8/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 9/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 10/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 11/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 12/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 13/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 14/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 15/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 16/100 of size 409 in 5ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 17/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 18/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 19/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 20/100 of size 409 in 5ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 21/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 22/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 23/100 of size 409 in 5ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 24/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 25/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 26/100 of size 409 in 5ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 27/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 28/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 29/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 30/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 31/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 32/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 33/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 34/100 of size 409 in 5ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 35/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 36/100 of size 409 in 3ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 37/100 of size 409 in 4ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 38/100 of size 409 in 5ms
+2023-07-19 15:25:55 INFO  TpmEngineImplTest:433 - Generated quote 39/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 40/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 41/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 42/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 43/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 44/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 45/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 46/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 47/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 48/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 49/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 50/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 51/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 52/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 53/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 54/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 55/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 56/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 57/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 58/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 59/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 60/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 61/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 62/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 63/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 64/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 65/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 66/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 67/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 68/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 69/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 70/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 71/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 72/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 73/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 74/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 75/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 76/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 77/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 78/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 79/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 80/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 81/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 82/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 83/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 84/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 85/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 86/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 87/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 88/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 89/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 90/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 91/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 92/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 93/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 94/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 95/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 96/100 of size 409 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 97/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 98/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 99/100 of size 409 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:433 - Generated quote 100/100 of size 409 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:435 - ##############################################
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:438 - Testing performance of ECDH key exchange...
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 1/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 1/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 1/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 1/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 1/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 2/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 2/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 2/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 2/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 2/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 3/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 3/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 3/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 3/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 3/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 4/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 4/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 4/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 4/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 4/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 5/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 5/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 5/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 5/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 5/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 6/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 6/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 6/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 6/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 6/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 7/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 7/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 7/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 7/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 7/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 8/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 8/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 8/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 8/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 8/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 9/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 9/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 9/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 9/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 9/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 10/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 10/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 10/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 10/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 10/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 11/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 11/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 11/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 11/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 11/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 12/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 12/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 12/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 12/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 12/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 13/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 13/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 13/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 13/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 13/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 14/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 14/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 14/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 14/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 14/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 15/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 15/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 15/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 15/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 15/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 16/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 16/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 16/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 16/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 16/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 17/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 17/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 17/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 17/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 17/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 18/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 18/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 18/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 18/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 18/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 19/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 19/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 19/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 19/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 19/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 20/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 20/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 20/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 20/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 20/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 21/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 21/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 21/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 21/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 21/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 22/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 22/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 22/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 22/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 22/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 23/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 23/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 23/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 23/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 23/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 24/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 24/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 24/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 24/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 24/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 25/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 25/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 25/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 25/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 25/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 26/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 26/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 26/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 26/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 26/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 27/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 27/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 27/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 27/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 27/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 28/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 28/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 28/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 28/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 28/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 29/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 29/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 29/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 29/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 29/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 30/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 30/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 30/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 30/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 30/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 31/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 31/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 31/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 31/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 31/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 32/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 32/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 32/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 32/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 32/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 33/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 33/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 33/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 33/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 33/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 34/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 34/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 34/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 34/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 34/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 35/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 35/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 35/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 35/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 35/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 36/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 36/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 36/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 36/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 36/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 37/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 37/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 37/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 37/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 37/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 38/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 38/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 38/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 38/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 38/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 39/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 39/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 39/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 39/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 39/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 40/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 40/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 40/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 40/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 40/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 41/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 41/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 41/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 41/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 41/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 42/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 42/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 42/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 42/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 42/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 43/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 43/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 43/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 43/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 43/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 44/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 44/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 44/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 44/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 44/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 45/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 45/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 45/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 45/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 45/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 46/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 46/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 46/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 46/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 46/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 47/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 47/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 47/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 47/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 47/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 48/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 48/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 48/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 48/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 48/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 49/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 49/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 49/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 49/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 49/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 50/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 50/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 50/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 50/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 50/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 51/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 51/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 51/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 51/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 51/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 52/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 52/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 52/100 in 4ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 52/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 52/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 53/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 53/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 53/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 53/100 in 5ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 53/100 in 1ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 54/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 54/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 54/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 54/100 in 3ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:466 - Generated shared secret 54/100 in 2ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:443 - Generated ECDH key 55/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:448 - Loaded ECDH key 55/100 in 0ms
+2023-07-19 15:25:56 INFO  TpmEngineImplTest:455 - Certified ECDH key 55/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 55/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 55/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 56/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 56/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 56/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 56/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 56/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 57/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 57/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 57/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 57/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 57/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 58/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 58/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 58/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 58/100 in 6ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 58/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 59/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 59/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 59/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 59/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 59/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 60/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 60/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 60/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 60/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 60/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 61/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 61/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 61/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 61/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 61/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 62/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 62/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 62/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 62/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 62/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 63/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 63/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 63/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 63/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 63/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 64/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 64/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 64/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 64/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 64/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 65/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 65/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 65/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 65/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 65/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 66/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 66/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 66/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 66/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 66/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 67/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 67/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 67/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 67/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 67/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 68/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 68/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 68/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 68/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 68/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 69/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 69/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 69/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 69/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 69/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 70/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 70/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 70/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 70/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 70/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 71/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 71/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 71/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 71/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 71/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 72/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 72/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 72/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 72/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 72/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 73/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 73/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 73/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 73/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 73/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 74/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 74/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 74/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 74/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 74/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 75/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 75/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 75/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 75/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 75/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 76/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 76/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 76/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 76/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 76/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 77/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 77/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 77/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 77/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 77/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 78/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 78/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 78/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 78/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 78/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 79/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 79/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 79/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 79/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 79/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 80/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 80/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 80/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 80/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 80/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 81/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 81/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 81/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 81/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 81/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 82/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 82/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 82/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 82/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 82/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 83/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 83/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 83/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 83/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 83/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 84/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 84/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 84/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 84/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 84/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 85/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 85/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 85/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 85/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 85/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 86/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 86/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 86/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 86/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 86/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 87/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 87/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 87/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 87/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 87/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 88/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 88/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 88/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 88/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 88/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 89/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 89/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 89/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 89/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 89/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 90/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 90/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 90/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 90/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 90/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 91/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 91/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 91/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 91/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 91/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 92/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 92/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 92/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 92/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 92/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 93/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 93/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 93/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 93/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 93/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 94/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 94/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 94/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 94/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 94/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 95/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 95/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 95/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 95/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 95/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 96/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 96/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 96/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 96/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 96/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 97/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 97/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 97/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 97/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 97/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 98/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 98/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 98/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 98/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 98/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 99/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 99/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 99/100 in 3ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 99/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 99/100 in 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:443 - Generated ECDH key 100/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:448 - Loaded ECDH key 100/100 in 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:455 - Certified ECDH key 100/100 in 4ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:461 - Certified ECDH key creation 100/100 in 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:466 - Generated shared secret 100/100 in 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:471 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:472 - 
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:477 - ##### TPM Command Timings ####################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_FlushContext
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 0.22496900000000006ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 416.57867475618133us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_Create
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 1.3592589999999996ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 483.0116398821215us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_PCR_Read
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 0.42223099999999997ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 494.8604404212763us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_PCR_Reset
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 0.22990599999999997ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 422.8564834789713us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_Certify
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 4.278938000000001ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 474.61713560521696us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_CreatePrimary
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 1
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 134ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 134ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 134.03629999999998ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = NaNus
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_Load
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 1ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 0.21001999999999996ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 409.4046919835942us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_Quote
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 5ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 4.199574ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 427.27951692047907us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_ECDH_ZGen
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 1.3107410000000004ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 464.8333797483597us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_PCR_Extend
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 0ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 6ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 0.26000599999999996ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 705.2824468697816us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:368 - Type:   TPM2_CertifyCreation
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:369 - n     = 100
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:370 - min   = 2ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:371 - max   = 6ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:372 - mean  = 4.274965999999999ms
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:373 - sigma = 511.0617895829401us
+2023-07-19 15:25:57 INFO  TpmEngineImplTest:482 - ##############################################
+2023-07-19 15:25:57 INFO  TpmTester:65 - ********* Finished test in 2443ms *********
+2023-07-19 15:25:57 INFO  TpmTester:72 - Done.
