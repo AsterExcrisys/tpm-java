@@ -31,7 +31,8 @@ Currently the library supports the following protocols:
   - TAP (plaintext)
   - TAP (DHKE)
   - TAP (SSL)
-  - MSCP
+  - MSCP (external DHKE)
+  - MSCP (TPM DHKE)
 
 For each protocol, the library provides server and client socket classes.
 Created sockets can be individually configured with uni- or bidirectional attestations and PCR selections.
@@ -47,7 +48,6 @@ You can change that behavior with the `--args="-n 1 --type tap-uni --type ..."` 
 Note that the examples require a running [MSR TPM simulator](https://gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-simulator).
 You can use the `--args="-a 127.0.0.1"` option to change the address of the TPM server to use, or set `--args="--device"` to use the local platform TPM instead.
 The option `--args="-h"` displays a list of all available configuration parameters.
-
 
 ## TTP Server
 The `ttp` subproject contains a standalone Trusted Third Party (TTP) providing trustworthy fingerprints for TPM-based remote attestations.

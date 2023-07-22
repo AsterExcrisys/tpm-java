@@ -1,0 +1,195 @@
+/*
+ * Protocol:  Stumpf's attested key exchange protocol
+ *                  A -> B: N^A, g^A
+ *                  A <- B: g^B, (h(g^B, N^A), PCR^B)_sig^B
+ *
+ * Modeler:   Paul Wagner
+ * Date:      February 2020
+ */
+theory Stumpf
+begin
+
+builtins: hashing, signing, diffie-hellman, symmetric-encryption
+
+/* Our goal is to verify the security of the key exchange protocol under the assumption
+ * that the trusted platform is secure. This means that we assume the used attestation
+ * keys to be known between Alice and Bob. Furthermore we assume that the attacker is
+ * unable to compromise an established attestation key or forge quote signatures. We
+ * model these assumptions by creating the attestation keys once for each platform.
+ */
+
+// Define two TPMs (Alice and Bob)
+rule TPM:
+  []
+  -->
+  [TPM('A'), TPM('B')]
+
+// Create a unique attestation key for each TPM
+rule Get_ak:
+  [ Fr(~ak), TPM(X) ]
+  --[
+    OnlyOnceFor(X)
+    , IsAK(X, ~ak)
+  ]->
+  [ Ak(X, ~ak), !AkCert(X, pk(~ak)) ]
+
+/* Create quotes for Bob's trusted software stack (TSS). This rule models that there is
+ * some valid software on Bob's platform that acts as an attestation endpoint. It takes
+ * some qualifying data (e.g. a nonce) and asks the TPM to create a signed quote.
+ * Activating this rule will break the security of Stumpf's key exchange protocol!
+ */
+rule TSS_Quote_TPMB:
+  [ In(qualifyingData)
+    , Ak('B', ak)
+  ]
+  -->
+  [ Out(sign(<qualifyingData, 'PCRB'>, ak)) ]
+
+// Step 1 and 2
+rule Alice_1:
+  [ Fr(~nonceA)                           // Choose fresh nonce for Alice
+    , Fr(~a)                              // Choose fresh DH private key for Alice
+  ]
+  --[
+    AttestationRequest('A', 'B', ~nonceA) // Take note of Alice's attestation request
+  ]->
+  [ Out(<'msg1', 'A', ~nonceA, 'g'^~a>)   // Send attestation request to Bob
+    , Alice_1('B', ~nonceA, <~a, 'g'^~a>)
+  ]
+
+// Step 3 and 4
+rule Bob_1:
+let quoteB = sign(<h(nonceA, 'g'^~b), 'PCRB'>, akB)
+in
+  [ In(<'msg1', A, nonceA, dhPubA>)       // Receive attestation request from Alice
+    , Fr(~b)                              // Choose fresh DH private key for Bob
+    , Ak('B', akB), !AkCert('B', akCertB) // Load Bob's AK key
+  ]
+  --[
+    Neq(dhPubA, 'g')                      // Alice's public DH key must not be 'g'
+    , AttestationResponse('B', A, quoteB) // Take note of the response that Bob sends
+    , EstablishedKey('B', dhPubA^~b)      // Take note of Bob's established key
+  ]->
+  [ Out(<'msg2', 'B', 'g'^~b, quoteB>)    // Send attestation response to Alice
+    , Bob_1(A, dhPubA^~b)
+  ]
+
+// Step 5 to 7
+rule Alice_2:
+  [ In(<'msg2', B, dhPubB, quoteB>)         // Receive attestation response from Bob
+    , Alice_1(B, nonceA, <dhPrivA, dhPubA>) // Retrieve own nonce and the DH key
+    , !AkCert(B, akCertB)                   // Lookup Bob's AK certificate
+    , Fr(~nonce1)                           // Create a new nonce1 for the subsequent proof of knowledge
+  ]
+  --[ 
+    Neq(dhPubB, 'g')                        // Bob's public DH key must not be 'g'
+    , Eq(verify(quoteB,                     // Verify the quote, including the nonce
+                <h(nonceA, dhPubB), 'PCRB'>,
+                akCertB), true)
+    , Attested('A', B, nonceA, akCertB)     // Take note that Alice attested Bob
+    , EstablishedKey('A', dhPubB^dhPrivA)   // Take note of Alice's established key
+  ]->
+  [ Out(<'msg3', 'A', ~nonce1>)             // Send a proof of knowledge request to Bob
+    , Alice_2(B, ~nonce1, dhPubB^dhPrivA)
+  ]
+
+// Step 8 and 9
+rule Bob_2:
+  [ In(<'msg3', A, nonce1>)                 // Receive proof of knowledge request from Alice
+    , Bob_1(A, k)
+  ]
+  --[ 
+    ProofOfKnowledge('B', k)                // Take note of Bob's proof of knowlede
+  ]->
+  [ Out(<'msg4', 'B', senc(nonce1, k)>) ]   // Send proof of knowledge to Alice
+
+// Step 10
+rule Alice_3:
+  [ Alice_2(B, nonce1, k)                   // Retrieve previously chosen nonce
+    , In(<'msg4', B, pok>)                  // Receive Bob's proof of knowledge
+  ]
+  --[
+    Eq(sdec(pok, k), nonce1)                // Verify proof of knowledge
+    , ProofOfKnowledge('A', k)              // Take note of Alice's proof of knowledge
+  ]->
+  []
+
+restriction Equality:
+  "All x y #i. Eq(x,y) @i ==> x = y"
+restriction InEquality:
+  "All x y #i. Neq(x,y) @i ==> not(x = y)"
+
+restriction OnlyOnceFor:
+  "All X #i #j. OnlyOnceFor(X)@#i & OnlyOnceFor(X)@#j ==> #i = #j"
+
+/* Prove that Alice can attest Bob and they establish a shared secret.
+ * Proving this lemma makes sure that the model can be fully executed.
+ */
+lemma Honest_protocol:
+  exists-trace
+  " Ex ak nonceA dhPubB key #i #j #k #l #m.
+      AttestationRequest('A', 'B', nonceA) @ #i
+      & AttestationResponse('B', 'A', sign(<h(nonceA, dhPubB), 'PCRB'>, ak)) @ #j
+      & EstablishedKey('B', key) @ #j
+      & Attested('A', 'B', nonceA, pk(ak)) @ #k
+      & EstablishedKey('A', key) @ #k
+      & ProofOfKnowledge('B', key) @ #l
+      & ProofOfKnowledge('A', key) @ #m
+      & #i < #j
+      & #j < #k
+      & #k < #l
+      & #l < #m
+  "
+
+/* Prove that an attacker cannot intercept the established secret. The prover basically
+ * reduces this property to the security of a Diffie-Hellman key exchange. Note that the
+ * exchange is authenticated by the fixed attestation keys that we assume the attacker
+ * cannot forge. If the rule TSS_Quote_TPMB is activated, there is a man-in-the-middle
+ * attack and this lemma is falsified.
+ */
+lemma Established_key_secrecy:
+  " /* It cannot be that */
+    not(
+      Ex challengeA akCertB key #i #j #k.
+        /* Alice attested Bob, */
+        Attested('A', 'B', challengeA, akCertB) @ #i
+        /* they established a shared key, */
+        & EstablishedKey('A', key) @ #j
+        /* and the adversary knows the key */
+        & K(key) @ #k
+    )
+  "
+
+/* Prove that Alice and Bob can mutually attest to one another, while establishing a
+ * single shared key. This property cannot be proven, because the Stumpf protocol does
+ * not include mutual attestation.
+ */
+lemma Mutual_attestation:
+  exists-trace
+  "
+    Ex akA akB nonceA nonceB key #i #j.
+      Attested('A', 'B', nonceA, pk(akA)) @ #i
+      & EstablishedKey('A', key) @ #i
+      & Attested('B', 'A', nonceB, pk(akB)) @ #j
+      & EstablishedKey('B', key) @ #j
+  "
+
+/* Sanity check: Prove that the attacker does not learn the secret attestation keys.
+ * In our model we assume that the trusted platforms are secure and no attestation keys
+ * leak. Otherwise the protocol would be trivially insecure, since an attacker could
+ * just forge a quote.
+ */
+lemma Aks_do_not_leak:
+  "not(
+    Ex akA #i #j.
+      IsAK('A', akA) @ #i
+      & K(akA) @ #j
+  )
+  &
+  not(
+    Ex akB #i #j.
+      IsAK('B', akB) @ #i
+      & K(akB) @ #j
+  )"
+
+end

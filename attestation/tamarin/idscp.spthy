@@ -1,0 +1,284 @@
+/*
+ * Protocol: IDSCP attested key exchange protocol with PFS
+ *
+ * This theory models the IDSCP protocol with perfect forward secrecy (PFS) enabled in
+ * the underlying TLS stack. This theory shows that in this configuration, IDSCP is
+ * vulnerable against internal attackers if an attestation endpoint for the standard
+ * TCG remote attestation protocol is present on one of the trusted platforms.
+ *
+ * Modeler:  Paul Wagner
+ * Date:     February 2020
+ */
+theory IDSCP
+begin
+
+builtins: hashing, signing, diffie-hellman, symmetric-encryption
+
+/* Our goal is to verify the security of the key exchange protocol under the assumption
+ * that the trusted platform is secure. This means that we assume the used attestation
+ * keys to be known between Alice and Bob. Furthermore we assume that the attacker is
+ * unable to compromise an established attestation key or forge quote signatures. We
+ * model these assumptions by creating the attestation keys once for each platform.
+ * 
+ * However, IDSCP is vulnerable against internal attackers who have knowledge about the
+ * platform secrets that are not bound to a TPM (in our case the TLS key). We model the
+ * administrator of Bob's system as an internal attacker by leaking Bob's TLS signature
+ * key (see below).
+ */
+
+// Define two TPMs (Alice and Bob)
+rule TPM:
+  []
+  -->
+  [TPM('A'), TPM('B')]
+
+// Create a unique attestation key for each TPM
+rule Get_ak:
+  [ Fr(~ak), TPM(X) ]
+  --[
+    OnlyOnceFor(<'Get_ak', X>)
+    , IsAK(X, ~ak)
+  ]->
+  [ Ak(X, ~ak), !AkCert(X, pk(~ak)) ]
+
+// Create a TLS signature key for each system
+rule Get_tls:
+  [ Fr(~tls), TPM(X) ]
+  --[
+    OnlyOnceFor(<'Get_tls', X>)
+  ]->
+  [ !Tls(X, ~tls), !TlsCert(X, pk(~tls)) ]
+
+// The TLS public keys are known to any attacker
+rule Tls_Certs_Are_Public:
+  [ !TlsCert('A', tlsCertA), !TlsCert('B', tlsCertB) ]
+  -->
+  [ Out(tlsCertA), Out(tlsCertB) ]
+
+/* Since we need at least one honest player, we assume that the internal attacker knows
+ * Bob's TLS signature key. This models an internal attacker who knows Bob's secrets
+ * (for example the administrator of the system) and wants to intercept the messages
+ * between Alice and the (trusted) Bob on the attested secure channel. For this purpose,
+ * rule BobIsAnInternalAttacker leaks Bob's TLS signature key.
+ */
+rule BobIsAnInternalAttacker:
+  [ !Tls('B', tlsB) ]
+  -->
+  [ Out(tlsB) ]
+
+/* Create quotes for Bob's trusted software stack (TSS). This rule models that there is
+ * some valid software on Bob's platform that acts as an attestation endpoint. It takes
+ * some qualifying data (e.g. a nonce) and asks the TPM to create a signed quote.
+ * Activating this rule will break the security of IDSCP!
+ */
+rule TSS_Quote_TPMB:
+  [ In(qualifyingData)
+    , Ak('B', ak)
+  ]
+  -->
+  [ Out(sign(<qualifyingData, 'PCRB'>, ak)) ]
+
+// Step 1: Ephemeral DH key exchange during TLS handshake
+rule tlsDHKE_A1:
+  [ Fr(~a)                                     // Choose fresh DH private key for Alice
+    , !Tls('A', tlsA)                          // Lookup Alice's TLS signature key
+  ]
+  --[
+    OnlyOnceFor('tlsDHKE_A1')
+  ]->
+  [ Out(<'DHKE1', 'g'^~a, sign('g'^~a, tlsA)>)
+    , DHKE_A(~a)                               // Store Alice's DH private key
+  ]
+
+rule tlsDHKE_B:
+  [ In(<'DHKE1', dhPubA, sigA>)
+    , !TlsCert('A', tlsCertA)                  // Lookup Alice's TLS certificate
+    , Fr(~b)                                   // Choose fresh DH private key for Bob
+    , !Tls('B', tlsB)                          // Lookup Bob's TLS signature key
+  ]
+  --[ 
+    OnlyOnceFor('tlsDHKE_B')
+    , Neq(dhPubA, 'g')                         // Alice's public DH key must not be 'g'
+    , Eq(verify(sigA, dhPubA, tlsCertA), true) // Verify the DHKE signature
+    , EstablishedKey('B', dhPubA^~b)           // Take note of Bob's established key
+  ]->
+  [ Out(<'DHKE2', 'g'^~b, sign('g'^~b, tlsB)>)
+    , Tls_Finish('B')                          // Bob finished the TLS handshake and used tlsCertA for verification. This public key must later be included his quote.
+    , !Tls_Ephemeral_Key_B(dhPubA^~b)
+  ]
+
+rule tlsDHKE_A2:
+  [ In(<'DHKE2', dhPubB, sigB>)
+    , DHKE_A(~a)
+    , !TlsCert('B', tlsCertB)                  // Lookup Bob's TLS certificate
+  ]
+  --[ 
+    OnlyOnceFor('tlsDHKE_A2')
+    , Neq(dhPubB, 'g')                         // Bob's public DH key must not be 'g'
+    , Eq(verify(sigB, dhPubB, tlsCertB), true) // Verify the DHKE signature
+    , EstablishedKey('A', dhPubB^~a)           // Take note of Alice's established key
+  ]->
+  [ Tls_Finish('A')                            // Alice finished the TLS handshake and used tlsCertB for verification. This public key must later be included her quote.
+    , !Tls_Ephemeral_Key_A(dhPubB^~a)
+  ]
+
+/* So far only the authenticated Diffie-Hellman key exchange during the TLS handshake
+ * has been conducted. Now the remote attestation protocol that binds the TLS public
+ * keys to the TPM state starts.
+ */
+
+// Step 2: IdscpRaVerifier messages
+rule IdscpRaVerifier_A:
+  [ Tls_Finish('A')
+    , !Tls_Ephemeral_Key_A(key)
+    , Fr(~challengeA)                                     // Choose fresh nonce for Alice
+  ]
+  --[
+    OnlyOnceFor('IdscpRaVerifier_A')
+    , IdscpRaVerifier('A', 'B', ~challengeA)              // Take note of Alice's attestation request
+  ]->
+  [ Out(senc(<'IdscpRaVerifier', 'A', ~challengeA>, key)) // Send attestation request to Bob
+    , Alices_Nonce(~challengeA)
+  ]
+
+rule IdscpRaVerifier_B:
+  [ Tls_Finish('B')
+    , !Tls_Ephemeral_Key_B(key)
+    , In(senc(<'IdscpRaVerifier', A, challengeA>, key))   // Receive attestation request from Alice
+    , Fr(~challengeB)                                     // Choose fresh nonce for Bob
+  ]
+  --[
+    OnlyOnceFor('IdscpRaVerifier_B')
+    , IdscpRaVerifier('B', 'A', ~challengeB)              // Take note of Bob's attestation request
+  ]->
+  [ Out(senc(<'IdscpRaVerifier', 'B', ~challengeB>, key)) // Send attestation request to Alice
+    , Bobs_Nonce(~challengeB)
+    , Bobs_Received_Nonce(challengeA)
+  ]
+
+rule IdscpRaProver_A:
+let quoteA = sign(<h(challengeB, tlsCertB), 'PCRA'>, akA) in
+  [ !Tls_Ephemeral_Key_A(key)
+    , In(senc(<'IdscpRaVerifier', B, challengeB>, key)) // Receive attestation request from Bob
+    , !TlsCert(B, tlsCertB)                             // Load Bob's TLS certificate
+    , Ak('A', akA), !AkCert('A', akCertA)               // Load Alice's attestation key
+  ]
+  --[
+    OnlyOnceFor('IdscpRaProver_A')
+    , IdscpRaProver('A', B, quoteA)                     // Take note of the response that Alice sends to Bob
+  ]->
+  [ Out(senc(<'IdscpRaProver', 'A', quoteA>, key)) ]    // Send quote to Bob
+
+rule IdscpRaProver_B:
+let quoteB = sign(<h(challengeA, tlsCertA), 'PCRB'>, akB) in
+  [ !Tls_Ephemeral_Key_B(key)
+    , In(senc(<'IdscpRaProver', A, quoteA>, key))       // Receive quote from Alice
+    , Bobs_Received_Nonce(challengeA)                   // Load Alice's nonce that Bob received in the previous step
+    , !TlsCert(A, tlsCertA)                             // Load Alice's TLS certificate
+    , Ak('B', akB), !AkCert('B', akCertB)               // Load Bob's attestation key
+  ]
+  --[
+    OnlyOnceFor('IdscpRaProver_B')
+    , IdscpRaProver('B', A, quoteB)                     // Take note of the response that Bob sends to Alice
+  ]->
+  [ Out(senc(<'IdscpRaProver', 'B', quoteB>, key))      // Send quote to Alice
+    , Bobs_Received_Quote(quoteA)                       // Store quote for later verification
+  ]
+
+rule IdscpRaResult_A:
+  [ !Tls_Ephemeral_Key_A(key)
+    , In(senc(<'IdscpRaProver', B, quoteB>, key))       // Receive quote from Bob
+    , Alices_Nonce(challengeA)                          // Retrieve own nonce from previous step
+    , !Tls('A', tlsA)                                   // Lookup own TLS key
+    , !AkCert(B, akCertB)                               // Lookup Bob's attestation key certificate
+  ]
+  --[ 
+    OnlyOnceFor('IdscpRaResult_A')
+    , Eq(verify(quoteB,                                 // Verify the quote, including the nonce and the TLS public key
+                <h(challengeA, pk(tlsA)), 'PCRB'>,
+                akCertB), true)
+    , Attested('A', B, challengeA, akCertB)             // Take note that Alice attested Bob
+  ]->
+  [ Out(senc(<'IdscpRaResult', 'A'>, key)) ]            // The original protocol informs about the attestation success, we don't need that here
+
+rule IdscpRaResult_B:
+  [ !Tls_Ephemeral_Key_B(key)
+    , In(senc(<'IdscpRaResult', A>, key))
+    , Bobs_Nonce(challengeB)                            // Retrieve own nonce from previous step
+    , Bobs_Received_Quote(quoteA)                       // Retrieve previously received quote from Alice
+    , !Tls('B', tlsB)                                   // Lookup own TLS key
+    , !AkCert(A, akCertA)                               // Lookup Alice's attestation key certificate
+  ]
+  --[
+    OnlyOnceFor('IdscpRaResult_B')
+    , Eq(verify(quoteA,                                 // Verify the quote, including the nonce and the TLS public key
+                <h(challengeB, pk(tlsB)), 'PCRA'>,
+                akCertA), true)
+    , Attested('B', A, challengeB, akCertA)             // Take note that Bob attested Alice
+  ]->
+  []
+
+restriction Equality:
+  "All x y #i. Eq(x,y) @i ==> x = y"
+restriction InEquality:
+  "All x y #i. Neq(x,y) @i ==> not(x = y)"
+
+restriction OnlyOnceFor:
+  "All X #i #j. OnlyOnceFor(X)@#i & OnlyOnceFor(X)@#j ==> #i = #j"
+
+/* Prove that Alice and Bob can mutually attest to one another and establish a shared
+ * secret. Proving this lemma makes sure that the model can be fully executed.
+ */
+lemma Honest_protocol_mutual_attestation:
+  exists-trace
+  " Ex akA akB challengeA challengeB tlsCertA tlsCertB key #i #j #k #l #m #n #o #p.
+      IdscpRaVerifier('A', 'B', challengeA) @ #i
+      & IdscpRaVerifier('B', 'A', challengeB) @ #j
+      & IdscpRaProver('A', 'B', sign(<h(challengeB, tlsCertB), 'PCRA'>, akA)) @ #k
+      & IdscpRaProver('B', 'A', sign(<h(challengeA, tlsCertA), 'PCRB'>, akB)) @ #l
+      & Attested('A', 'B', challengeA, pk(akB) ) @ #m
+      & Attested('B', 'A', challengeB, pk(akA) ) @ #n
+      & EstablishedKey('A', key ) @ #o
+      & EstablishedKey('B', key ) @ #p
+  "
+
+/* Prove that an attacker cannot establish a shared secret with honest Alice and still
+ * successfully complete the attestation. An internal attacker with knowledge Bob's TLS
+ * signature key (c.f. rule BobIsAnInternalAttacker) can establish a DH secret with
+ * Alice during the TLS handshake. However, that attacker still has to present a valid
+ * quote from Bob's system that is signed with his attestation key. If the rule
+ * TSS_Quote_TPMB is activated this lemma is falsified, because the internal attacker
+ * can use the system of honest Bob to get such a quote and break the security of IDSCP.
+ */
+lemma Established_key_secrecy:
+  " /* It cannot be that */
+    not(
+      Ex key challengeA akCertB #i #j #k #l.
+        /* Alice and Bob mutually attested one another, */
+        IdscpRaVerifier('A', 'B', challengeA) @ #i
+        & Attested('A', 'B', challengeA, akCertB ) @ #j
+        /* they established a shared key, */
+        & EstablishedKey('A', key) @ #k
+        /* and the adversary knows the key */
+        & K(key) @ #l
+  )"
+
+/* Sanity check: Prove that the attacker does not learn the secret attestation keys.
+ * In our model we assume that the trusted platforms are secure and no attestation keys
+ * leak. Otherwise the protocol would be trivially insecure, since an attacker could
+ * just forge a quote.
+ */
+lemma Aks_do_not_leak:
+  "not(
+    Ex akA #i #j.
+      IsAK('A', akA) @ #i
+      & K(akA) @ #j
+  )
+  &
+  not(
+    Ex akB #i #j.
+      IsAK('B', akB) @ #i
+      & K(akB) @ #j
+  )"
+
+end

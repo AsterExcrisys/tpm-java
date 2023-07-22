@@ -1,0 +1,232 @@
+/*
+ * Protocol: MSCP
+ *
+ * Modeler:  Paul Wagner
+ * Date:     July 2023
+ */
+theory MSCP
+begin
+
+builtins: hashing, signing, diffie-hellman, symmetric-encryption
+
+/* Our goal is to verify the security of the key exchange protocol under the assumption
+ * that the trusted platform is secure. This means that we assume the used attestation
+ * keys to be known between Alice and Bob. Furthermore we assume that the attacker is
+ * unable to compromise an established attestation key or forge quote signatures. We
+ * model these assumptions by creating the attestation keys once for each platform.
+ */
+
+// Define two TPMs (Alice and Bob)
+rule TPM:
+  []
+  -->
+  [TPM('A'), TPM('B')]
+
+// Create a unique attestation key for each TPM
+rule Get_ak:
+  [ Fr(~ak), TPM(X) ]
+  --[
+    OnlyOnceFor(<'Get_ak', X>)
+    , IsAK(X, ~ak)
+  ]->
+  [ !Ak(X, ~ak), !AkCert(X, pk(~ak)) ]
+
+/* Create quotes for Alice's and Bob's trusted software stack (TSS). This rule models
+ * that there is some valid software on both platforms that acts as an attestation
+ * endpoint. It takes some qualifying data (e.g. a nonce) and asks the TPM to create a
+ * signed quote.
+ */
+rule TSS_Quote_TPMA:
+  [ In(qualifyingData)
+    , Fr(~creationData) // Creation data for Alice's ephemeral key. Cannot be chosen by the attacker.
+    , !Ak('A', ak)
+  ]
+  -->
+  [ Out(sign(<qualifyingData, 'PCRA', ~creationData>, ak)) ]
+rule TSS_Quote_TPMB:
+  [ In(qualifyingData)
+    , Fr(~creationData) // Creation data for Bob's ephemeral key. Cannot be chosen by the attacker.
+    , !Ak('B', ak)
+  ]
+  -->
+  [ Out(sign(<qualifyingData, 'PCRB', ~creationData>, ak)) ]
+
+// Initiation phase
+rule Init_A:
+  [ Fr(~nonceA) ]                     // Choose fresh nonce for Alice
+  --[
+    OnlyOnceFor('Init_A')
+    , Initiation('A', 'B', ~nonceA)   // Take note of Alice's init request
+  ]->
+  [ Out(<'Init_A', ~nonceA>)          // Send the nonce to Bob
+    , !Alices_Nonce(~nonceA)
+    , Init_A('B')
+  ]
+
+rule Init_B:
+  [ In(<'Init_A', nonceA>)            // Receive nonce from Alice
+    , Fr(~nonceB)                     // Choose fresh nonce for Bob
+  ]
+  --[ OnlyOnceFor('Init_B')
+      , Initiation('B', 'A', ~nonceB) // Take note of Bob's init request
+  ]->
+  [ Out(<'Init_B', ~nonceB>)          // Send the nonce to Alice
+    , !Bobs_Nonce(~nonceB)
+    , !Bobs_Received_Nonce(nonceA)
+    , Init_B('A')
+  ]
+
+// Attestation phase
+rule Attestation_A:
+let quoteA = sign(<nonceB, 'PCRA', 'g'^~a>, akA) in
+/* This quoting information attests to both the platform state and the ephemeral key.
+ * In case of MSCP with internal key establishment, this is created by
+ * TPM2_CertifyCreation. The creation data includes the name of the public key. In case
+ * of MSCP with external key establishment, this is created by TPM2_Quote. The ephemeral
+ * public key is then included by extending it into PCR 16.
+ */
+  [ Init_A(B)
+    , In(<'Init_B', nonceB>)                    // Receive nonce from Bob
+    , Fr(~a)                                    // Create a new DH private key for Alice
+    , !Ak('A', akA)                             // Load Alice's attestation key
+  ]
+  --[
+    OnlyOnceFor('Attestation_A')
+    , AttestationResponse('A', B, quoteA)       // Take note of Alice's quote
+  ]->
+  [ Out(<'Attestation_A', quoteA, 'g'^~a>)      // Send quote and DH public key to Bob
+    , Attestation_A(B, ~a)
+  ]
+
+rule Attestation_B:
+let quoteB = sign(<nonceA, 'PCRB', 'g'^~b>, akB) in
+
+  [ Init_B(A)
+    , In(<'Attestation_A', quoteA, dhPubA>)   // Receive quote and public key from Alice
+    , Fr(~b)                                  // Create a new DH private key for Bob
+    , !Ak('B', akB)                           // Load Bob's attestation key
+    , !Bobs_Received_Nonce(nonceA)            // Load the nonce that Bob received earlier
+  ]
+  --[
+    OnlyOnceFor('Attestation_B')
+    , Neq(dhPubA, 'g')                        // Alice's public DH key must not be 'g'
+    , AttestationResponse('B', A, quoteB)     // Take note of Bob's quote
+  ]->
+  [ Out(<'Attestation_B', quoteB, 'g'^~b>)    // Send quote and public key to Alice
+    , !Bobs_Received_Attestation(<quoteA, dhPubA>)
+    , Attestation_B(A, ~b)
+  ]
+
+// Verification phase
+rule Verification_A:
+  [ Attestation_A(B, a)
+    , In(<'Attestation_B', quoteB, dhPubB>)   // Receive quote and public key from Bob
+    , !Alices_Nonce(nonceA)                   // Load Alice's nonce
+    , !AkCert('B', akCertB)                   // Load Bob's attestation certificate
+  ]
+  --[
+    OnlyOnceFor('Verification_A')
+    , Eq(verify(quoteB,                       // Verify the quote, including the nonce and the DH public key
+                <nonceA, 'PCRB', dhPubB>,
+                akCertB), true)
+    , Attested('A', B, nonceA, akCertB)       // Take note that Alice attested Bob
+    , EstablishedKey('A', dhPubB^a)           // Generate shared key
+  ]->
+  [ Out(<'Verification_A'>) ]
+
+rule Verification_B:
+  [ Attestation_B(A, b)
+    , In(<'Verification_A'>)
+    , !Bobs_Nonce(nonceB)                     // Load Bob's nonce
+    , !Bobs_Received_Attestation(             // Load the quote and DH public key that Bob received earlier
+                          <quoteA, dhPubA>)
+    , !AkCert('A', akCertA)                   // Load Alice's attestation certificate
+  ]
+  --[ 
+    OnlyOnceFor('Verification_B')
+    , Eq(verify(quoteA,                       // Verify the quote, including the nonce and the DH public key
+                <nonceB, 'PCRA', dhPubA>,
+                akCertA), true)
+    , Attested('B', A, nonceB, akCertA)       // Take note that Alice attested Bob
+    , EstablishedKey('B', dhPubA^b)           // Generate shared key
+  ]->
+  []
+
+// Reveal the attestation keys
+rule Ak_reveal:
+  [ !Ak(X, ak) ] --[ RevealAk(X) ]-> [ Out(ak) ]
+
+restriction Equality:
+  "All x y #i. Eq(x,y) @i ==> x = y"
+restriction InEquality:
+  "All x y #i. Neq(x,y) @i ==> not(x = y)"
+
+restriction OnlyOnceFor:
+  "All X #i #j. OnlyOnceFor(X)@#i & OnlyOnceFor(X)@#j ==> #i = #j"
+
+ /* Prove that Alice and Bob can mutually attest to one another and establish a shared
+ * secret. Proving this lemma makes sure that the model can be fully executed.
+ */
+lemma Honest_protocol_mutual_attestation:
+  exists-trace
+  " Ex akA akB nonceA nonceB dhPubA dhPubB key #i #j #k #l #m #n #o #p.
+      Initiation('A', 'B', nonceA) @ #i
+      & Initiation('B', 'A', nonceB) @ #j
+      & AttestationResponse('A', 'B', sign(<nonceB, 'PCRA', dhPubA>, akA)) @ #k
+      & AttestationResponse('B', 'A', sign(<nonceA, 'PCRB', dhPubB>, akB)) @ #l
+      & Attested('B', 'A', nonceB, pk(akA)) @ #m
+      & Attested('A', 'B', nonceA, pk(akB)) @ #n
+      & EstablishedKey('B', key) @ #o
+      & EstablishedKey('A', key) @ #p
+  "
+
+/* Prove that an attacker cannot retrieve the shared secret between Alice and Bob and
+ * still successfully complete the attestation, unless the attestation keys are revealed
+ * before the attestation is accepted (forward secrecy). Unlike IDSCP, this lemma holds
+ * true even if the TSS_Quote_TPM rules are active (i.e. internal attackers have access
+ * to the platform quote oracles).
+ */
+lemma Established_key_secrecy_pfs:
+  /* For all MSCP handshakes, */
+  "(All key nonceA akCertB #i #j #k #l.
+      /* where Alice attests Bob, */
+      Initiation('A', 'B', nonceA) @ #i
+      & Attested('A', 'B', nonceA, akCertB) @ #j
+      /* and a shared key is established, */
+      & EstablishedKey('A', key) @ #k
+      /* which is known by the attacker, */
+      & K(key) @ #l
+    /* the attacker must already have known Bob's attestation key, */
+    ==> Ex #z. RevealAk('B') @ #z
+               /* even before Alice accepted the attestation */
+               & #z < #j
+  )
+  &
+  /* And the same also the other way around */
+  (All key nonceB akCertA #i #j #k #l.
+      Initiation('B', 'A', nonceB) @ #i
+      & Attested('B', 'A', nonceB, akCertA) @ #j
+      & EstablishedKey('B', key) @ #k
+      & K(key) @ #l
+    ==> Ex #z. RevealAk('A') @ #z & #z < #j
+   )
+  "
+
+/* Sanity check: Prove that the attacker does not learn the secret attestation keys.
+ * In our model we assume that the trusted platforms are secure and no attestation keys
+ * leak. Otherwise the protocol would be trivially insecure, since an attacker could
+ * just forge a quote.
+ */
+lemma Aks_do_not_leak:
+  "All akA #i #j.
+      IsAK('A', akA) @ #i
+      & K(akA) @ #j
+      ==> Ex #z. RevealAk('A') @ #z
+  &
+   All akB #i #j.
+      IsAK('B', akB) @ #i
+      & K(akB) @ #j
+      ==> Ex #z. RevealAk('B') @ #z
+  "
+
+end
