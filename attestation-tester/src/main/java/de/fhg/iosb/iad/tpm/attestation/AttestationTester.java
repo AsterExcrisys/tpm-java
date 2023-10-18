@@ -269,7 +269,8 @@ public class AttestationTester {
 
 			// Connect to the server
 			LinkedList<Duration> durations = new LinkedList<>();
-			tpmEngine.clearDurations();
+			if(tpmEngine != null)
+				tpmEngine.clearDurations();
 			for (int i = 0; i < args.getN() + 1; i++) {
 				Socket clientSocket = null;
 				try {
@@ -320,14 +321,16 @@ public class AttestationTester {
 			durations.remove(0); // Remove first element as outlier
 			printResults(type.toUpperCase(), durations);
 
-			Map<String, List<Duration>> m = tpmEngine.getDurations();
-			if (m.size() > 0)
-				LOG.info("##### TPM Command Timings ####################");
-			for (String command : m.keySet()) {
-				List<Duration> l = m.get(command);
-				l.remove(0); // Remove first element as outlier
-				printResults(command, l);
-				LOG.info("##############################################");
+			if(tpmEngine != null) {
+				Map<String, List<Duration>> m = tpmEngine.getDurations();
+				if (m.size() > 0)
+					LOG.info("##### TPM Command Timings ####################");
+				for (String command : m.keySet()) {
+					List<Duration> l = m.get(command);
+					l.remove(0); // Remove first element as outlier
+					printResults(command, l);
+					LOG.info("##############################################");
+				}
 			}
 		}
 
