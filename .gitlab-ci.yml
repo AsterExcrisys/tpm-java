@@ -6,7 +6,7 @@ gradle-build:
   stage: build
   image: gradle:8.1.1-jdk17
   script:
-    - chmod +x ./gradlew && ./gradlew build
+    - chmod +x ./build-gradle.sh && ./build-gradle.sh
   artifacts:
     paths:
       - attestation-tester/build/distributions
