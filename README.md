@@ -73,8 +73,8 @@ You can also use the Docker image to run a TTP instance.
 
 To pull and run the image from the Docker registry, use
 ```
-docker login registry.gitlab.cc-asp.fraunhofer.de
-docker run --rm -it -p 5001:5001 -v /path/to/db.sqlite:/ttp/ttp.sqlite registry.gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-java/ttp
+docker login container-registry.gitlab.cc-asp.fraunhofer.de
+docker run --rm -it -p 5001:5001 -v /path/to/db.sqlite:/ttp/ttp.sqlite container-registry.gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-java/ttp
 ```
 
 To build and run the image locally, use
