@@ -69,6 +69,18 @@ public class Database {
 		return result;
 	}
 
+	public String getRemarksForTrustedState(UUID trustedState) throws SQLException {
+		String sql = "SELECT * FROM TrustedStates WHERE trustedState = ?";
+		try (PreparedStatement pStatement = connection.prepareStatement(sql)) {
+			pStatement.setString(1, trustedState.toString());
+			try (ResultSet rs = pStatement.executeQuery()) {
+				if (rs.next())
+					return rs.getString("remarks");
+			}
+		}
+		return null;
+	}
+
 	public Map<Integer, String> getPCRValuesForTrustedState(UUID trustedState) throws SQLException {
 		Map<Integer, String> result = new HashMap<Integer, String>();
 		String sql = "SELECT * FROM PCRValues WHERE trustedState = ?";

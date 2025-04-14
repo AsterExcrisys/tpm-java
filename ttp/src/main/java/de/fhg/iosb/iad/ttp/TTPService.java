@@ -49,7 +49,11 @@ public class TTPService extends TTPServiceGrpc.TTPServiceImplBase {
 			TTPResponse.Builder response = TTPResponse.newBuilder();
 			for (UUID state : trustedStates) {
 				Map<Integer, String> pcrValues = database.getPCRValuesForTrustedState(state);
-				response.addTrustedStates(SystemState.newBuilder().putAllPcrValues(pcrValues).build());
+				SystemState.Builder builder = SystemState.newBuilder().putAllPcrValues(pcrValues);
+				String remarks = database.getRemarksForTrustedState(state);
+				if (remarks != null)
+					builder.setRemarks(remarks);
+				response.addTrustedStates(builder.build());
 			}
 
 			responseObserver.onNext(response.build());
