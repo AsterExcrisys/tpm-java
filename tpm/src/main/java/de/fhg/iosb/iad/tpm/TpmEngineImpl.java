@@ -1,56 +1,14 @@
 package de.fhg.iosb.iad.tpm;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tss.*;
+import tss.tpm.*;
 
-import tss.Crypto;
-import tss.Helpers;
-import tss.Tpm;
-import tss.TpmBuffer;
-import tss.TpmDeviceTcp;
-import tss.tpm.CertifyCreationResponse;
-import tss.tpm.CertifyResponse;
-import tss.tpm.CreatePrimaryResponse;
-import tss.tpm.CreateResponse;
-import tss.tpm.GetCapabilityResponse;
-import tss.tpm.PCR_ReadResponse;
-import tss.tpm.QuoteResponse;
-import tss.tpm.StartAuthSessionResponse;
-import tss.tpm.TPM2B_DIGEST;
-import tss.tpm.TPM2B_PRIVATE;
-import tss.tpm.TPM2B_PUBLIC_KEY_RSA;
-import tss.tpm.TPMA_OBJECT;
-import tss.tpm.TPML_HANDLE;
-import tss.tpm.TPMS_ECC_PARMS;
-import tss.tpm.TPMS_ECC_POINT;
-import tss.tpm.TPMS_KEY_SCHEME_ECDH;
-import tss.tpm.TPMS_NULL_ASYM_SCHEME;
-import tss.tpm.TPMS_NULL_KDF_SCHEME;
-import tss.tpm.TPMS_PCR_SELECTION;
-import tss.tpm.TPMS_RSA_PARMS;
-import tss.tpm.TPMS_SENSITIVE_CREATE;
-import tss.tpm.TPMS_SIG_SCHEME_RSASSA;
-import tss.tpm.TPMT_PUBLIC;
-import tss.tpm.TPMT_SYM_DEF;
-import tss.tpm.TPMT_SYM_DEF_OBJECT;
-import tss.tpm.TPMT_TK_CREATION;
-import tss.tpm.TPM_ALG_ID;
-import tss.tpm.TPM_CAP;
-import tss.tpm.TPM_ECC_CURVE;
-import tss.tpm.TPM_HANDLE;
-import tss.tpm.TPM_HT;
-import tss.tpm.TPM_RH;
-import tss.tpm.TPM_SE;
-import tss.tpm.TPM_SU;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class TpmEngineImpl implements TpmEngine {
 
@@ -169,21 +127,20 @@ public class TpmEngineImpl implements TpmEngine {
 	public Map<Integer, String> getPcrValues(Collection<Integer> numbers) throws TpmEngineException {
 		timer.tick();
 		Map<Integer, String> result = new HashMap<Integer, String>();
-		int[] numbersArray = numbers.stream().mapToInt(i -> i).toArray();
-		TPMS_PCR_SELECTION[] pcrSelection = new TPMS_PCR_SELECTION[] {
-				TpmHelper.createPcrSelection(numbersArray, pcrHashAlg) };
-
-		PCR_ReadResponse pcrValues = null;
-		try {
-			pcrValues = tpm.PCR_Read(pcrSelection);
-		} catch (Exception e) {
-			throw new TpmEngineException("Error in TPM2_PCR_Read()", e);
+		List<Integer> numbersList = new LinkedList<>(numbers);
+		while (!numbersList.isEmpty()) {
+			PCR_ReadResponse pcrValues;
+			try {
+				pcrValues = tpm.PCR_Read(TpmHelper.createPcrSelectionArray(numbersList, List.of(pcrHashAlg)));
+			} catch (Exception e) {
+				throw new TpmEngineException("Error in TPM2_PCR_Read()", e);
+			}
+			List<Integer> numbersOut = TpmHelper.parsePcrSelection(pcrValues.pcrSelectionOut[0]);
+			for (int i = 0; i < numbersOut.size(); i++) {
+				result.put(numbersOut.get(i), SecurityHelper.bytesToHex(pcrValues.pcrValues[i].buffer));
+			}
+			numbersList.removeAll(numbersOut);
 		}
-
-		for (int i = 0; i < numbersArray.length; i++) {
-			result.put(numbersArray[i], SecurityHelper.bytesToHex(pcrValues.pcrValues[i].buffer));
-		}
-
 		LOG.trace("TpmEngine.getPcrValues() took {}ms", timer.tock().toMillis());
 		logDuration("PCR_Read", timer.lastTock());
 		return result;
@@ -236,7 +193,7 @@ public class TpmEngineImpl implements TpmEngine {
 			sessionResponse = tpm.StartAuthSession(TPM_HANDLE.NULL, TPM_HANDLE.NULL, Helpers.RandomBytes(16),
 					new byte[0], TPM_SE.TRIAL, new TPMT_SYM_DEF(), TPM_ALG_ID.SHA256);
 			tpm.PolicyPCR(sessionResponse.handle, calculatePcrDigest(pcrValues),
-					TpmHelper.createPcrSelectionArray(pcrValues.keySet(), pcrHashAlg));
+					TpmHelper.createPcrSelectionArray(pcrValues.keySet(), List.of(pcrHashAlg)));
 			policyDigest = tpm.PolicyGetDigest(sessionResponse.handle);
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in PolicyPCR()", e);
@@ -255,7 +212,7 @@ public class TpmEngineImpl implements TpmEngine {
 			sessionResponse = tpm.StartAuthSession(TPM_HANDLE.NULL, TPM_HANDLE.NULL, nonceCaller, new byte[0],
 					TPM_SE.POLICY, new TPMT_SYM_DEF(), TPM_ALG_ID.SHA256);
 			tpm.PolicyPCR(sessionResponse.handle, calculatePcrDigest(getPcrValues(pcrNumbers)),
-					TpmHelper.createPcrSelectionArray(pcrNumbers, pcrHashAlg));
+					TpmHelper.createPcrSelectionArray(pcrNumbers, List.of(pcrHashAlg)));
 			return sessionResponse.handle.handle;
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in PolicyPCR()", e);
@@ -301,7 +258,7 @@ public class TpmEngineImpl implements TpmEngine {
 		CreateResponse response = null;
 		try {
 			response = tpm.Create(TPM_HANDLE.from(rootKeyHandle), new TPMS_SENSITIVE_CREATE(new byte[0], new byte[0]),
-					dhTemplate, new byte[0], TpmHelper.createPcrSelectionArray(pcrNumbers, pcrHashAlg));
+					dhTemplate, new byte[0], TpmHelper.createPcrSelectionArray(pcrNumbers, List.of(pcrHashAlg)));
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Create()", e);
 		}
@@ -382,7 +339,7 @@ public class TpmEngineImpl implements TpmEngine {
 		try {
 			quote = tpm.Quote(TPM_HANDLE.from(quotingKeyHandle), qualifyingData,
 					new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256),
-					TpmHelper.createPcrSelectionArray(pcrNumbers, pcrHashAlg));
+					TpmHelper.createPcrSelectionArray(pcrNumbers, List.of(pcrHashAlg)));
 		} catch (Exception e) {
 			throw new TpmEngineException("Error in TPM2_Quote()", e);
 		}

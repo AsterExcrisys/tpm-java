@@ -1,6 +1,7 @@
 package de.fhg.iosb.iad.tpm;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import tss.Crypto;
@@ -104,7 +105,7 @@ public class TpmValidator {
 
 		// Verify that creationData contains the claimed PCRs
 		PCR_ReadResponse expectedPcrs = new PCR_ReadResponse();
-		expectedPcrs.pcrSelectionOut = TpmHelper.createPcrSelectionArray(pcrValues.keySet(), pcrHashAlg);
+		expectedPcrs.pcrSelectionOut = TpmHelper.createPcrSelectionArray(pcrValues.keySet(), List.of(pcrHashAlg));
 		expectedPcrs.pcrValues = TpmHelper.createPcrDigests(pcrValues);
 		expectedPcrs.pcrUpdateCounter = 0;
 		TpmBuffer pcrBuf = new TpmBuffer();
@@ -151,7 +152,7 @@ public class TpmValidator {
 
 		// Validate quote
 		PCR_ReadResponse expectedPcrs = new PCR_ReadResponse();
-		expectedPcrs.pcrSelectionOut = TpmHelper.createPcrSelectionArray(pcrValues.keySet(), pcrHashAlg);
+		expectedPcrs.pcrSelectionOut = TpmHelper.createPcrSelectionArray(pcrValues.keySet(), List.of(pcrHashAlg));
 		expectedPcrs.pcrValues = TpmHelper.createPcrDigests(pcrValues);
 		expectedPcrs.pcrUpdateCounter = 0;
 		return remoteQk.validateQuote(expectedPcrs, qualifyingData, remoteQuote);
