@@ -22,6 +22,11 @@ subprojects {
   
   group = 'de.fhg.iosb.iad.tpm.commons'
   version = '1.0.0'
+
+  java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+  }
   
   dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: libraryVersions.slf4j
