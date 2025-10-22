@@ -1,5 +1,4 @@
 # TPM 2.0 Java Commons
-[![pipeline status](https://gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-java/badges/master/pipeline.svg)](https://gitlab.cc-asp.fraunhofer.de/tpm-20-commons/tpm-java/-/commits/master)
 
 This repository contains convenience libraries and tools to use TPM 2.0 in Java environments.
 To build all included libraries and tools, use
