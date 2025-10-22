@@ -36,6 +36,9 @@ subprojects {
     publications {
       Libs(MavenPublication) {
         from components.java
+        groupId = 'com.github.AsterExcrisys'
+        artifactId = 'tpm-java'
+        version = 'v1.0.0'
       }
     }
   }
